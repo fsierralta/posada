@@ -39,8 +39,12 @@ const Body = () => {
 
   return (
    <>
-   
-   <div className='w-full justify-items-center flex  '> 
+  {/*  
+     se define la cabezera principal l 
+    para alinear body  con footer 
+
+  */} 
+  <div className='w-full justify-items-center flex  '> 
     
            <div>
             <a 
@@ -61,7 +65,13 @@ const Body = () => {
             </a>
             </div> 
     
-     </div>
+   </div>
+
+   {/*  
+     se define el body principal como flex flex-col 
+    para alinear body  con footer 
+
+  */} 
    <div className='flex flex-col '>
           <div className=" md:flex md:flex-row sm:flex   sm:flex-col 
                         bg-gradient-to-r
