@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('contacto_registrados', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('nombre');
+            $table->string('apellidos');
+            $table->string('nacionalidad',1)->default("V");
+            $table->string('cedula')->unique();
+            $table->date('nacimiento');
+            $table->string('celular');
+            $table->string('direccion');
+            $table->foreignId("contacto_id")->constrained("contactos",'id');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('contacto_registrados');
+    }
+};

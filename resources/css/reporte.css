@@ -1,0 +1,50 @@
+ /* Aquí puedes agregar estilos CSS para personalizar el aspecto del ticket */
+ body {
+    font-family: Arial, sans-serif;
+   
+
+}
+table {
+    border-collapse: collapse;
+ 
+}
+th, td {
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 25px;
+   
+
+}
+
+thead,tr{
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 25px;
+
+}
+h1{
+    color:green;
+    font-size:18px;
+    margin-top: 24px;
+    
+}
+
+.pagar {
+   align-items: end;
+   align-content: end;
+   
+   text-align: right;
+   margin-top: 10px;
+   font-weight: bold;
+} 
+.cabezeraAbono{
+   text-align: center;
+   color:blue;
+   font-weight: bold;
+   font-size: larger;
+
+}
+.fecha-impresion{
+    text-align: right;
+    float: right;
+}

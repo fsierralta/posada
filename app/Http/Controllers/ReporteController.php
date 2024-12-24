@@ -1,0 +1,266 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\FichaRegistro;
+use App\Models\FichaRegistroHuespe;
+use App\Models\Huespede;
+use App\Models\MovimientoHuespede;
+use App\Models\PagoHuespede;
+use App\Models\Posada;
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Dompdf\Dompdf;
+use Fpdf\Fpdf;
+use App\CustomTool\RegistroLibroPolicial;
+use Carbon\Month;
+use Illuminate\Support\Str;
+class ReporteController extends Controller
+{
+    //recibe el ticket a imprimir
+    public function ticketConsumo($movimientoHuespede_id){
+
+         // Obtener los datos del cliente y los items
+         $datacliente = MovimientoHuespede::find($movimientoHuespede_id);
+         $fichaRegistro=FichaRegistroHuespe::where("nroficha",$datacliente->nroficharegistro)
+                         ->first();
+        //  info("consumo",["data"=>$datacliente]);
+         /*  return response()->json(["data"=>[
+                                    "ficha"=>$fichaRegistro,
+                                    "mov"=>$datacliente
+                                    ]])               ; */
+         $posada=$fichaRegistro->posada;
+         $huespede=$fichaRegistro->huespede;
+
+         $total = $datacliente->totalitem;
+         $fechaActual=Carbon::now()->format('d-m-Y');
+         $cabezera=[
+             "nombrePosada"=>$posada->nombre,
+             "fechaActual"=>$fechaActual,
+             "nombreCliente"=>$huespede->nombre." ".$huespede->apellidos,
+             "cedula"=>$huespede->nacionalidad.$huespede->cedula,
+
+
+
+         ];
+        // info("cabezera",["data"=>$cabezera["fechaActual"]
+        //]);
+         //return response()->json($cabezera);  
+
+        $data=['cabezera'=>$cabezera,
+              'datacliente'=>$datacliente, 
+              'total'=>$total,
+              'datacliente'=>$datacliente 
+        ];
+ /*      return view("reporte.ticketconsumo",['cabezera'=>$cabezera,
+                                                    'datacliente'=>$datacliente, 
+                                                    'total'=>$total,
+                                                     'datacliente'=>$datacliente 
+                                                   ]
+                                                );   */
+      
+        $name=$huespede->nacionalidad.$huespede->cedula."_".$movimientoHuespede_id.".pdf";      
+          
+          
+          
+         $pdf=pdf::loadView('reporte.ticketconsumo',$data);
+        
+          return $pdf->download($name);   
+ 
+        
+         
+    }        
+    /* 
+       Procedimiento:Ticket de Consumo
+               parametro:huespde_id
+               return: pdf->consumo 
+    */
+    public function nroticketConsumo($movimientoHuespede_id){
+        return view("reporte.linkticket",["data"=>$movimientoHuespede_id]);
+
+
+
+    }
+
+    public function estadoCta($posada_id){
+        info("id",["id"=>$posada_id]);
+        $posada=Posada::find($posada_id);
+        if ($posada->estatus=="D"){
+            return redirect(route("dashboard"))->with("message","Posada debe estar ocupada");
+        }
+        $fichaRegistro=FichaRegistroHuespe::where('estatus','A')
+                                      ->where("posada_id",$posada->id)
+                                      ->first();
+
+         if($fichaRegistro==null){
+            return redirect(route("dashboard"))->with("message","No existe ficha de registro");
+         }
+        $huespede=$fichaRegistro->huespede;
+        $dataCargo=MovimientoHuespede::where('nroficharegistro',$fichaRegistro->nroficha)
+                                         ->get();
+        $totalCargo=MovimientoHuespede::where('nroficharegistro',$fichaRegistro->nroficha)
+                                        ->first()->totalcargos();  
+        $dataAbono=PagoHuespede::where('nroficha',$fichaRegistro->nroficha)
+                                     ->get();
+        $totalAbono=PagoHuespede::where('nroficha',$fichaRegistro->nroficha)
+        ->first()->totalabono();                             
+         //cabezera
+
+         $fechaActual=Carbon::now()->format('m-d-Y');
+         $cabezera=[
+             "nombrePosada"=>$posada->nombre,
+             "fechaActual"=>$fechaActual,
+             "nombreCliente"=>$huespede->nombre." ".$huespede->apellidos,
+             "cedula"=>$huespede->nacionalidad.$huespede->cedula,
+
+
+
+         ];  
+         $data=["cargos"=>$dataCargo,
+                'abonos'=>$dataAbono,
+                'cabezera'=>$cabezera,
+                "totalcargo"=>number_format($totalCargo,2,",",'.'),
+                "totalabono"=>number_format($totalAbono,2,",",".")
+               
+            ];
+
+         //return view("reporte.estadocta",$data);
+         $name=$huespede->nacionalidad.$huespede->cedula."_".now()->format('dmy').".pdf";      
+         /* $htm=view("reporte.estadocta",$data);
+         $pdf=new pdf();
+         $pdf->setPaper("A4",'landscape');
+         $pdf->loadHTML($htm);
+         return $pdf->stream($name); */
+
+          $pdf=pdf::loadView("reporte.estadocta",$data); 
+          return $pdf->download($name); 
+
+
+
+
+
+
+
+
+
+
+    }
+    public function notaFactura($posada_id){
+        info("id",["id"=>$posada_id]);
+        $posada=Posada::find($posada_id);
+        if ($posada->estatus=="D"){
+            return redirect(route("dashboard"))->with("message","Posada debe estar ocupada");
+        }
+        $fichaRegistro=FichaRegistroHuespe::where('estatus','A')
+                                      ->where("posada_id",$posada->id)
+                                      ->first();
+
+         if($fichaRegistro==null){
+            return redirect(route("dashboard"))->with("message","No existe ficha de registro");
+         }
+        $huespede=$fichaRegistro->huespede;
+        $dataCargo=MovimientoHuespede::where('nroficharegistro',$fichaRegistro->nroficha)
+                                         ->get();
+        $totalCargo=MovimientoHuespede::where('nroficharegistro',$fichaRegistro->nroficha)
+                                        ->first()->totalcargos();  
+        $dataAbono=PagoHuespede::where('nroficha',$fichaRegistro->nroficha)
+                                     ->get();
+        $totalAbono=PagoHuespede::where('nroficha',$fichaRegistro->nroficha)
+        ->first()->totalabono();                             
+         //cabezera
+
+         $fechaActual=Carbon::now()->format('d-m-Y');
+         $cabezera=[
+             "nombrePosada"=>$posada->nombre,
+             "fechaActual"=>$fechaActual,
+             "nombreCliente"=>$huespede->nombre." ".$huespede->apellidos,
+             "cedula"=>$huespede->nacionalidad.$huespede->cedula,
+             "telefonos"=>$huespede->celular."/".$huespede->telefono,
+             'direccion'=>$huespede->direccion
+   ];  
+         $data=["cargos"=>$dataCargo,
+                 'cabezera'=>$cabezera,
+                "totalcargo"=>number_format($totalCargo,2,",",'.'),
+                
+               
+            ];
+
+         //return view("reporte.estadocta",$data);
+         $name=$huespede->nacionalidad.$huespede->cedula."_".Str::random(6).".pdf";      
+         $pdf=pdf::loadView("reporte.notadefactura",$data);
+        return $pdf->download($name);
+
+
+
+
+    }
+
+
+    public function movimientosPagos(Request $request){
+      
+
+        try {
+            //code...
+          $pagoHuespede=new PagoHuespede();
+          $totalGeneral=$pagoHuespede->totaLGeneralPorRango(Carbon::parse($request->fechainicial),Carbon::parse($request->fechafinal));                   
+          $pagosPorRango=$pagoHuespede->pagosPorRangoReporte(Carbon::parse($request->fechainicial),Carbon::parse($request->fechafinal));
+          
+          $name="repocaja.pdf";
+          $pdf=pdf::loadView("reporte.movimientosPagos",[
+                                                                    "fechaInicial"=>$request->fechainicial,
+                                                                    "fechaFinal"  =>$request->fechafinal,
+                                                                    "pagos"=>$pagosPorRango,
+                                                                    "totalGeneral"=>$totalGeneral
+                                                                        ]);
+         return $pdf->download($name);
+         //return $pdf->stream($name);
+         
+    
+        } catch (\Throwable $th) {
+             //throw $th;
+             info("error",["message"=>$th->getMessage()]);
+             return back()->with("message",$th->getMessage());
+    
+             }                                                                
+
+
+
+    }
+
+
+    public function informepolicialmensual(Request $request){
+
+        try {
+            //code...
+            info('repo05',['data'=>$request->fechainicial]) ; 
+            $rp=new RegistroLibroPolicial();
+            $fechaInicial=Carbon::parse($request->fechainicial) ;
+            $fechaFinal=  Carbon::parse($request->fechafinal);
+            $huespedesMes=$rp->getAllReporte($fechaInicial,$fechaFinal);
+            //return response()->json($huespedesMes);
+   
+   
+          /* return view('reporte.informePolicialMensual',["fechaInicial"=>$fechaInicial->format('d-m-Y'),
+                                                        "fechaFinal" =>$fechaFinal->format('d-m-Y')   ,
+                                                       "huespedesMes"=>$huespedesMes
+                                                      ]
+                                                   );  */
+          $name="repoInformeMes_".$fechaInicial->month."_".$fechaInicial->year.".pdf";
+          $pdf=pdf::loadView('reporte.informePolicialMensual',["fechaInicial"=>$fechaInicial->format('d-m-Y'),
+                                                                "fechaFinal" =>$fechaFinal->format('d-m-Y')   ,
+                                                               "huespedesMes"=>$huespedesMes
+                                                      ]) ;                                      
+       $pdf->set_paper('A3', 'landscape') ;                                           
+       return $pdf->download($name);  
+        } catch (\Throwable $th) {
+            //throw $th;
+            info("error",["message"=>$th->getMessage()]);
+            return back()->with("message",$th->getMessage());
+        }
+      
+
+
+    }
+
+}
