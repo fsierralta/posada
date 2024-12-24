@@ -1,10 +1,11 @@
 import { Link } from "@inertiajs/react"
+import Footer from "./Footer"
 
 
 export default function Slider() {
   return (
-    
-    <div className="w-1/4 border border-collapse rounded-lg border-black px-4  h-screen  my-auto py-5 "> {/* Sidebar */}
+    <>
+    <div    > {/* Sidebar */}
       <div> {/* Contenido superior del sidebar */}
           
           <h1 className='text-white  text-2xl text-center '>{`Obten el ${import.meta.env.VITE_INSTAGRAM_DESCUENTO} porciento de Descuento en todas Las Monturas para Lentes  `}
@@ -34,6 +35,9 @@ export default function Slider() {
            rel="noopener noreferrer" className="text-amber-500 hover:underline block text-center">Síguenos en Instagram Posada los Humacos</a>
       </div>
     </div>
-
+    
+    
+    </>
+    
   )
 }

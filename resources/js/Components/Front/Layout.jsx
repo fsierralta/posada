@@ -9,11 +9,12 @@ const App = ({auth, children }) => {
          auth={auth}
        />
 
-      <main className="flex-row flex-grow ">
+      <main>
         
         {children} {/* Contenido de la página */}
+       
       </main>
-      <Footer />
+     
     </div>
   );
 };

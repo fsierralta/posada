@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-gray-300 py-4 px-4">
-      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-        <div className="mb-2 md:mb-0">
+    <footer className="bg-gray-800 text-gray-300 py-4 px-4 ">
+      <div className="flex justify-between items-center ">
+        <div>
           <p>&copy; {new Date().getFullYear()}  Todos los derechos reservados.{`${import.meta.env.VITE_NAME_PROGRAMER} ${import.meta.env.VITE_PHONE_PROGRAMER}`}</p>
         </div>
         <div className="flex space-x-4">

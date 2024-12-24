@@ -40,7 +40,7 @@ const Body = () => {
   return (
    <>
    
-   <div className='w-full justify-items-center flex'> 
+   <div className='w-full justify-items-center flex  '> 
     
            <div>
             <a 
@@ -62,66 +62,89 @@ const Body = () => {
             </div> 
     
      </div>
-   
-    <div className="flex  h-screen bg-gradient-to-r  from-gray-100 via-green-600 to-slate-600  "> {/* Contenedor principal */}
-       
-    
-      <div className={`w-3/4 p-4   justify-items-center relative `}
-                 
+   <div className='flex flex-col '>
+          <div className=" md:flex md:flex-row sm:flex   sm:flex-col 
+                        bg-gradient-to-r
+                        from-gray-100
+                          via-green-600 to-slate-600  "> {/* Contenedor principal */}
+            
+              
+                <div className={`md:w-3/4 p-4 sm:w-full h-screen
+              justify-items-center relative `}
+                      
 
 
-                   
-      > {/* Sección principal (carrusel) */}
-         
-         {/* Encabezado/Leyenda */}
-        <div className="text-center  mb-6 pt-4   "> {/* Contenedor del encabezado */}
-            <div className='w-full'>
-                 <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight mr-2"> {/* Título */}
-                  <p> Disponemos de cabañas</p>
-                   tradicionales
-                </h2>
-              <div className='text-2xl'>
-                <h1>{`Reservaciones:${import.meta.env.VITE_EMAIL_POSADA}`}</h1>
-                <h1>{`Telefonos ${import.meta.env.VITE_CELULAR_POSADA}`}</h1>
+                        
+            > {/* Sección principal (carrusel) */}
+              
+              {/* Encabezado/Leyenda */}
+              <div className="text-center  mb-6 pt-4   "> {/* Contenedor del encabezado */}
+                  <div className='w-full'>
+                      <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight mr-2"> {/* Título */}
+                        <p> Disponemos de cabañas</p>
+                        tradicionales
+                      </h2>
+                    <div className='text-2xl'>
+                      <h1>{`Reservaciones:${import.meta.env.VITE_EMAIL_POSADA}`}</h1>
+                      <h1>{`Telefonos ${import.meta.env.VITE_CELULAR_POSADA}`}</h1>
+                      </div> 
+                
                 </div> 
-           
-          </div> 
-        </div>
+              </div>
 
-        {/* Carrusel */}
+              {/* Carrusel */}
 
-        <div className="relative w-96 h-80 overflow-hidden  ">
-          <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentImage * 100}%)` }} ref={carouselRef}>
-              {images.map((image, index) => (
-                  <div key={index} className="w-full shrink-0 ">
-                      <img src={image} alt={`Imagen ${index + 1}`} className="object-contain w-full " width="100px" height={"100pxx"} />
-                  </div>
-              ))}
-          </div>
+              <div className="relative w-96 h-96 overflow-hidden  ">
+                <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentImage * 100}%)` }} ref={carouselRef}>
+                    {images.map((image, index) => (
+                        <div key={index} className="w-full shrink-0 ">
+                            <img src={image} alt={`Imagen ${index + 1}`} className="object-contain w-full " width="100px" height={"100pxx"} />
+                        </div>
+                    ))}
+                </div>
+                
+                <button onClick={prevImage} className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full opacity-70 hover:opacity-100">
+                    {'<'}
+                </button>
+                <button onClick={nextImage} className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full opacity-70 hover:opacity-100">
+                    {'>'}
+                </button>
+                
+              </div>
+              <div className='mt-8'>
+                  <p className="text-2xl md:text-3xl font-bold text-white leading-tight mx-auto ml-2 text-center"> {/* Subtítulo */}
+                      Rodeadas de un hermoso <span>paisaje</span>
+                  </p>
+                  
+                </div>  
           
-          <button onClick={prevImage} className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full opacity-70 hover:opacity-100">
-              {'<'}
-          </button>
-          <button onClick={nextImage} className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full opacity-70 hover:opacity-100">
-              {'>'}
-          </button>
+
           
-        </div>
-        <div className='mt-8'>
-             <p className="text-2xl md:text-3xl font-bold text-white leading-tight mx-auto ml-2 text-center"> {/* Subtítulo */}
-                 Rodeadas de un hermoso <span>paisaje</span>
-            </p>
-             
-          </div>  
-     
+              
+            
+              
+                </div>  
+                <div className="md:w-1/4 md:flex
+                   md:border 
+                   md:border-collapse 
+                   md:rounded-lg md:border-black px-4 
+                    bg-gradient-to-r
+                   from-gray-100
+                   via-green-600 to-slate-600 
+                    py-12" 
+                >{/* slider */}
+                   <Slider/>
 
-     
-      </div>
-      
-
-     <Slider/>
-     
+                </div>
+        
+          
+         </div>
+         <div>
+            <Footer/>
+         </div>
     </div>
+   
+    
     
     
     </>   
