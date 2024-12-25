@@ -234,10 +234,6 @@ Route::post('contactoregisterstore',[ContactoController::class,'registerContacto
 
 //------------------
 //Ensayo: Front
-Route::get('/ensayo',function(){
-    return Inertia::render('WelcomeNew');
-});
-
 
 
 
