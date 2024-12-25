@@ -20,6 +20,7 @@ class ContactoController extends Controller
 {
 
    public function index(){
+      
       return Inertia::render('Publicidad/Publicidad');   
    }
     public function show (Request $request){
@@ -75,7 +76,7 @@ class ContactoController extends Controller
                 info('contactoNull',['contacto'=>$contactoExist]);
              }
              info('contacto',['contacto'=>$contactoExist->id]);
-              $contactoRegistrado=DB::table('contacto_registrados')
+             $contactoRegistrado=DB::table('contacto_registrados')
                                  ->where('contacto_id',"=",$contactoExist->id)
                                  ->get(); //se puede utilizar first()
               info('contactoRegistrao',['data'=>$contactoRegistrado->count()])   ;                
