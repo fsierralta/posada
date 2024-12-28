@@ -37,6 +37,7 @@ class CabanaCerradaController extends Controller
     public function show(CabanaCerrada $cabanaCerrada)
     {
         //
+    
     }
 
     /**

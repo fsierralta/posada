@@ -90,10 +90,10 @@ const Body = () => {
                                         <p> Disponemos de cabañas</p>
                                         tradicionales
                                       </h2>
-                                    <div className='text-2xl'>
-                                      <h1>{`Reservaciones:${import.meta.env.VITE_EMAIL_POSADA}`}</h1>
+                                    <div className='md:text-2xl sm:text-sm' >
+                                      <h1 >{`Reservaciones:${import.meta.env.VITE_EMAIL_POSADA}`}</h1>
                                       <h1>{`Telefonos ${import.meta.env.VITE_CELULAR_POSADA}`}</h1>
-                                      </div> 
+                                    </div> 
                                 
                                 </div> 
                               </div>
