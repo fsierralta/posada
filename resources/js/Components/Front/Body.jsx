@@ -98,9 +98,10 @@ const Body = () => {
                                 </div> 
                               </div>
 
+                               
+                               
                                {/* Carrusel */}
-
-                            <div className="relative w-96 h-96 overflow-hidden  ">
+                               <div className="relative w-96 h-96 overflow-hidden  ">
                                   <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentImage * 100}%)` }} ref={carouselRef}>
                                           {images.map((image, index) => (
                                               <div key={index} className="w-full shrink-0 ">
