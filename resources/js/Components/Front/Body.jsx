@@ -80,7 +80,7 @@ const Body = () => {
             
               
                 <div className={`md:w-3/4 p-4 sm:w-full h-screen
-                             justify-items-center relative `}
+                              md:justify-items-center relative `}
                              > {/* Sección principal (carrusel) */}
               
                               {/* Encabezado/Leyenda */}
@@ -104,8 +104,8 @@ const Body = () => {
                                <div className="relative w-96 h-96 overflow-hidden  ">
                                   <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentImage * 100}%)` }} ref={carouselRef}>
                                           {images.map((image, index) => (
-                                              <div key={index} className="w-full shrink-0 ">
-                                                  <img src={image} alt={`Imagen ${index + 1}`} className="object-fill w-full "  />
+                                              <div key={index} className="w-full shrink-0  ">
+                                                  <img src={image} alt={`Imagen ${index + 1}`} className="object-fill w-full  overflow-hidden"  />
                                               </div>
                                           ))}
                                   </div>
