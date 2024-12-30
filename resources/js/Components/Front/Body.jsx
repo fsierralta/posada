@@ -105,7 +105,7 @@ const Body = () => {
                                   <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentImage * 100}%)` }} ref={carouselRef}>
                                           {images.map((image, index) => (
                                               <div key={index} className="w-full shrink-0  ">
-                                                  <img src={image} alt={`Imagen ${index + 1}`} className="object-fill w-full  overflow-hidden"  />
+                                                  <img src={image} alt={`Imagen ${index + 1}`} className="object-fill w-full "  />
                                               </div>
                                           ))}
                                   </div>
