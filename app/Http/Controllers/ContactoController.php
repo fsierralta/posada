@@ -23,6 +23,7 @@ class ContactoController extends Controller
       
       return Inertia::render('Publicidad/Publicidad');   
    }
+   
     public function show (Request $request){
     
      
