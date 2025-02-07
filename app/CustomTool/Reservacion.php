@@ -3,7 +3,8 @@
 namespace App\CustomTool;
 use App\Models\Posada;
 use Illuminate\Support\Facades\DB;
-use PhpParser\ErrorHandler\Collecting;
+use Illuminate\Support\Collection ;
+
 
 class Reservacion
 {
@@ -20,7 +21,7 @@ class Reservacion
        @param $posadas
 
     */
-    public static function  posadaPorCapacidad($posadas=null):?Collecting
+    public static function  posadaPorCapacidad($posadas=null):?Collection
     {
         $groupCapcity = Posada::select('capacidad',DB::raw('count(*) as total'))->groupBy('capacidad')
         ->orderBy('capacidad','asc')
@@ -33,5 +34,6 @@ class Reservacion
     
     }
     
+
 
 }

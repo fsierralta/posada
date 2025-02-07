@@ -236,4 +236,8 @@ Route::post('contactoregisterstore',[ContactoController::class,'registerContacto
 //Ensayo: Front
 
 
+
+
+
+
 require __DIR__.'/auth.php';
