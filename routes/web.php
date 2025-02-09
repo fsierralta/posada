@@ -5,16 +5,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
-
-//---------------------------------
-//use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
-use App\Http\Controllers\FichaRegistroHuespeController;
-use App\Http\Controllers\PagoHuespedeController;
-use App\Http\Controllers\ReporteController;
-//use Illuminate\Support\Facades\Mail;
-use  App\Http\Controllers\MailController;
 use App\Http\Controllers\SendGetCodeController;
+
 //----------------------------------------------------------
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -28,7 +20,6 @@ Route::get('/', function () {
 Route::get("/codeverification",[SendGetCodeController::class,"senderCode"])
        ->name("codeverification.get");
  //------------------      
-
 
 Route::get('/dashboard', [DashboardController::class,"index"])
       ->middleware(['auth', 'verified'])
@@ -52,5 +43,4 @@ require __DIR__.'/reporte.php';
 //require aqui pago 
 require __DIR__.'/pago.php';
 //  requirre aqui auth.php
-
 require __DIR__.'/auth.php';
