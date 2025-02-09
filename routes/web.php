@@ -51,64 +51,63 @@ Route::middleware('auth')->group(function () {
 //
 //
 //
-Route::get("/posada",[PosadaController::class,"index"])
-->middleware('auth','verified')
-->name("posada.get");
+// Route::get("/posada",[PosadaController::class,"index"])
+// ->middleware('auth','verified')
+// ->name("posada.get");
 
-Route::get("/posada/create",[PosadaController::class,"create"]
-)
-->middleware('auth','verified')
-->name('posada.create');
+// Route::get("/posada/create",[PosadaController::class,"create"]
+// )
+// ->middleware('auth','verified')
+// ->name('posada.create');
 
-Route::post('/posada',[PosadaController::class,'store'])
-->middleware('auth','verified')
-->name('posada.store');
+// Route::post('/posada',[PosadaController::class,'store'])
+// ->middleware('auth','verified')
+// ->name('posada.store');
 
-Route::get("/posada/{id}",function($id){
-   $posada=Posada::find($id);
-   $controller=new PosadaController();
-   return $controller->edit($posada);
-   //return Route::get("posada/{posada}",[PosadaController::class,"edit"]);
+// Route::get("/posada/{id}",function($id){
+//    $posada=Posada::find($id);
+//    $controller=new PosadaController();
+//    return $controller->edit($posada);
+//    //return Route::get("posada/{posada}",[PosadaController::class,"edit"]);
+// })->middleware('auth','verified')
+// ->name("posada.edit");
 
+// Route::put('/posada/put',[PosadaController::class,"update"])
+// ->middleware('auth','verified')
+// ->name('posada.put');
 
-})->middleware('auth','verified')
-->name("posada.edit");
-
-Route::put('/posada/put',[PosadaController::class,"update"])
-->middleware('auth','verified')
-->name('posada.put');
-
-Route::delete("/posada/destroy/{id}",[PosadaController::class,"destroy"])
-->middleware('auth','verified')
-->name('posada.destroy');
+// Route::delete("/posada/destroy/{id}",[PosadaController::class,"destroy"])
+// ->middleware('auth','verified')
+// ->name('posada.destroy');
 
 
 //-------Precio Base//---------------
-Route::get("/precio",[PrecioController::class,'index'])
-->middleware('auth','verified')
-->name('precio.get');
+// Route::get("/precio",[PrecioController::class,'index'])
+// ->middleware('auth','verified')
+// ->name('precio.get');
 
-Route::get("/precio/create",[PrecioController::class,'create'])
-->middleware('auth','verified')
-->name('precio.create');
+// Route::get("/precio/create",[PrecioController::class,'create'])
+// ->middleware('auth','verified')
+// ->name('precio.create');
 
-Route::post("/precio",[PrecioController::class,'store'])
-->middleware('auth','verified')
-->name('precio.store');
+// Route::post("/precio",[PrecioController::class,'store'])
+// ->middleware('auth','verified')
+// ->name('precio.store');
 
-Route::get("/precio/{id}",[PrecioController::class,'show'])
-->middleware('auth','verified')
-->name('precio.show');
+// Route::get("/precio/{id}",[PrecioController::class,'show'])
+// ->middleware('auth','verified')
+// ->name('precio.show');
 
-Route::put("/precio",[PrecioController::class,'update'])
-->middleware('auth','verified')
-->name('precio.put');
+// Route::put("/precio",[PrecioController::class,'update'])
+// ->middleware('auth','verified')
+// ->name('precio.put');
 
- Route::delete("/precio/destroy/{id}",[PrecioController::class,'destroy'])
-->middleware('auth','verified')
-->name('precio.destroy');
+// Route::delete("/precio/destroy/{id}",[PrecioController::class,'destroy'])
+// ->middleware('auth','verified')
+// ->name('precio.destroy');
 //-------------------------------------------------
 
+/*
 Route::get('/huespede',[HuespedeController::class,'index'])
 ->middleware('auth','verified')
 ->name('huespede.get');
@@ -170,26 +169,27 @@ Route::patch("/huespededardealta/{id}",[FichaRegistroHuespeController::class,'da
 Route::get("/huespedenotafactura/{id}",[FichaRegistroHuespeController::class,'notaFactura'])
 ->middleware('auth','verified')
 ->name('notafactura.get');
+*/
 //------------------Caja 
-Route::get("/cajashow",[PagoHuespedeController::class,"show"])
-->middleware('auth','verified')
-->name('caja.show');  
 
-Route::get('/libromensual',[PagoHuespedeController::class,'showInformePolicial'])
-->middleware('auth','verified')
-->name('libromensual.show');  
+// Route::get("/cajashow",[PagoHuespedeController::class,"show"])
+// ->middleware('auth','verified')
+// ->name('caja.show');  
 
-Route::get('/libromensua//fechainicial/{fechaInicial}/fechafinal/{fechaFinal}',[PagoHuespedeController::class,'showInformePolicialRango'])
-->middleware('auth','verified')
-->name('libromensual.get');  
+// Route::get('/libromensual',[PagoHuespedeController::class,'showInformePolicial'])
+// ->middleware('auth','verified')
+// ->name('libromensual.show');  
+
+// Route::get('/libromensua//fechainicial/{fechaInicial}/fechafinal/{fechaFinal}',[PagoHuespedeController::class,'showInformePolicialRango'])
+// ->middleware('auth','verified')
+// ->name('libromensual.get');  
 
 
-//----------------------------
+// //----------------------------
 
-Route::get("/cajamovimientopagos/fechainicial/{fechainicial}/fechafinal/{fechafinal}",[PagoHuespedeController::class,"movimientoPagos"])
-->middleware('auth','verified')
-->name('cajamovimientopagos.get');   
-     
+// Route::get("/cajamovimientopagos/fechainicial/{fechainicial}/fechafinal/{fechafinal}",[PagoHuespedeController::class,"movimientoPagos"])
+// ->middleware('auth','verified')
+// ->name('cajamovimientopagos.get');   
 
 
 // Rutas para reportes
@@ -220,25 +220,34 @@ Route::get("/cajamovimientopagos/fechainicial/{fechainicial}/fechafinal/{fechafi
 //------------------------
 //Route de Publicidad
 
-Route::get('contacto',[ContactoController::class,"show"]
-)->name("contacto.show");
+// Route::get('contacto',[ContactoController::class,"show"]
+// )->name("contacto.show");
 
-Route::get('contactopublicidad',[ContactoController::class,'index'])
-->name('contato.index');
+// Route::get('contactopublicidad',[ContactoController::class,'index'])
+// ->name('contato.index');
 
-Route::get("contactoCode",[ContactoController::class,'senderCode'])
-->name('contactocode.get');
+// Route::get("contactoCode",[ContactoController::class,'senderCode'])
+// ->name('contactocode.get');
 
-Route::post('contactoregisterstore',[ContactoController::class,'registerContactoStore'])
-->name('contacto.store');
+// Route::post('contactoregisterstore',[ContactoController::class,'registerContactoStore'])
+// ->name('contacto.store');
 
 
 //------------------
 //Ensayo: Front
-
-
-
-
+//require aqui huespede.php
+require __DIR__.'/huespede.php';
+//requirre aqui posada.php 
+require __DIR__.'/posada.php';
+//requirre aqui precio.php
+require __DIR__.'/precio.php';
+//requirre aqui contacto.php
+require __DIR__.'/contacto.php';
+//requirre aqui reporte.php
 require __DIR__.'/reporte.php';
+//require aqui pago 
+require __DIR__.'/pago.php';
+
+//  requirre aqui auth.php
 
 require __DIR__.'/auth.php';
