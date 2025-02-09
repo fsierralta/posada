@@ -192,8 +192,9 @@ Route::get("/cajamovimientopagos/fechainicial/{fechainicial}/fechafinal/{fechafi
      
 
 
-Route::prefix("reporte")->group(function (){
-    //Recibe el nro del ticket/ que el id en la tabla de movimiento huespede
+// Rutas para reportes
+/* Route::prefix("reporte")->group(function (){
+    // Recibe el nro del ticket/ que el id en la tabla de movimiento huespede
     Route::get('/ticketconsumo/{id}',[ReporteController::class,"ticketConsumo"])
     ->middleware('auth','verified')
     ->name("repo.01");
@@ -210,11 +211,11 @@ Route::prefix("reporte")->group(function (){
     ->middleware('auth','verified')
     ->name("repo.04");
 
-    Route::get("/informepolicialmensual/fechainicial/{fechainicial}/fechafinal/{fechafinal}",[ReporteController::class,"informepolicialmensual"])
+    Route::get("/informepolicialmensual/fechainicial/{fechainicial}/fechafinal/{fechafinal}",
+    [ReporteController::class,"informepolicialmensual"])
     ->middleware('auth','verified')
     ->name('repo.05');   
-
-});
+}); */
 
 //------------------------
 //Route de Publicidad
@@ -238,6 +239,6 @@ Route::post('contactoregisterstore',[ContactoController::class,'registerContacto
 
 
 
-
+require __DIR__.'/reporte.php';
 
 require __DIR__.'/auth.php';
