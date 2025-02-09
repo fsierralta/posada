@@ -14,6 +14,14 @@ class PagoHuespedeController extends Controller
 {
     //
     //Carga la vista  para el rango de fecha de pago
+    /**
+     * Muestra la vista de la caja de pagos para huéspedes.
+     *
+     * Este método renderiza el componente "CajaShow" dentro del directorio "Catalogo/Huespede/Pago"
+     * utilizando el framework Inertia.js. Pasa la fecha actual como fecha inicial y final a la vista.
+     *
+     * @return \Inertia\Response La vista renderizada con las fechas inicial y final.
+     */
     public function show(){
        
         return Inertia::render("Catalogo/Huespede/Pago/CajaShow",[

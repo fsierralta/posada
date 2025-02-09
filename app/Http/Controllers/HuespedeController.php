@@ -12,6 +12,11 @@ class HuespedeController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * This method retrieves a paginated list of Huespede records ordered by descending ID
+     * and returns an Inertia response to render the "Catalogo/Huespede/Index" view with the data.
+     *
+     * @return \Inertia\Response
      */
     public function index()
     {
