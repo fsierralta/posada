@@ -2,9 +2,10 @@
 
 namespace App\CustomTool;
 use App\Models\Posada;
+use Closure;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection ;
-
+use Illuminate\Http\Request;
 
 class Reservacion
 {
@@ -33,7 +34,46 @@ class Reservacion
 
     
     }
-    
+ /**
+     * determinar posada segun capacidad y agrupar por capacidad
+     * @param $posadas
+     */
+    public static function  totalCabana($posadas=null):int
+    {
+        $totalcabana = Posada::count();
+        if($totalcabana==0)      return 0;
+               
+        return $totalcabana;
 
+
+    }
+
+    /**
+     * determinar si si el huespede se le puede asignar una cabana
+     * @param $request
+     * @param 
+     * @param
+     */
+
+     public static function  asignarCabana(\Closure $callback,Request $request=null):bool
+     {
+        $validatea = $request->validate([
+            'nombre' => 'required',
+            'apellido' => 'required',
+            'cedula' => 'required',
+            'telefono' => 'required',
+            'email' => 'required',
+            'fecha_entrada' => 'required',
+            'fecha_salida' => 'required',
+            'posada_id' => 'required',
+            'cabana_id' => 'required',
+            'precio_id' => 'required',
+            'user_id' => 'required',
+        ]); 
+       
+               
+        return true;        
+
+     }     
 
 }
