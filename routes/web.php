@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\SendGetCodeController;
+use App\Http\Controllers\ReservacionController;
 
 //----------------------------------------------------------
 Route::get('/', function () {
@@ -44,3 +45,5 @@ require __DIR__.'/reporte.php';
 require __DIR__.'/pago.php';
 //  requirre aqui auth.php
 require __DIR__.'/auth.php';
+
+Route::post('/reservaciones', [ReservacionController::class, 'store']);

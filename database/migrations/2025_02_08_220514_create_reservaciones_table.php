@@ -17,14 +17,18 @@ return new class extends Migration
             $table->string('nro_reservacion', 12)->default('000000000000');
             $table->bigInteger('huespede_id')->unsigned();
             $table->integer('nro_personas');
-            $table->date('fecha_entrada');
-            $table->date('fecha_salida');
-            $table->string('estatus', 20)->default('pendiente');//confirmado,pendiente/pago
-            $table->string('observacion', 100)->nullable();
+            $table->dateTime('fecha_entrada');
+            $table->dateTime('fecha_salida');
+            $table->string('estatuspago',20)->default('p');//Confirmado,Ppendiente/pago
+            $table->string('observacion')->nullable();
             $table->foreign('huespede_id')->references('id')->on('huespedes');
             $table->decimal('monto', 12, 2)->default(0.00);
             $table->bigInteger('formapago_id')->unsigned();
             $table->foreign('formapago_id')->references('id')->on('forma_pagos');
+            $table->integer('cantidad_cabana_reservadas')->default(1);
+            $table->string('cargado_pago_huespede',12)->default('no');//se actualiza al reegistrar huespede
+
+
 
 
 
