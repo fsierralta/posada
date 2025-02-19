@@ -5,6 +5,7 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import MenuDatosBasicos from '@/Pages/Menues/MenuDatosBasicos';
+import MenuReservacion from '@/Pages/Menues/MenuReservacion';
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
@@ -31,11 +32,17 @@ export default function Authenticated({ user, header, children }) {
                         </div>
 
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
-                         
+                            
+                        <div className='ms-3 relativa'>
+                             <MenuReservacion/>
+                         </div>
                         <div className="ms-3 relative">
                               {/*colocar los menues aqui */}
                                 <MenuDatosBasicos/>
-                            </div> 
+                            
+                         </div> 
+                         
+                            
                             <div className="ms-3 relative over-flow-scroll  over-flow-y-scroll">
                                 <Dropdown>
                                     <Dropdown.Trigger>
@@ -68,10 +75,7 @@ export default function Authenticated({ user, header, children }) {
                                         <Dropdown.Link href={route('logout')} method="post" as="button">
                                             Log Out
                                         </Dropdown.Link>
-                                        {/* <Dropdown.Link href={route("posada.get")}>Catalogo Posada</Dropdown.Link>
-                                        <Dropdown.Link href={route("precio.get")}>Catalogo Precio Base</Dropdown.Link>
-                                        <Dropdown.Link href={route("huespede.get")}>Catalogo Huespede</Dropdown.Link>
-                                        <Dropdown.Link href={route("libromensual.show")}>Informe Policial Mensual</Dropdown.Link> */}
+                                       
                                     </Dropdown.Content>
                                 </Dropdown>
                             </div >

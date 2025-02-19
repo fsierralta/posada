@@ -11,7 +11,7 @@ import { useEffect, useState } from "react"
 
 export default function CajaShow({fechaInicial,flash,fechaFinal,auth,pagos=null,totalGeneral=0}) {
     
-    
+    //console.log(pagos.links)
    
    const [showData,setShowData]=useState(false)
     const {data,setData,errors,processing,get}=useForm({

@@ -5,6 +5,7 @@ import Dropdown from "@/Components/Dropdown"
 export default function MenuDatosBasicos() {
   return (
     <Dropdown>
+                                   
                                     <Dropdown.Trigger>
                                         <span className="inline-flex rounded-md">
                                             <button
@@ -28,6 +29,9 @@ export default function MenuDatosBasicos() {
                                             </button>
                                         </span>
                                     </Dropdown.Trigger>
+                                   
+                                    
+
 
                                     <Dropdown.Content>
                                          <Dropdown.Link href={route("posada.get")}>Catalogo Posada</Dropdown.Link>

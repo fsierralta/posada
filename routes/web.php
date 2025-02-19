@@ -46,4 +46,5 @@ require __DIR__.'/pago.php';
 //  requirre aqui auth.php
 require __DIR__.'/auth.php';
 
-Route::post('/reservaciones', [ReservacionController::class, 'store']);
+//require aqui reservacion 
+require __DIR__.'/reservacion.php';
