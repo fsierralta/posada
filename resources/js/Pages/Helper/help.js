@@ -1,3 +1,4 @@
+
 /* 
     @param fecha: string "2021-09-01"
     @return string "01-09-2021"
@@ -47,9 +48,38 @@ function findPrecio(id,precios){
 
 }
 
+/**
+ * Añade un número especificado de días a una fecha dada.
+ *
+ * @param {string|Date} fechaActual - La fecha inicial.
+ * @param {number} dias - El número de días a añadir.
+ * @returns {Date} La nueva fecha con los días añadidos.
+ */
+function sumarDias(fechaActual, dias) {
+    // Creamos una copia de la fecha para no modificar la original
+    const year_month_day=fechaActual.split('-')
+    console.log(`fecha recibida: ${fechaActual}+${dias}`)
+    const fecha = new Date(        parseInt(year_month_day[0]),
+                                   parseInt(year_month_day[1]-1),
+                                   parseInt(year_month_day[2]))
+                                   ;
+    
+    // Sumamos los días utilizando setDate()
+    fecha.setDate(fecha.getDate() + parseInt(dias));
+    console.log(fecha)
+    return `${fecha.getFullYear()}-${(fecha.getMonth()+1).toString().padStart(2,"0")}-${fecha.getDate().toString().padStart(2,"0")}`;
+  }
+
+  function toISOStringDate(fecha=new Date()){
+    return fecha.toISOString().split('T')[0]
+
+  }
+
 export {
     fechaFormato_dmy,
     findPrecio,
-    dateTimeToDate
+    dateTimeToDate,
+    sumarDias,
+    toISOStringDate
 
 }

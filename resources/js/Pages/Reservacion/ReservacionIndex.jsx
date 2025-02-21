@@ -21,7 +21,7 @@ const ReservacionIndex = () => {
     const {links}=reservaciones
     console.log(usePage().props)
 
-    const getDataOnClick=(e)=>{
+     const getDataOnClick=(e)=>{
 
       e.preventDefault()
        console.log(data)
@@ -31,16 +31,13 @@ const ReservacionIndex = () => {
         },
         
        }) 
+   }
+   const createReservacion=(e)=>{
+     e.preventDefault
+     router.get(route('reservaciones.create'),{rangoFechas})
 
-
-
-
-
-
-    }
-
-
-
+ 
+   }
 
     
 
@@ -58,7 +55,9 @@ const ReservacionIndex = () => {
        <>
          <div className="flex justify-between">
         <div>
-          <PrimaryButton className='bg-green-500'>Crear Reservación</PrimaryButton>
+          <PrimaryButton className='bg-green-500'
+            onClick={createReservacion}
+          >Crear Reservación</PrimaryButton>
 
         </div>
        
@@ -139,7 +138,8 @@ const ReservacionIndex = () => {
             </table> 
           <div><Pagination links={links.map(link => {
             if (link.url) {
-              link.url += `&fecha_entrada=${data.fecha_entrada}&fecha_salida=${data.fecha_salida}`;
+             link.url += `&fecha_entrada=${data.fecha_entrada}&fecha_salida=${data.fecha_salida}`;
+            
             }
             return link;
           })} /></div> 

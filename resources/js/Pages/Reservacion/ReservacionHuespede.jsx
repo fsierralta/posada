@@ -1,15 +1,16 @@
 import MainHtml from '@/Components/MainHtml'
 import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { useForm } from '@inertiajs/react'
+import { useForm,router } from '@inertiajs/react'
 import TextInput from '@/Components/TextInput'
 import PrimaryButton from '@/Components/PrimaryButton'
-import { findPrecio } from '../Helper/help'
+import { findPrecio,sumarDias,fechaFormato_dmy,toISOStringDate } from '../Helper/help'
 import InputLabel from '@/Components/InputLabel'
+import { useEffect } from 'react'
 
 
 
 
-export default function ReservacionHuespede({user,precios,formaPagos,rangoFechas}) {
+export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas,backRangoFechas}) {
     const {data,setData,proccesing,errors}=useForm({
         fecha_entrada:rangoFechas[0],
         fecha_salida:rangoFechas[1],
@@ -19,7 +20,20 @@ export default function ReservacionHuespede({user,precios,formaPagos,rangoFechas
         cantidad_cabana_reservadas:1,
         totalPagar:0,
         pago_id:0,
+        observacion:"",
+        huespede_id:0,
+        nacionalidad:'V',
+        cedula:"",
+        nombre:'',
+        apellidos:'',
+        nacimiento:toISOStringDate(new Date()),
+        email:'',
+        ceular:'',
+        proviene:'',
+        profesion:''
+
       })
+      console.log(backRangoFechas)
 
       const precioValor=(e)=>{
               e.preventDefault()
@@ -32,14 +46,33 @@ export default function ReservacionHuespede({user,precios,formaPagos,rangoFechas
                 setData('totalPagar',0)
                }
             } 
+   const goBack=(e)=>{
+    e.preventDefault()
+    router.get(route('reservaciones.index'),{
+      fecha_entrada:backRangoFechas[0],
+      fecha_salida:backRangoFechas[1]
+    })
+    }         
+  const onUpdateFechaSalida=()=>{
+    const fechaupdate=sumarDias(data.fecha_entrada,data.dias_estadias)
+    console.log(fechaupdate);
+    setData("fecha_salida",sumarDias(data.fecha_entrada,data.dias_estadias))
 
+  }
+  useEffect(()=>{
+    data.dias_estadias && onUpdateFechaSalida()
+  },[data.dias_estadias])
   return (
     <Authenticated
-      user={user}
+      user={auth.user}
       header={'Reservaciones'}
     >
         <MainHtml>
              <form>
+                     {/*  
+                        fecha y precios
+                     
+                      */}
                       <div className='flex gap-2 '>
                           <div className='w-full'>
                             <InputLabel>Fecha Entrada</InputLabel>
@@ -73,9 +106,10 @@ export default function ReservacionHuespede({user,precios,formaPagos,rangoFechas
             
                             <TextInput type='Date'
                               name='fecha_salida'
-                              value={data.fecha_salidad}
+                              value={data.fecha_salida}
                               onChange={e=>setData('fecha-salida',e.target.value)}
                               className='w-full'
+                              disabled
             
             
             
@@ -100,10 +134,13 @@ export default function ReservacionHuespede({user,precios,formaPagos,rangoFechas
                           {errors.precio_id && <div className="text-red-500">{errors.precio_id}</div>}
                           </div>
                           
-                        </div>  
-                        <div className='flex gap-2 mt-2'>
-                            <div className='w-full'>
-                              <InputLabel>Número de Personas</InputLabel>
+                      </div> 
+                      {/* 
+                        calculo de tarifa    
+                       */} 
+                      <div className='flex gap-2 mt-2'>
+                            <div className=''>
+                              <InputLabel>Nro Personas
                               <TextInput
                                 type='number'
                                 name='nro_personas'
@@ -112,13 +149,15 @@ export default function ReservacionHuespede({user,precios,formaPagos,rangoFechas
                                 required
                                 min="1"
                                 max="100"
-                                className='w-full'
+                                className=''
                               />
+                              </InputLabel>
+                             
                               {errors.nro_personas && <div className="text-red-500">{errors.nro_personas}</div>}
                             </div>
-                            <div className='w-full'>
+                            <div className=''>
             
-                              <InputLabel>Nro de Cabañas a Reservar</InputLabel>
+                              <InputLabel>Cabaña Reservar
                               <TextInput
                                 type='number'
                                 name='cantidad_cabana_reservadas'
@@ -127,59 +166,147 @@ export default function ReservacionHuespede({user,precios,formaPagos,rangoFechas
                                 required
                                 min="1"
                                 max="9"
-                                className='w-full'
+                                className=''
                               />
+                              </InputLabel>
+                             
                               {errors.cantidad_cabana_reservadas && <div className="text-red-500">{errors.cantidad_cabana_reservadas}</div>}
                             </div>
             
-                            <div className='w-full'>
-                              <InputLabel>Total a Pagar</InputLabel>
+                            <div className=''>
+                              <InputLabel>Total a Pagar
                               <TextInput
                                 type='number'
                                 name='totalPagar'
                                 step="0.01"
                                 value={data.totalPagar}
-                                className='w-full'
-                                onChange={e => setData('totalPagar', e.target.value)}
+                                className=''
+                               //onChange={e => setData('totalPagar', e.target.value)}
+                                readonly
                                
                               />
+                              </InputLabel>
+                             
             
                             </div>
                             
-                            <div className='w-full'>
+                            <div className=''>
                                 <InputLabel>Calcular Pago</InputLabel> 
                                     <PrimaryButton className='py-3 w-full'
                                        onClick={precioValor}
                                     >Calcular</PrimaryButton>
                              </div>
-                             <div>
-                                <InputLabel>Forma de Pago</InputLabel>
+                             <div className=''>
+                                <InputLabel>Forma de Pago
                                 <select
                                   name="pago_id"
                                   value={data.pago_id}
                                   onChange={e => setData('pago_id', e.target.value)}
                                   className="rounded-md "
+
                                 >
-                                  <option value="">Seleccione una forma de pago</option>
+                                  <option value="">Forma de pago</option>
                                   {formaPagos.map(formaPago => (
                                     <option key={formaPago.id} value={formaPago.id}>
                                       {formaPago.nombre}
                                     </option>
                                   ))}
                                 </select>
+                                </InputLabel>
+                               
                                 {errors.pago_id && <div className="text-red-500">{errors.pago_id}</div>}
             
                              </div>
+                             <div >
+                               
+                              <div className=''>
+                                <InputLabel>Observación:
+                                <TextInput
+                                  type='text'
+                                  name='observacion'
+                                  value={data.observacion}
+                                  onChange={e => setData('observacion', e.target.value)}
+                                  className=''
+                                />
+                                </InputLabel>
+                               
+                                {errors.observacion && <div className="text-red-500">{errors.observacion}</div>}
+                              </div>
+                             </div>
+
                             
+                      </div>
+                      
+
+
+                        {/* 
+                           formulario del huespede
+                         */}
+                        <div className='flex gap-2 mt-4'>
+                            <div>
+                                      <InputLabel>Nacionalidad
+                                        <select
+                                          name="nacionalidad"
+                                          value={data.nacionalidad}
+                                          onChange={e => setData('nacionalidad', e.target.value)}
+                                          className="rounded-md w-full"
+                                        >
+                                          <option value="V">Venezolano</option>
+                                          <option value="E">Extranjero</option>
+                                        </select>
+                                      </InputLabel>
+                                      {errors.nacionalidad && <div className="text-red-500">{errors.nacionalidad}</div>}
+                            </div>
+                            <div className=''>
+                                <InputLabel>Cédula
+                                  <TextInput
+                                    type='text'
+                                    name='cedula'
+                                    value={data.cedula}
+                                    placeholder="9610050"
+                                    onChange={e => setData('cedula', e.target.value)}
+                                    className='w-full'
+                                  />
+                                </InputLabel>
+                                {errors.cedula && <div className="text-red-500">{errors.cedula}</div>}
+                            </div>
+                            <div>
+                              <InputLabel>
+                                Realizar
+                                </InputLabel>
+                              <PrimaryButton className='py-3' >Buscar Huespde</PrimaryButton>
+                               
+                              
+                            </div>
+                            <div>
+                              <InputLabel>
+                                  Nombre
+
+                              </InputLabel>
+                              <TextInput
+                                 name='nombre'
+                                 value={data.nombre}
+                                 onChange={e=>setData('nombre',e.target.value) }
+                              />
+                            </div>
+
                         </div>
-                        
-            
-                        <div className='flex  gap-2 mt-4'>
+                      
+                       {/*---------------------------  
+                         acciones del usuario 
+                      */}
+                     <div className='flex  gap-2 mt-4'>
                            <div>
                                 <PrimaryButton className='bg-green-400'>Enviar Reservación</PrimaryButton>
                            </div>
+                           <div>
+                                <PrimaryButton 
+                                onClick={goBack}
+                                >Regresar</PrimaryButton>
+                           </div>
+
             
-                        </div>
+                     </div>
              </form>
         </MainHtml>
     </Authenticated>

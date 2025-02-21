@@ -54,6 +54,21 @@ class ReservacionController extends Controller
 
     }
 
+    public function create(Request $request){
+        
+        $fecha_entrada = Carbon::now()->toDateString();
+        $fecha_salida = Carbon::now()->endOfMonth()->toDateString();
+
+
+        return Inertia::render('Reservacion/ReservacionHuespede',["precios"=>Precio::all(),
+                                                                'formaPagos'=>FormaPago::all(),
+                                                                'rangoFechas'=>[$fecha_entrada,$fecha_salida],
+                                                                "backRangoFechas"=>[$request->rangoFechas[0],$request->rangoFechas[1]],
+                                                                
+                                                              ]);
+    }
+    
+
     public function store(Request $request)
     {
         $request->validate([
