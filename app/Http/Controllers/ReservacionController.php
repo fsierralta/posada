@@ -43,11 +43,13 @@ class ReservacionController extends Controller
                                     ->where('cargado_pago_huespede','no')
                                     ->with('huespede')
                                     ->paginate(10);
+        $nroCabana=$reservaciones->sum('cantidad_cabana_reservadas');
         
         return Inertia::render('Reservacion/ReservacionIndex',["reservaciones"=>$reservaciones,
                                                                 "precios"=>Precio::all(),
                                                                 'formaPagos'=>FormaPago::all(),
                                                                 'rangoFechas'=>[$fecha_entrada,$fecha_salida],
+                                                                'nroCabana'=>$nroCabana,
                                                                 
                                                                 ]);
 
