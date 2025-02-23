@@ -73,7 +73,7 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
                         fecha y precios
                      
                       */}
-                      <div className='flex gap-2 '>
+                      <div className='md:flex   gap-2 '>
                           <div className='w-full'>
                             <InputLabel>Fecha Entrada</InputLabel>
             
@@ -138,7 +138,7 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
                       {/* 
                         calculo de tarifa    
                        */} 
-                      <div className='flex gap-2 mt-2'>
+                      <div className='flex gap-2 mt-2 ' >
                             <div className=''>
                               <InputLabel>Nro Personas
                               <TextInput
@@ -241,8 +241,9 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
 
                         {/* 
                            formulario del huespede
+                           
                          */}
-                        <div className='flex gap-2 mt-4'>
+                        <div className='flex gap-2 mt-4 '>
                             <div>
                                       <InputLabel>Nacionalidad
                                         <select
@@ -263,9 +264,10 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
                                     type='text'
                                     name='cedula'
                                     value={data.cedula}
-                                    placeholder="9610050"
+                                    placeholder="nro"
                                     onChange={e => setData('cedula', e.target.value)}
                                     className='w-full'
+                                    required
                                   />
                                 </InputLabel>
                                 {errors.cedula && <div className="text-red-500">{errors.cedula}</div>}
@@ -274,7 +276,7 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
                               <InputLabel>
                                 Realizar
                                 </InputLabel>
-                              <PrimaryButton className='py-3' >Buscar Huespde</PrimaryButton>
+                              <PrimaryButton className='' >Buscar</PrimaryButton>
                                
                               
                             </div>
@@ -287,7 +289,32 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
                                  name='nombre'
                                  value={data.nombre}
                                  onChange={e=>setData('nombre',e.target.value) }
+                                 required
                               />
+                            </div>
+                            <div className=''>
+                            <InputLabel>
+                              Apellidos
+                            </InputLabel>
+                            <TextInput
+                              name='apellidos'
+                              value={data.apellidos}
+                                onChange={e => setData('apellidos', e.target.value)}
+                                required
+                            />
+                            </div>
+                            <div>
+                                  <InputLabel>
+                                    Fecha de Nacimiento
+                                  </InputLabel>
+                                  <TextInput
+                                    type='date'
+                                    name='nacimiento'
+                                    value={data.nacimiento}
+                                    onChange={e => setData('nacimiento', e.target.value)}
+                                    className='w-full'
+                                  />
+
                             </div>
 
                         </div>
