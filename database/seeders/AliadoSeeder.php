@@ -1,0 +1,35 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use App\Models\UserAliado;
+use App\Models\Aliado;
+use Faker\Factory as Faker;
+class AliadoSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        //
+        $faker = Faker::create('es_ES'); // Configura Faker en español
+        $userAliadosIds = UserAliado::pluck('id')->toArray();
+        for ($i = 0; $i < 100; $i++) {
+            Aliado::create([
+                'user_aliado_id' => $faker->randomElement($userAliadosIds), // Relación con user_aliados
+                'name' => $faker->company, // Nombre de la empresa
+                'rif' => $faker->unique()->regexify('J-\d{8}-\d'), // RIF único (ej: J-12345678-9)
+                'tipo' => $faker->randomElement(['J', 'G', 'P']), // Tipo de aliado
+                'direccion' => $faker->address, // Dirección
+                'ciudad' => $faker->city, // Ciudad
+                'estado' => $faker->state, // Estado
+                'telefono' => $faker->phoneNumber, // Teléfono
+                'email' => $faker->unique()->companyEmail, // Correo electrónico único
+            ]);
+        }
+
+    }
+}

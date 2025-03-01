@@ -10,8 +10,9 @@ import { useEffect } from 'react'
 
 
 
-export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas,backRangoFechas}) {
-    const {data,setData,proccesing,errors}=useForm({
+
+export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas,backRangoFechas,errors}) {
+    const {data,setData,proccesing}=useForm({
         fecha_entrada:rangoFechas[0],
         fecha_salida:rangoFechas[1],
         dias_estadias:1,
@@ -30,11 +31,12 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
         email:'',
         celular:'',
         procedencia:'Barquisimeto',
-        profesion:'comerciantes'
+        profesion:'comerciante',
+        aliado_id:0  //
 
       })
       console.log(backRangoFechas)
-
+       console.log(errors)  
       const precioValor=(e)=>{
               e.preventDefault()
                const precio=findPrecio(data.precio_id,precios)
@@ -59,6 +61,16 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
     setData("fecha_salida",sumarDias(data.fecha_entrada,data.dias_estadias))
 
   }
+
+  const handleSubmit=(e)=>{
+    e.preventDefault()
+    console.log(data);
+
+   router.post(route('reservaciones.store'),data,{
+     onSuccess:()=>console.log('eviado'),
+     onError:(error)=>console.log(error)
+   })
+  }
   useEffect(()=>{
     data.dias_estadias && onUpdateFechaSalida()
   },[data.dias_estadias])
@@ -68,76 +80,73 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
       header={'Reservaciones'}
     >
         <MainHtml>
-             <form>
-                     {/*  
-                        fecha y precios
-                     
-                      */}
-                      <div className='md:flex   gap-2 '>
-                          <div className='w-full'>
-                            <InputLabel>Fecha Entrada</InputLabel>
-            
-                            <TextInput type='Date'
-                              name='fecha_entrada'
-                              value={data.fecha_entrada}
-                              className='w-full'
-                              onChange={e=>setData('fecha_entrada',e.target.value)}
-                              required
-            
-            
-                            />
-            
-                          </div>
-                          <div className='w-full'>
-                            <InputLabel>Días de Estadía</InputLabel>
-                            <TextInput
-                              type='number'
-                              name='dias_estadias'
-                              value={data.dias_estadias}
-                              className='w-full'
-                              onChange={e => setData('dias_estadias', e.target.value)}
-                              required
-                              min="1"
-                              max="100"
-                            />
-                          </div>
-                          <div className='w-full'>
-                            <InputLabel>Fecha Salida</InputLabel>
-            
-                            <TextInput type='Date'
-                              name='fecha_salida'
-                              value={data.fecha_salida}
-                              onChange={e=>setData('fecha-salida',e.target.value)}
-                              className='w-full'
-                              disabled
-            
-            
-            
-                            />
-            
-                          </div>
-                          <div className='w-full'>
-                          <InputLabel>Precio</InputLabel>
-                          <select
-                            name="precio_id"
-                            value={data.precio_id}
-                            onChange={e => setData('precio_id', e.target.value)}
-                            className="rounded-md w-full"
-                          >
-                            <option value="">Seleccione un precio</option>
-                            {precios.map(precio => (
-                              <option key={precio.id} value={precio.id}>
-                                {precio.descripcion.substr(0,10)} - ${precio.precio}
-                              </option>
-                            ))}
-                          </select>
-                          {errors.precio_id && <div className="text-red-500">{errors.precio_id}</div>}
-                          </div>
+             <form onSubmit={handleSubmit}>
+                   {/* } 
+                                fecha y precios
+                               
+                                */}
+                                <div className='md:flex gap-2'>
+                                  <div className='w-full'>
+                                  <InputLabel>Fecha Entrada</InputLabel>
                           
-                      </div> 
-                      {/* 
-                        calculo de tarifa    
-                      */} 
+                                  <TextInput 
+                                    type='Date'
+                                    name='fecha_entrada'
+                                    value={data.fecha_entrada}
+                                    className='w-full'
+                                    onChange={e => setData('fecha_entrada', e.target.value)}
+                                    required
+                                  />
+                          
+                                  </div>
+                                  <div className='w-full'>
+                                  <InputLabel>Días de Estadía</InputLabel>
+                                  <TextInput
+                                    type='number'
+                                    name='dias_estadias'
+                                    value={data.dias_estadias}
+                                    className='w-full'
+                                    onChange={e => setData('dias_estadias', e.target.value)}
+                                    required
+                                    min="1"
+                                    max="100"
+                                  />
+                                  {errors.dias_estadias && <div className="text-red-500">{errors.dias_estadias}</div>}
+                                  </div>
+                                  <div className='w-full'>
+                                  <InputLabel>Fecha Salida</InputLabel>
+                          
+                                  <TextInput 
+                                    type='Date'
+                                    name='fecha_salida'
+                                    value={data.fecha_salida}
+                                    onChange={e => setData('fecha-salida', e.target.value)}
+                                    className='w-full'
+                                    disabled
+                                  />
+                          
+                                  </div>
+                                  <div className='w-full'>
+                                  <InputLabel>Precio</InputLabel>
+                                  <select
+                                    name="precio_id"
+                                    value={data.precio_id}
+                                    onChange={e => setData('precio_id', e.target.value)}
+                                    className="rounded-md w-full"
+                                  >
+                                    <option value="">Seleccione un precio</option>
+                                    {precios.map(precio => (
+                                    <option key={precio.id} value={precio.id}>
+                                      {precio.descripcion.substr(0,10)} - ${precio.precio}
+                                    </option>
+                                    ))}
+                                  </select>
+                                  {errors.precio_id && <div className="text-red-500">{errors.precio_id}</div>}
+                                  </div>
+                                </div> 
+                                {/* 
+                                calculo de tarifa    
+                                */}
                       <div className='flex gap-2 mt-2 ' >
                             <div className=''>
                               <InputLabel>Nro Personas
@@ -182,7 +191,7 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
                                 value={data.totalPagar}
                                 className=''
                                //onChange={e => setData('totalPagar', e.target.value)}
-                                readonly
+                                disabled
                                
                               />
                               </InputLabel>
@@ -319,6 +328,7 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
                                     required
                                     
                                   />
+                                  {errors?.nacimiento &&<div className='text-red-500'>{errors.nacimiento}</div>}
 
                             </div>
 
@@ -393,7 +403,10 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
                       */}
                      <div className='flex  gap-2 mt-8'>
                            <div>
-                                <PrimaryButton className='bg-green-400'>Enviar Reservación</PrimaryButton>
+                                <PrimaryButton className='bg-green-400'
+                                   disabled={proccesing}
+                                   type="sumit"
+                                >Enviar Reservación</PrimaryButton>
                            </div>
                            <div>
                                 <PrimaryButton 

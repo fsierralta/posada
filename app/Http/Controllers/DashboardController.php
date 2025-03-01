@@ -16,7 +16,7 @@ class DashboardController extends Controller
     {
         //
         $posada=Posada::all();
-        $huespedesRegistrados=(new Posada())->obtenerHuespedes();
+          $huespedesRegistrados=(new Posada())->obtenerHuespedes();
         info('dasboardController',['data'=>$huespedesRegistrados]);
         return Inertia::render("Dashboard",["dataPosada"=>$posada,
                                             'huespedesRegistrados'=>$huespedesRegistrados]);
