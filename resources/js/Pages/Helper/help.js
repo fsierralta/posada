@@ -70,10 +70,25 @@ function sumarDias(fechaActual, dias) {
     return `${fecha.getFullYear()}-${(fecha.getMonth()+1).toString().padStart(2,"0")}-${fecha.getDate().toString().padStart(2,"0")}`;
   }
 
+
   function toISOStringDate(fecha=new Date()){
+    fecha=restarAnios(fecha,18);
     return fecha.toISOString().split('T')[0]
 
   }
+
+  /**
+ * Resta un número especificado de años a una fecha dada.
+ *
+ * @param {Date} fecha - La fecha inicial.
+ * @param {number} anios - El número de años a restar.
+ * @returns {Date} La nueva fecha con los años restados.
+ */
+function restarAnios(fecha, anios) {
+    const nuevaFecha = new Date(fecha);
+    nuevaFecha.setFullYear(nuevaFecha.getFullYear() - anios);
+    return nuevaFecha;
+}
 
 export {
     fechaFormato_dmy,

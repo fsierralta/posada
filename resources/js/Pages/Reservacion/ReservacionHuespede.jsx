@@ -28,9 +28,9 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
         apellidos:'',
         nacimiento:toISOStringDate(new Date()),
         email:'',
-        ceular:'',
-        proviene:'',
-        profesion:''
+        celular:'',
+        procedencia:'Barquisimeto',
+        profesion:'comerciantes'
 
       })
       console.log(backRangoFechas)
@@ -82,7 +82,7 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
                               value={data.fecha_entrada}
                               className='w-full'
                               onChange={e=>setData('fecha_entrada',e.target.value)}
-            
+                              required
             
             
                             />
@@ -137,7 +137,7 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
                       </div> 
                       {/* 
                         calculo de tarifa    
-                       */} 
+                      */} 
                       <div className='flex gap-2 mt-2 ' >
                             <div className=''>
                               <InputLabel>Nro Personas
@@ -227,6 +227,7 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
                                   value={data.observacion}
                                   onChange={e => setData('observacion', e.target.value)}
                                   className=''
+                                  required
                                 />
                                 </InputLabel>
                                
@@ -268,6 +269,7 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
                                     onChange={e => setData('cedula', e.target.value)}
                                     className='w-full'
                                     required
+
                                   />
                                 </InputLabel>
                                 {errors.cedula && <div className="text-red-500">{errors.cedula}</div>}
@@ -301,6 +303,7 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
                               value={data.apellidos}
                                 onChange={e => setData('apellidos', e.target.value)}
                                 required
+                                
                             />
                             </div>
                             <div>
@@ -313,16 +316,82 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
                                     value={data.nacimiento}
                                     onChange={e => setData('nacimiento', e.target.value)}
                                     className='w-full'
+                                    required
+                                    
                                   />
 
                             </div>
 
                         </div>
+                        <div>
+                           <div className='flex gap-2 mt-4'>
+                              
+                                <div >
+                                  <InputLabel>
+                                  Email
+                                  </InputLabel>
+                                  <TextInput 
+                                    type="email"
+                                    name="email"
+                                    value={data.email}
+                                    onChange={e => setData('email', e.target.value)}
+                                    className=""
+                                    required
+                                  />
+                                  
+                                  {errors.email && <div className="text-red-500">{errors.email}</div>}
+                                </div>
+                              
+                              <div>
+                                <InputLabel>
+                                  Celular
+                                </InputLabel>  
+                                  <TextInput
+                                    type="text"
+                                    name="celular"
+                                    value={data.celular}
+                                    onChange={e => setData('celular', e.target.value)}
+                                    className=""
+                                    required
+                                  />
+                                
+                              </div>
+                              <div>
+                                <InputLabel>
+                                  Procedencia
+                                </InputLabel>
+                                <TextInput
+                                  type="text"
+                                  name="procedencia"
+                                  value={data.procedencia}
+                                  onChange={e => setData('procedencia', e.target.value)}
+                                  className=""
+                                  required
+                                />
+
+                              </div>
+                              <div>
+                                <InputLabel>
+                                  Profesión
+                                </InputLabel>
+                                <TextInput
+                                  type="text"
+                                  name="profesion"
+                                  value={data.profesion}
+                                  onChange={e => setData('profesion', e.target.value)}
+                                  className=""
+                                  required
+                                />
+                              </div>
+
+
+                           </div>
+                        </div>
                       
                        {/*---------------------------  
                          acciones del usuario 
                       */}
-                     <div className='flex  gap-2 mt-4'>
+                     <div className='flex  gap-2 mt-8'>
                            <div>
                                 <PrimaryButton className='bg-green-400'>Enviar Reservación</PrimaryButton>
                            </div>
