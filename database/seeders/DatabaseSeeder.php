@@ -22,7 +22,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PosadaSeeder::class,
             FormaPagoSeeder::class,
-            UserSeeder::class
+            UserSeeder::class,
+            UserAliadoSeeder::class,
+            AliadoSeeder::class,
+
+
         ]
         );
          

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection ;
 use Illuminate\Http\Request;
 
+
 class Reservacion
 {
     /**
@@ -74,6 +75,20 @@ class Reservacion
                
         return true;        
 
-     }     
+     }  
+     
+     public  function verificarDisponibilidad($fechaEntrada, $fechaSalida,$reservacion)
+     {
+         $reservaciones = $reservacion->where(function ($query) use ($fechaEntrada, $fechaSalida) {
+             $query->whereBetween('fecha_entrada', [$fechaEntrada, $fechaSalida])
+                   ->orWhereBetween('fecha_salida', [$fechaEntrada, $fechaSalida])
+                   ->orWhere(function ($query) use ($fechaEntrada, $fechaSalida) {
+                       $query->where('fecha_entrada', '<=', $fechaEntrada)
+                             ->where('fecha_salida', '>=', $fechaSalida);
+                   });
+         })->count();
+ 
+         return $reservaciones < 9;
+     }
 
 }

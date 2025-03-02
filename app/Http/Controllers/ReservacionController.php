@@ -10,9 +10,18 @@ use App\Models\FormaPago;
 use Carbon\Carbon;
 use Exception;
 use App\Models\Huespede;
+use App\CustomTool\Reservacion as CustomReservacion;
+use App\Models\FichaRegistro;
 class ReservacionController extends Controller
 {
-    
+   public $customReservacion;
+       
+
+    public function __construct(){
+        $this->customReservacion = new CustomReservacion();
+    }
+
+   
     public function index(Request $request)
     {
        info('reservacion index',['request'=>$request->all()]);
@@ -112,47 +121,73 @@ class ReservacionController extends Controller
             if (intval($request->huespede_id) != 0) {
                 $huespede = Huespede::findOrFail($request->huespede_id);
                 $request->merge(['huespede_id' => $huespede->id]);
+            } else {
+                //para crear el huespde si es null
+                 $huespede= $huespede->where("nacionalidad", '=', $request->nacionalidad)  
+                                ->where('cedula', '=', $request->cedula)
+                                ->first();
             }
-            
-                
+            //--------calculado disponibilidad 
+            $disponible = $this->customReservacion->verificarDisponibilidad($request->fecha_entrada, 
+            $request->fecha_salida,
+            new Reservacion()
+            );
+            if (!$disponible) {
+                throw new Exception('No hay disponibilidad para las fechas seleccionadas');
+            }
+            //
+            if($huespede==null){
+                $huespede=Huespede::create([
+                    'nombre'=>$request->nombre,
+                    'apellidos'=>$request->apellidos,
+                    'cedula'=>$request->cedula,
+                    'nacimiento'=>Carbon::parse($request->nacimiento),
+                    'nacionalidad' => strtoupper($request->nacionalidad),
+                    'procedencia'=>$request->procedencia,
+                    'profesion'=>$request->profesion,
+                    'email'=>$request->email,
+                    'celular'=>$request->celular,
+                    'direccion'=>"al registrarse"
+                ]);
+
+            }
+            $nroResevacion=FichaRegistro::find(1);
+            info($nroResevacion->mostrarNroReservacion());
+            $newReservacion=Reservacion::create([
+                "nro_reservacion"=>$nroResevacion->mostrarNroReservacion(),
+                'huespede_id'=>$huespede->id,
+                'nro_personas'=>$request->nro_personas,
+                'fecha_entrada'=>Carbon::parse($request->fecha_entrada),
+                "fecha_salida"=>Carbon::parse($request->fecha_salida),
+                'estatuspago'=>'C',
+                 'monto'=>$totalPagar,
+                 'formapago_id'=>$precio->id,
+                 'cantidad_cabana_reservadas'=>$request->cantidad_cabana_reservadas,
+                 'created_at'=>Carbon::now(),
+                 'updated_a'=>Carbon::now(),
+                 'observacion'=>$request->observacion
+                 
+               ]);
+              return redirect(route('reservaciones.index'));
 
 
+                                
 
-            
-
-
-            
-
-
-
-        } catch (\Throwable $th) {
+            } catch (\Throwable $th) {
             //throw $th;
+            info('errr',['error'=>$th->getMessage()]);
+             return back()->with('message',$th->getMessage());
+
         } 
 
 
-        $disponible = $this->verificarDisponibilidad($request->fecha_entrada, $request->fecha_salida);
+       
 
-        if (!$disponible) {
-            return response()->json(['error' => 'No hay disponibilidad para las fechas seleccionadas.'], 400);
-        }
+
+        
         
 
-        // ...código para crear la reservación...
-
-        return response()->json(['message' => 'Reservación creada exitosamente.'], 201);
     }
 
-    private function verificarDisponibilidad($fechaEntrada, $fechaSalida)
-    {
-        $reservaciones = Reservacion::where(function ($query) use ($fechaEntrada, $fechaSalida) {
-            $query->whereBetween('fecha_entrada', [$fechaEntrada, $fechaSalida])
-                  ->orWhereBetween('fecha_salida', [$fechaEntrada, $fechaSalida])
-                  ->orWhere(function ($query) use ($fechaEntrada, $fechaSalida) {
-                      $query->where('fecha_entrada', '<=', $fechaEntrada)
-                            ->where('fecha_salida', '>=', $fechaSalida);
-                  });
-        })->count();
-
-        return $reservaciones < 9;
-    }
+   
 }
