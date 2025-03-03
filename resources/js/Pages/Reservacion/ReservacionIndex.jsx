@@ -4,13 +4,15 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import InputLabel from '@/Components/InputLabel';
 import { usePage, Head, useForm, router } from '@inertiajs/react';
 import ReservacionTable from '@/Components/Reservacion/ReservacionTable';
-
+import { use, useEffect } from 'react';
+import axios from 'axios';
 const ReservacionIndex = () => {
-  const { reservaciones, auth, rangoFechas } = usePage().props;
+  const { reservaciones, auth, rangoFechas,flash,nroCabana } = usePage().props;
   const { data, setData } = useForm({
     fecha_entrada: rangoFechas[0],
     fecha_salida: rangoFechas[1],
   });
+  
   const { links } = reservaciones;
 
   const getDataOnClick = (e) => {
@@ -27,13 +29,21 @@ const ReservacionIndex = () => {
     router.get(route('reservaciones.create'), { rangoFechas });
   };
 
+  
+
   return (
     <Authenticated user={auth.user} header="Reservaciones">
       <Head title="Reservaciones" />
       <MainHtml>
         <>
+        <div className='mt-2 bg-green-400 w-full py-2 rounded-md'>
+              {flash?.message ?<p>{flash.message}</p>:<p>{`Resevaciones en rango de fecha`}</p>}
+
+
+        </div>
           <div className="flex justify-between">
-            <div>
+            
+            <div className='mt-2'>
               <PrimaryButton className="bg-green-500" onClick={createReservacion}>
                 Crear Reservación
               </PrimaryButton>
@@ -66,6 +76,7 @@ const ReservacionIndex = () => {
             </div>
           </div>
           <ReservacionTable reservaciones={reservaciones} data={data} links={links} />
+          <div>{`Cantida de Resevaciones en este PAGINA:${nroCabana}`}</div>
         </>
       </MainHtml>
     </Authenticated>

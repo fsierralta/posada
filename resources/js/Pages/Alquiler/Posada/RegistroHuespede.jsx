@@ -8,6 +8,7 @@ import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm,Link } from "@inertiajs/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+
 //-----------------------------------------------
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';

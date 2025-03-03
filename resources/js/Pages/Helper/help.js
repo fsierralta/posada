@@ -1,3 +1,6 @@
+import Mensaje from "@/Components/Mensaje";
+import axios from "axios";
+import { ToastContainer,toast } from "react-toastify";
 
 /* 
     @param fecha: string "2021-09-01"
@@ -90,11 +93,45 @@ function restarAnios(fecha, anios) {
     return nuevaFecha;
 }
 
+const getDataHuespede=async(cedula)=>{
+    //e.preventDefault()
+    try {
+        let response=await axios.get(route('registrohuespedecedula.get',cedula))
+
+        if (response.status===200){
+        // console.log(response)
+         
+         return {data:response.data.dataHuespede,
+                 error:null
+                }
+         
+      }
+      //console.log(response)
+       
+   } catch (error) {
+       console.log(error.response.data.dataHuespede) 
+       return {data:null,
+               error:error.response.data.dataHuespede}
+     
+      
+   }
+ }
+
+ //---------------
+ function mostrarToast(mensaje){
+    const notify=()=>toast.error(mensaje)
+    return notify()
+
+
+ }
+
 export {
     fechaFormato_dmy,
     findPrecio,
     dateTimeToDate,
     sumarDias,
-    toISOStringDate
+    toISOStringDate,
+    getDataHuespede,
+    mostrarToast
 
 }

@@ -5,10 +5,10 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import Modal from '@/Components/Modal';
 import SecondaryButton from '@/Components/SecondaryButton';
 import Mensaje from '@/Components/Mensaje';
-//import useDashboard from '@/hooks/useDashboard';
+import useDashboard from './HookCustom/useDashboard';
 
 export default function Dashboard({ auth, flash, dataPosada, huespedesRegistrados }) {
- /*  const {
+   const {
     selectPosada,
     show,
     enviar,
@@ -28,7 +28,7 @@ export default function Dashboard({ auth, flash, dataPosada, huespedesRegistrado
     CajaShow,
     setMostrarMessage,
     setMensaje,
-  } = useDashboard(dataPosada, huespedesRegistrados, flash); */
+  } = useDashboard(dataPosada, huespedesRegistrados, flash); 
 
   return (
     <AuthenticatedLayout

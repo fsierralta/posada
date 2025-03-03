@@ -24,7 +24,7 @@ class ReservacionController extends Controller
    
     public function index(Request $request)
     {
-       info('reservacion index',['request'=>$request->all()]);
+      // info('reservacion index',['request'=>$request->all()]);
 
 
         if (!$request->has('fecha_entrada') || !$request->has('fecha_salida')) {
@@ -55,7 +55,7 @@ class ReservacionController extends Controller
                                     ->with('huespede')
                                     ->paginate(10);
         $nroCabana=$reservaciones->sum('cantidad_cabana_reservadas');
-        
+       
         return Inertia::render('Reservacion/ReservacionIndex',["reservaciones"=>$reservaciones,
                                                                 "precios"=>Precio::all(),
                                                                 'formaPagos'=>FormaPago::all(),
@@ -129,8 +129,10 @@ class ReservacionController extends Controller
             }
             //--------calculado disponibilidad 
             $disponible = $this->customReservacion->verificarDisponibilidad($request->fecha_entrada, 
-            $request->fecha_salida,
-            new Reservacion()
+                                                                           $request->fecha_salida,
+                                                                           new Reservacion(),
+                                                                           intval($request->input('cantidad_cabana_reservadas'))
+           
             );
             if (!$disponible) {
                 throw new Exception('No hay disponibilidad para las fechas seleccionadas');
@@ -168,7 +170,7 @@ class ReservacionController extends Controller
                  'observacion'=>$request->observacion
                  
                ]);
-              return redirect(route('reservaciones.index'));
+              return redirect(route('reservaciones.index'))->with('message','Reservacion registrada nro:'.$newReservacion->nro_reservacion);
 
 
                                 

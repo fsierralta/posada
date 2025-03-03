@@ -6,12 +6,16 @@ import PrimaryButton from '@/Components/PrimaryButton'
 import { findPrecio,sumarDias,fechaFormato_dmy,toISOStringDate } from '../Helper/help'
 import InputLabel from '@/Components/InputLabel'
 import { useEffect } from 'react'
+import { getDataHuespede,mostrarToast } from '../Helper/help'
+import { ToastContainer,toast } from 'react-toastify'
+import InputFecha from './Components/InputFecha'
+import InputPersona from './Components/InputPersona'
+import InputDatosPersonales from './Components/InputDatosPersonales'
 
 
 
-
-
-export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas,backRangoFechas,errors}) {
+export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas,backRangoFechas,errors,flash}) {
+  
     const {data,setData,proccesing}=useForm({
         fecha_entrada:rangoFechas[0],
         fecha_salida:rangoFechas[1],
@@ -36,6 +40,7 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
 
       })
       console.log(backRangoFechas)
+      flash?.message &&mostrarToast(flash.message)
        console.log(errors)  
       const precioValor=(e)=>{
               e.preventDefault()
@@ -61,6 +66,33 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
     setData("fecha_salida",sumarDias(data.fecha_entrada,data.dias_estadias))
 
   }
+   //-
+   const onGetHupespede=async(e)=>{
+    e.preventDefault()
+    const cedula=data.nacionalidad.concat(data.cedula)
+    console.log(cedula)
+    let  {data:getData,error:getError}=await getDataHuespede(cedula);
+     console.log(getData)
+     console.log(typeof(getError))
+     if(getData!==null) {
+        const { nombre, apellidos, nacimiento, profesion, email, celular } = getData
+
+        setData({
+          ...data,
+          nombre,
+          apellidos,
+          nacimiento,
+          profesion,
+          email,
+          celular
+        })
+      }
+      if(getError){
+         mostrarToast(getError)
+            console.log(getError)
+      }
+
+   }
 
   const handleSubmit=(e)=>{
     e.preventDefault()
@@ -80,324 +112,37 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
       header={'Reservaciones'}
     >
         <MainHtml>
+              <div>
+                <ToastContainer />
+              </div>  
+
              <form onSubmit={handleSubmit}>
-                   {/* } 
-                                fecha y precios
-                               
-                                */}
-                                <div className='md:flex gap-2'>
-                                  <div className='w-full'>
-                                  <InputLabel>Fecha Entrada</InputLabel>
-                          
-                                  <TextInput 
-                                    type='Date'
-                                    name='fecha_entrada'
-                                    value={data.fecha_entrada}
-                                    className='w-full'
-                                    onChange={e => setData('fecha_entrada', e.target.value)}
-                                    required
-                                  />
-                          
-                                  </div>
-                                  <div className='w-full'>
-                                  <InputLabel>Días de Estadía</InputLabel>
-                                  <TextInput
-                                    type='number'
-                                    name='dias_estadias'
-                                    value={data.dias_estadias}
-                                    className='w-full'
-                                    onChange={e => setData('dias_estadias', e.target.value)}
-                                    required
-                                    min="1"
-                                    max="100"
-                                  />
-                                  {errors.dias_estadias && <div className="text-red-500">{errors.dias_estadias}</div>}
-                                  </div>
-                                  <div className='w-full'>
-                                  <InputLabel>Fecha Salida</InputLabel>
-                          
-                                  <TextInput 
-                                    type='Date'
-                                    name='fecha_salida'
-                                    value={data.fecha_salida}
-                                    onChange={e => setData('fecha-salida', e.target.value)}
-                                    className='w-full'
-                                    disabled
-                                  />
-                          
-                                  </div>
-                                  <div className='w-full'>
-                                  <InputLabel>Precio</InputLabel>
-                                  <select
-                                    name="precio_id"
-                                    value={data.precio_id}
-                                    onChange={e => setData('precio_id', e.target.value)}
-                                    className="rounded-md w-full"
-                                  >
-                                    <option value="">Seleccione un precio</option>
-                                    {precios.map(precio => (
-                                    <option key={precio.id} value={precio.id}>
-                                      {precio.descripcion.substr(0,10)} - ${precio.precio}
-                                    </option>
-                                    ))}
-                                  </select>
-                                  {errors.precio_id && <div className="text-red-500">{errors.precio_id}</div>}
-                                  </div>
-                                </div> 
-                                {/* 
-                                calculo de tarifa    
-                                */}
-                      <div className='flex gap-2 mt-2 ' >
-                            <div className=''>
-                              <InputLabel>Nro Personas
-                              <TextInput
-                                type='number'
-                                name='nro_personas'
-                                value={data.nro_personas}
-                                onChange={e => setData('nro_personas', e.target.value)}
-                                required
-                                min="1"
-                                max="100"
-                                className=''
-                              />
-                              </InputLabel>
-                             
-                              {errors.nro_personas && <div className="text-red-500">{errors.nro_personas}</div>}
-                            </div>
-                            <div className=''>
-            
-                              <InputLabel>Cabaña Reservar
-                              <TextInput
-                                type='number'
-                                name='cantidad_cabana_reservadas'
-                                value={data.cantidad_cabana_reservadas}
-                                onChange={e => setData('cantidad_cabana_reservadas', e.target.value)}
-                                required
-                                min="1"
-                                max="9"
-                                className=''
-                              />
-                              </InputLabel>
-                             
-                              {errors.cantidad_cabana_reservadas && <div className="text-red-500">{errors.cantidad_cabana_reservadas}</div>}
-                            </div>
-            
-                            <div className=''>
-                              <InputLabel>Total a Pagar
-                              <TextInput
-                                type='number'
-                                name='totalPagar'
-                                step="0.01"
-                                value={data.totalPagar}
-                                className=''
-                               //onChange={e => setData('totalPagar', e.target.value)}
-                                disabled
-                               
-                              />
-                              </InputLabel>
-                             
-            
-                            </div>
-                            
-                            <div className=''>
-                                <InputLabel>Calcular Pago</InputLabel> 
-                                    <PrimaryButton className='py-3 w-full'
-                                       onClick={precioValor}
-                                    >Calcular</PrimaryButton>
-                             </div>
-                             <div className=''>
-                                <InputLabel>Forma de Pago
-                                <select
-                                  name="pago_id"
-                                  value={data.pago_id}
-                                  onChange={e => setData('pago_id', e.target.value)}
-                                  className="rounded-md "
-
-                                >
-                                  <option value="">Forma de pago</option>
-                                  {formaPagos.map(formaPago => (
-                                    <option key={formaPago.id} value={formaPago.id}>
-                                      {formaPago.nombre}
-                                    </option>
-                                  ))}
-                                </select>
-                                </InputLabel>
-                               
-                                {errors.pago_id && <div className="text-red-500">{errors.pago_id}</div>}
-            
-                             </div>
-                             <div >
-                               
-                              <div className=''>
-                                <InputLabel>Observación:
-                                <TextInput
-                                  type='text'
-                                  name='observacion'
-                                  value={data.observacion}
-                                  onChange={e => setData('observacion', e.target.value)}
-                                  className=''
-                                  required
-                                />
-                                </InputLabel>
-                               
-                                {errors.observacion && <div className="text-red-500">{errors.observacion}</div>}
-                              </div>
-                             </div>
-
-                            
-                      </div>
-                      
-
-
-                        {/* 
-                           formulario del huespede
-                           
-                         */}
-                        <div className='flex gap-2 mt-4 '>
-                            <div>
-                                      <InputLabel>Nacionalidad
-                                        <select
-                                          name="nacionalidad"
-                                          value={data.nacionalidad}
-                                          onChange={e => setData('nacionalidad', e.target.value)}
-                                          className="rounded-md w-full"
-                                        >
-                                          <option value="V">Venezolano</option>
-                                          <option value="E">Extranjero</option>
-                                        </select>
-                                      </InputLabel>
-                                      {errors.nacionalidad && <div className="text-red-500">{errors.nacionalidad}</div>}
-                            </div>
-                            <div className=''>
-                                <InputLabel>Cédula
-                                  <TextInput
-                                    type='text'
-                                    name='cedula'
-                                    value={data.cedula}
-                                    placeholder="nro"
-                                    onChange={e => setData('cedula', e.target.value)}
-                                    className='w-full'
-                                    required
-
-                                  />
-                                </InputLabel>
-                                {errors.cedula && <div className="text-red-500">{errors.cedula}</div>}
-                            </div>
-                            <div>
-                              <InputLabel>
-                                Realizar
-                                </InputLabel>
-                              <PrimaryButton className='' >Buscar</PrimaryButton>
-                               
-                              
-                            </div>
-                            <div>
-                              <InputLabel>
-                                  Nombre
-
-                              </InputLabel>
-                              <TextInput
-                                 name='nombre'
-                                 value={data.nombre}
-                                 onChange={e=>setData('nombre',e.target.value) }
-                                 required
-                              />
-                            </div>
-                            <div className=''>
-                            <InputLabel>
-                              Apellidos
-                            </InputLabel>
-                            <TextInput
-                              name='apellidos'
-                              value={data.apellidos}
-                                onChange={e => setData('apellidos', e.target.value)}
-                                required
-                                
-                            />
-                            </div>
-                            <div>
-                                  <InputLabel>
-                                    Fecha de Nacimiento
-                                  </InputLabel>
-                                  <TextInput
-                                    type='date'
-                                    name='nacimiento'
-                                    value={data.nacimiento}
-                                    onChange={e => setData('nacimiento', e.target.value)}
-                                    className='w-full'
-                                    required
-                                    
-                                  />
-                                  {errors?.nacimiento &&<div className='text-red-500'>{errors.nacimiento}</div>}
-
-                            </div>
-
-                        </div>
                         <div>
-                           <div className='flex gap-2 mt-4'>
-                              
-                                <div >
-                                  <InputLabel>
-                                  Email
-                                  </InputLabel>
-                                  <TextInput 
-                                    type="email"
-                                    name="email"
-                                    value={data.email}
-                                    onChange={e => setData('email', e.target.value)}
-                                    className=""
-                                    required
-                                  />
-                                  
-                                  {errors.email && <div className="text-red-500">{errors.email}</div>}
-                                </div>
-                              
-                              <div>
-                                <InputLabel>
-                                  Celular
-                                </InputLabel>  
-                                  <TextInput
-                                    type="text"
-                                    name="celular"
-                                    value={data.celular}
-                                    onChange={e => setData('celular', e.target.value)}
-                                    className=""
-                                    required
-                                  />
-                                
-                              </div>
-                              <div>
-                                <InputLabel>
-                                  Procedencia
-                                </InputLabel>
-                                <TextInput
-                                  type="text"
-                                  name="procedencia"
-                                  value={data.procedencia}
-                                  onChange={e => setData('procedencia', e.target.value)}
-                                  className=""
-                                  required
+                           <InputFecha 
+                                  data={data}
+                                  precios={precios}
+                                  setData={setData}
+                                  errors={errors}
+
                                 />
-
-                              </div>
-                              <div>
-                                <InputLabel>
-                                  Profesión
-                                </InputLabel>
-                                <TextInput
-                                  type="text"
-                                  name="profesion"
-                                  value={data.profesion}
-                                  onChange={e => setData('profesion', e.target.value)}
-                                  className=""
-                                  required
-                                />
-                              </div>
-
-
-                           </div>
+                         </div>       
+                         <div>
+                             <InputPersona
+                               data={data}
+                               precioValor={precioValor}
+                               formaPagos={formaPagos}
+                               setData={setData}
+                               errors={errors}
+                             />
                         </div>
-                      
+ 
+                        <InputDatosPersonales
+                           data={data}
+                           setData={setData}
+                           errors={errors}
+                           onGetHupespede={onGetHupespede}
+                         
+                       />
                        {/*---------------------------  
                          acciones del usuario 
                       */}

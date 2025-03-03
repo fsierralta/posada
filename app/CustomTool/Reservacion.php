@@ -77,18 +77,20 @@ class Reservacion
 
      }  
      
-     public  function verificarDisponibilidad($fechaEntrada, $fechaSalida,$reservacion)
+     public  function verificarDisponibilidad($fechaEntrada, $fechaSalida,$reservacion,$cantidadCabana)
      {
          $reservaciones = $reservacion->where(function ($query) use ($fechaEntrada, $fechaSalida) {
-             $query->whereBetween('fecha_entrada', [$fechaEntrada, $fechaSalida])
-                   ->orWhereBetween('fecha_salida', [$fechaEntrada, $fechaSalida])
-                   ->orWhere(function ($query) use ($fechaEntrada, $fechaSalida) {
-                       $query->where('fecha_entrada', '<=', $fechaEntrada)
-                             ->where('fecha_salida', '>=', $fechaSalida);
+                                    $query->whereBetween('fecha_entrada', [$fechaEntrada, $fechaSalida])
+                                        ->orWhereBetween('fecha_salida', [$fechaEntrada, $fechaSalida])
+                                              ->orWhere(function ($query) use ($fechaEntrada, $fechaSalida) {
+                                                                $query->where('fecha_entrada', '<=', $fechaEntrada)
+                                                                      ->where('fecha_salida', '>=', $fechaSalida);
                    });
-         })->count();
- 
-         return $reservaciones < 9;
+         })->sum("cantidad_cabana_reservadas");
+         $disponibilidad=$this->totalCabana()-($reservaciones+$cantidadCabana);
+         info('disponibilidad',["total"=>$disponibilidad,"reservaciones"=>$reservaciones]);
+         return ($disponibilidad>0  && $disponibilidad<=$this->totalCabana());
+         
      }
 
 }
