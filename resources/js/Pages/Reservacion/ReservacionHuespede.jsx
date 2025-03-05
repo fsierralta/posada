@@ -70,12 +70,9 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
    const onGetHupespede=async(e)=>{
     e.preventDefault()
     const cedula=data.nacionalidad.concat(data.cedula)
-    console.log(cedula)
     let  {data:getData,error:getError}=await getDataHuespede(cedula);
-     console.log(getData)
-     console.log(typeof(getError))
-     if(getData!==null) {
-        const { nombre, apellidos, nacimiento, profesion, email, celular } = getData
+    if(getData!==null) {
+        const { nombre, apellidos, nacimiento, profesion, email, celular,id:huespede_id} = getData
 
         setData({
           ...data,
@@ -84,8 +81,10 @@ export default function ReservacionHuespede({auth,precios,formaPagos,rangoFechas
           nacimiento,
           profesion,
           email,
-          celular
+          celular,
+          huespede_id
         })
+   
       }
       if(getError){
          mostrarToast(getError)

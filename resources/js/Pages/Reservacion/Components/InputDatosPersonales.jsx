@@ -22,7 +22,7 @@ export default function InputDatosPersonales({data,setData,errors,onGetHupespede
                                           {errors.nacionalidad && <div className="text-red-500">{errors.nacionalidad}</div>}
                                 </div>
                                 <div className=''>
-                                    <InputLabel>Cédula
+                                    <InputLabel>{`Cédula`}
                                       <TextInput
                                         type='text'
                                         name='cedula'

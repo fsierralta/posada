@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { router } from '@inertiajs/react';
-import { fechaFormato_dmy } from '../Pages/Helper/help';
+import { fechaFormato_dmy } from "../Helper/help"
 
-const useDashboard = (dataPosada, huespedesRegistrados, flash) => {
+const  useDashboard = (dataPosada, huespedesRegistrados, flash) => {
   const [selectPosada, setSelectPosada] = useState(0);
   const [show, setShow] = useState(false);
   const [enviar, setEnviar] = useState(false);
@@ -15,7 +15,7 @@ const useDashboard = (dataPosada, huespedesRegistrados, flash) => {
     setShow(false);
   };
 
-  const estatusPosada = (posada_id) => {
+const estatusPosada = (posada_id) => {
     const posada = dataPosada.find((item) => item.id === posada_id);
     return posada ? posada.estatus : null;
   };
