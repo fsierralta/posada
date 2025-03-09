@@ -228,15 +228,7 @@ class FichaRegistroHuespeController extends Controller
            $codeSendEmailUser->sendNotificacionAlquiler($sendDataMail);         
            return  $this->storepago($request);
          }
-         /* "precio_id"=>["required"],
-              "nrodias"=>['required',"min:1",'integer','max:365'],
-              "nropersonas"=>['required','min:1'],
-              "fechaEntrada"=>['required','date_equals:today'],
-              'fechaSalida'=>['required','date','after_or_equal:fechaEntrada'],
-              'cedula'=>['required'],
-              'montoTotal'=>['required',"min:1","max:999999"],
-              'descripcion'=>['required'],
-              'reservacion_id'=>["required","min:0"] */
+        
 
         /* "posada_id"=>['required'],
             'nroficha'=>['required'],
