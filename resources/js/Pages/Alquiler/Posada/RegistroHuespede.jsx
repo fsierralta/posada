@@ -8,18 +8,34 @@ import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm,Link } from "@inertiajs/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-//-----------------------------------------------
+import {toISOStringDate}   from "@/Pages/Helper/help"
+//------ -----------------------------------------
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
 
 export default function RegistroHuespede({auth,flash,dataRegistro}) {
+  const {data,setData,post,processing,errors}=useForm({
+    ...dataRegistro,
+    precio_id:0,
+    nrodias:0,
+    nropersonas:0,
+    montoTotal:0,
+    descripcion:"Hospedaje para",
+    reservacion_id:0
+
+     
+})
+ console.log("entrada data",data)
   const [nombreApellido,setNombreApellidos]=useState("");
   const [mostrar,setMostrar]=useState(false)
   const [mensaje,setMensaje]=useState("")
   const [cedula,setCedula]=useState("")
   const [acompanante,setAcompanante]=useState([])
+  //
+ const {reservaciones}=dataRegistro
+  //console.log(reservaciones)
+  const [tieneReservacion,setTieneReservacion]=useState("N")
 
 //manejo de operaciones del acompante
 
@@ -87,9 +103,9 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
   //---------------------------------------------------
 
    const delAcompanante=(getcedula)=>{
-   // console.log(getcedula)
+  
      let dataAcom=acompanante
-     console.log(dataAcom)
+    
      dataAcom=dataAcom.splice(findItem(getcedula),0)
      if(dataAcom.length===0){
         setAcompanante([])
@@ -106,22 +122,12 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
 
 
   
-  const {data,setData,post,processing,errors}=useForm({
-        ...dataRegistro,
-      
-        precio_id:0,
-        nrodias:0,
-        nropersonas:0,
-        montoTotal:0,
-        descripcion:"Hospedaje para"
-
-         
-    })
+  
 
     const getDataHuespede=async(e)=>{
          e.preventDefault()
          try {
-             let response=await axios.get(route('registrohuespedecedula.get',data.cedula.toUpperCase()))
+             let response=await axios.get(route('registrohuespedecedula.get',cedula.toUpperCase()))
              if (response.status===200){
              // console.log(response)
               const {nombre,apellidos}=response.data.dataHuespede
@@ -138,6 +144,7 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
            
         }
       }
+
      //-------------------------------
       const onSubmitHuespede=(e)=>{
           e.preventDefault()
@@ -211,15 +218,69 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
            
 
       }
+
+ 
+
+
+     
+
 //calculando dias de estadia 
+   
+
+     const onChangeReservacion=(e)=>{
+            e.preventDefault()
+            const id=parseInt(parseInt(e.target.value))
+            console.log(id)
+            const reserva=reservaciones.filter(item=> item.id===id)
+            if (Array.isArray(reserva) && reserva.length>0){
+                 const cedula=reserva[0].huespede.nacionalidad.concat(reserva[0].huespede.cedula)
+                const nombreApellido=reserva[0].huespede.nombre.concat(reserva[0].huespede.apellidos)
+                const fechaEntrada= toISOStringDate(reserva[0].fecha_entrada,1) //el segun parametro es para que nos reste anos 
+                const fechaSalida= toISOStringDate(reserva[0].fecha_salida,1)
+                const montoTotal=reserva[0].monto
+                const precio_id=reserva[0].formapago_id
+                const nropersonas=reserva[0].nro_personas
+                const reservacion_id=id
+                setCedula(cedula)
+                setNombreApellidos(nombreApellido)
+                setData({...data,
+                           fechaEntrada,
+                           fechaSalida,
+                           cedula,
+                           montoTotal,
+                           precio_id,
+                           nropersonas,
+                           reservacion_id
+                           
+                          }
+                        )
+                
+               
+               
+               
+                
+
+
+            }   
+        
+        }
+
+    
+        //--------useEffect 
+     
      useEffect(()=>{
            
-             data.fechaSalida!=null && nroDiasEstadia()
+      data.fechaSalida!=null && nroDiasEstadia()
 
 
-     },[data.fechaSalida])
-     
+   },[data.fechaSalida])
+
+
+
+   
+
    useEffect(()=>{
+    console.log("id",data.reservacion_id)
         const mostrar=()=>{
            if (flash?.message!==null){
                setMensaje(flash.message)
@@ -231,6 +292,8 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
      flash?.message && mostrar()
 
    },[flash])
+
+
   return (
     <Authenticated
         user={auth.user}
@@ -267,9 +330,10 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
                     <form onSubmit={onSubmitHuespede}
                       className="mt-4"
                     >
+                      <div className="flex gap-2">
                       <div>
                         <InputLabel
-                          htmlFor="posadanombre"                       
+                                            
                             value={"Nombre Posada"}
                             
                         />
@@ -279,7 +343,40 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
                             name='posadanombre'
                             disabled={true}
                         />
-                      </div>
+                       </div> 
+
+                    
+                       <div>
+                         <InputLabel 
+                           value={'Reservaciones'}
+                         />
+                         <select 
+                           name="reservaciones"
+                           defaultValue={data.reservacion_id}
+                           className="rounded-md border-green-500"
+                           onChange={onChangeReservacion}
+                          
+
+
+                         >
+                          <option value={"0"}>Selecciones una reservacion</option>
+                          {
+                            reservaciones.length>0 ?(
+                            reservaciones.map(item=>(
+
+                              <option
+                              key={item.id}
+                               value={item.id}
+                              >{`Id:${item.id}|Nro:${item.nro_reservacion}|${item.huespede.nombre} ${item.huespede.apellidos} |Cedula:${item.huespede.cedula}|Monto:${item.monto}`}</option>
+                            ))
+                          ): <p>No hay servaciones este dia</p>
+                          }
+
+
+                         </select>
+
+                       </div>
+                      </div> 
                       <div className=" flex grid-cols-3 space-x-2 mt-2">
                         <div>
                       <InputLabel
@@ -289,9 +386,9 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
                         />
                         <TextInput
                             type="text"
-                            value={data.cedula}
+                            value={cedula}
                             name='cedula'
-                            onChange={(e)=>setData("cedula",e.target.value.toUpperCase())}
+                            onChange={e=>setCedula(e.target.value.toUpperCase())}
                             className="font-bold"
                             placeholder={"cedula comienza con V o E"}
                             required
@@ -301,7 +398,7 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
                         </div>
                         <div>
                         <InputLabel
-                          htmlFor=""                       
+                                          
                             value={"Buscar "}
                             
                         />
@@ -316,7 +413,7 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
                         
                         <div className="block w-full" >
                                 <InputLabel
-                                htmlFor="nombreHuespedes"                       
+                                htmlFor="nombrehuespedes"                       
                                     value={"Nombre Huespede"}
                                     
                                 />
@@ -342,7 +439,7 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
                       <div className="mt-6 grid-cols-2 flex   space-x-2  ">
                                 <div className="w-full">
                                         <InputLabel
-                                            htmlFor="fechaEntrada"
+                                          
                                             value={"Fecha Entrada"}
 
                                         
@@ -363,7 +460,7 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
                             
                                 <div className="w-full">
                                         <InputLabel
-                                                htmlFor="fechaSalida"
+                                               
                                                 value={"Fecha Salida"}
 
                                             
@@ -482,13 +579,14 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
                           </div>
                           <div>
                               <InputLabel
-                                htmlFor="btnCalcular"
+                                
                                 value="Calcular"
                               />
 
                               <PrimaryButton
                                 className="mt-2 py-3"
                                 onClick={calcularTotal}
+                                name="btnCalcular"
                               >Calcular</PrimaryButton>
                           </div>
 

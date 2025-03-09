@@ -53,4 +53,17 @@ class Posada extends Model
      return $huespedesRegistrado;
 
     }
+
+    /*
+     * The roles that belong to the Posada
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function reservaciones(): BelongsToMany
+    {
+        return $this->belongsToMany(Reservacion::class, 'posada_reservacion', 'posada_id', 'reservacion_id');
+    }
+    
+
+   
 }

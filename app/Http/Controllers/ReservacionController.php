@@ -42,7 +42,12 @@ class ReservacionController extends Controller
         }
         
 
-        $reservaciones = Reservacion::where(function ($query) use ($fecha_entrada, $fecha_salida) {
+        
+        
+        //info($reservaciones);
+        $reservaciones = $this->customReservacion->
+                         reservacionesEnRangoFecha($fecha_entrada, $fecha_salida,new Reservacion());
+        /*  Reservacion::where(function ($query) use ($fecha_entrada, $fecha_salida) {
                                         $query->whereBetween('fecha_entrada', [$fecha_entrada, $fecha_salida])
                                               ->orWhereBetween('fecha_salida', [$fecha_entrada, $fecha_salida])
                                               ->orWhere(function ($query) use ($fecha_entrada, $fecha_salida) {
@@ -53,7 +58,8 @@ class ReservacionController extends Controller
                                         })
                                     ->where('cargado_pago_huespede','no')
                                     ->with('huespede')
-                                    ->paginate(10);
+                                    ->paginate(10);  */
+      // info($reservaciones);
         $nroCabana=$reservaciones->sum('cantidad_cabana_reservadas');
        
         return Inertia::render('Reservacion/ReservacionIndex',["reservaciones"=>$reservaciones,
@@ -170,6 +176,7 @@ class ReservacionController extends Controller
                  'observacion'=>$request->observacion
                  
                ]);
+               
               return redirect(route('reservaciones.index'))->with('message','Reservacion registrada nro:'.$newReservacion->nro_reservacion);
 
 

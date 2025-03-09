@@ -22,10 +22,17 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use InvalidArgumentException;
 use App\CustomTool\RegistroLibroPolicial;
+use App\CustomTool\Reservacion as CustomReservacion;
 
 class FichaRegistroHuespeController extends Controller
 {
     //
+    public $customReservacion;
+    public function __construct(CustomReservacion $reservacion){
+        $this->customReservacion=$reservacion;
+
+
+    }
     
     public function verificaEstatusPosada( $id){
       
@@ -37,7 +44,7 @@ class FichaRegistroHuespeController extends Controller
                 if($posada!=null){
                   
                    if ($posada->estatus=="D"){
-                        info("paso",["posada"=>$posada]) ;
+                      //  info("paso",["posada"=>$posada]) ;
                         $dataRegistro=["posada"=>$posada,
                                         "fechaEntrada"=>Carbon::now()->format('Y-m-d'),
                                         'fechaSalida'=>Carbon::now()->addDay()->format('Y-m-d'),
@@ -45,6 +52,9 @@ class FichaRegistroHuespeController extends Controller
                                         "nroficha"=>"",
                                         "cedula"=>"" ,
                                         "precios"=>Precio::all(),
+                                        "reservaciones"=>$this->customReservacion
+                                                              ->reservacionesEnFechaActual(Carbon::now(),
+                                                                      Carbon::now(),new CustomReservacion())
                                     ];
 
                                
@@ -86,7 +96,10 @@ class FichaRegistroHuespeController extends Controller
 
     //--------------------------
     public function store(Request $request ){
-        // info("data",["request"=>$request->acompanante]);
+       ///se modifica para tomar las reservacion 
+       //se ingresaa el monto a la abono 
+       //cuenta
+        info("data",["request"=>$request]);
         $validate=$request->validate([
               "precio_id"=>["required"],
               "nrodias"=>['required',"min:1",'integer','max:365'],
@@ -95,7 +108,8 @@ class FichaRegistroHuespeController extends Controller
               'fechaSalida'=>['required','date','after_or_equal:fechaEntrada'],
               'cedula'=>['required'],
               'montoTotal'=>['required',"min:1","max:999999"],
-              'descripcion'=>['required']
+              'descripcion'=>['required'],
+              'reservacion_id'=>["required","min:0"]
               ]);
 
         //Se hace ajuste para los nrodias, y las fecha de salida sean iguales
@@ -170,8 +184,8 @@ class FichaRegistroHuespeController extends Controller
                $insert=$rp->insert();
                info('acompanante',['exito'=>$insert]);
 
-
-
+        
+           
             //-----------------
 
 
@@ -179,6 +193,60 @@ class FichaRegistroHuespeController extends Controller
             $sendDataMail=["posada"=>$posada,
                            "movimientoHuespede"=>$movimientoHuespede
         ];
+
+        //-----------------se carga el monto de la reservacion/
+        
+        $findReservacionHuespede=$this->customReservacion->findReservacionHuespede((int) $request->reservacion_id);
+         if($findReservacionHuespede){
+              $request->merge([
+                "posada_id"=>$posada->id,
+                'nroficha' =>$fichaRegistroHuespe->nroficha,
+                     'monto'=>$findReservacionHuespede->monto,
+                "formaPago_id"=>$findReservacionHuespede->formapago_id,
+                "referencia"=>$findReservacionHuespede->nro_reservacion,
+                "observacion"=>$findReservacionHuespede->observacion,
+                'huespede_id'=>$huespede->id
+
+
+
+
+
+              ])  ;
+              $findReservacionHuespede->cargado_pago_huespede="si";
+              $findReservacionHuespede->save($request->only([
+                     "posada_id",
+                     'nroficha' ,
+                     'monto',
+                     "formaPago_id",
+                     "referencia",
+                      "observacion",
+                      'huespede_id'
+                    ]));
+              $findReservacionHuespede->posadas()->attach($posada_id);
+             
+           $codeSendEmailUser=new CodeSendEmailUser($request);
+           $codeSendEmailUser->sendNotificacionAlquiler($sendDataMail);         
+           return  $this->storepago($request);
+         }
+         /* "precio_id"=>["required"],
+              "nrodias"=>['required',"min:1",'integer','max:365'],
+              "nropersonas"=>['required','min:1'],
+              "fechaEntrada"=>['required','date_equals:today'],
+              'fechaSalida'=>['required','date','after_or_equal:fechaEntrada'],
+              'cedula'=>['required'],
+              'montoTotal'=>['required',"min:1","max:999999"],
+              'descripcion'=>['required'],
+              'reservacion_id'=>["required","min:0"] */
+
+        /* "posada_id"=>['required'],
+            'nroficha'=>['required'],
+            'formaPago_id'=>['required'],
+            'monto'=>['required','min:0.5','max:999999'],
+            'referencia'=>['required'],
+            'observacion'=>['required'],
+            'huespede_id'=>['required'], */
+
+
 
         //se va a crear un classe despachadora de mail 
           $codeSendEmailUser=new CodeSendEmailUser($request);

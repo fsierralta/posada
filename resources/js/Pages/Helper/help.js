@@ -74,11 +74,19 @@ function sumarDias(fechaActual, dias) {
   }
 
 
-  function toISOStringDate(fecha=new Date()){
-    fecha=restarAnios(fecha,18);
-    return fecha.toISOString().split('T')[0]
+  function toISOStringDate(fecha=new Date(),year=0){
+    
+     if(year===0) {
+        fecha=restarAnios(fecha,18);
+        return fecha.toISOString().split('T')[0] 
 
+
+  }else {
+    fecha=restarAnios(fecha,0);
+    return fecha.toISOString().split('T')[0] 
   }
+  }
+
 
   /**
  * Resta un número especificado de años a una fecha dada.
@@ -135,3 +143,5 @@ export {
     mostrarToast
 
 }
+
+let date=new Date();

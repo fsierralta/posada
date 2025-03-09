@@ -33,9 +33,15 @@ class Reservacion extends Model
         return $this->belongsTo(Huespede::class, 'huespede_id');
     }
 
+    public function posadas()
+    {
+        return $this->belongsToMany(Posada::class, 'posada_reservacion', 'reservacion_id', 'posada_id');
+                   
+
 
 
 
 
     
+}
 }
