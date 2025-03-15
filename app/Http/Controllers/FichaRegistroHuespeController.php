@@ -206,22 +206,9 @@ class FichaRegistroHuespeController extends Controller
                 "referencia"=>$findReservacionHuespede->nro_reservacion,
                 "observacion"=>$findReservacionHuespede->observacion,
                 'huespede_id'=>$huespede->id
-
-
-
-
-
-              ])  ;
+                ])  ;
               $findReservacionHuespede->cargado_pago_huespede="si";
-              $findReservacionHuespede->save($request->only([
-                     "posada_id",
-                     'nroficha' ,
-                     'monto',
-                     "formaPago_id",
-                     "referencia",
-                      "observacion",
-                      'huespede_id'
-                    ]));
+              $findReservacionHuespede->save();
               $findReservacionHuespede->posadas()->attach($posada_id);
              
            $codeSendEmailUser=new CodeSendEmailUser($request);
@@ -257,7 +244,7 @@ class FichaRegistroHuespeController extends Controller
            })
            */
           //------------------------       
-
+           
            return redirect()->route("dashboard")->with("message","Cliente registrado, Recuerda registrar el pago");
 
 
@@ -325,7 +312,7 @@ class FichaRegistroHuespeController extends Controller
                     "fpago"=>$fpagos,
                     "montoPagar"=>$montoPagar]
             ]); 
-           
+        
         } catch (\Throwable $th) {
             //throw $th;
             return back()
