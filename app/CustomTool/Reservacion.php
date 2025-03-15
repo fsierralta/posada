@@ -160,7 +160,7 @@ class Reservacion
      * @return reservacion
      */
      public function findReservacionHuespede(int $reservacion_id ):?ModelReservacion{
-        $reservacion=ModelReservacion::find($reservacion_id);
+        $reservacion=ModelReservacion::findOrFail($reservacion_id);
         return $reservacion;
 
 

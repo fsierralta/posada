@@ -183,7 +183,7 @@ class FichaRegistroHuespeController extends Controller
                $rp=new RegistroLibroPolicial($request,$fichaRegistroHuespe);
                $insert=$rp->insert();
                info('acompanante',['exito'=>$insert]);
-
+               $this->
         
            
             //-----------------
@@ -212,20 +212,13 @@ class FichaRegistroHuespeController extends Controller
               $findReservacionHuespede->posadas()->attach($posada_id);
              
            $codeSendEmailUser=new CodeSendEmailUser($request);
-           $codeSendEmailUser->sendNotificacionAlquiler($sendDataMail);         
-           return  $this->storepago($request);
+           $codeSendEmailUser->sendNotificacionAlquiler($sendDataMail);   
+           //se envia al pago      
+           return  $this->storepago($request);//se realiza el pago
+           
+
          }
         
-
-        /* "posada_id"=>['required'],
-            'nroficha'=>['required'],
-            'formaPago_id'=>['required'],
-            'monto'=>['required','min:0.5','max:999999'],
-            'referencia'=>['required'],
-            'observacion'=>['required'],
-            'huespede_id'=>['required'], */
-
-
 
         //se va a crear un classe despachadora de mail 
           $codeSendEmailUser=new CodeSendEmailUser($request);
