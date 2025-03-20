@@ -2,7 +2,7 @@ import React from 'react';
 import PrimaryButton from '@/Components/PrimaryButton';
 import Pagination from '@/Components/Pagination';
 import { fechaFormato_dmy, dateTimeToDate } from '../../Pages/Helper/help';
-
+import { Link } from '@inertiajs/react';
 
 const ReservacionTable = ({ reservaciones, data, links }) => {
   return (
@@ -36,7 +36,7 @@ const ReservacionTable = ({ reservaciones, data, links }) => {
                 <td className="border border-collapse rounded-md">{fechaFormato_dmy(dateTimeToDate(reservacion.fecha_salida))}</td>
                 <td className="border border-collapse rounded-md">{reservacion.monto}</td>
                 <td className="justify-center text-center items-center">
-                  <PrimaryButton className="bg-yellow-500">Editar</PrimaryButton>
+                  <Link  href={route('reservaciones.edit',reservacion.id)} as="button" className="bg-yellow-500 py-2 rounded-md px-2">Editar</Link>
                 </td>
               </tr>
             ))

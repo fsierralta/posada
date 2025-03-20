@@ -9,4 +9,5 @@ Route::prefix("reporte")->middleware('auth', 'verified')->group(function () {
     Route::get('/notafactura/{id}', [ReporteController::class, "notaFactura"])->name("repo.03");
     Route::get('caja', [ReporteController::class, 'movimientosPagos'])->name("repo.04");
     Route::get("/informepolicialmensual/fechainicial/{fechainicial}/fechafinal/{fechafinal}", [ReporteController::class, "informepolicialmensual"])->name('repo.05');
+
 });

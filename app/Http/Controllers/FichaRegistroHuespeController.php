@@ -162,9 +162,6 @@ class FichaRegistroHuespeController extends Controller
                 "estatus"=>"A",
                 'nroficha'=>$nroRegistro
             ]);
-           
-           
-            
 
             $movimientoHuespede=MovimientoHuespede::create([
                   "ficha_registro_huespe_id"=>$huespede->id,
@@ -183,14 +180,11 @@ class FichaRegistroHuespeController extends Controller
                $rp=new RegistroLibroPolicial($request,$fichaRegistroHuespe);
                $insert=$rp->insert();
                info('acompanante',['exito'=>$insert]);
-               $this->
+               
         
            
             //-----------------
-
-
-
-            $sendDataMail=["posada"=>$posada,
+          $sendDataMail=["posada"=>$posada,
                            "movimientoHuespede"=>$movimientoHuespede
         ];
 
@@ -223,24 +217,7 @@ class FichaRegistroHuespeController extends Controller
         //se va a crear un classe despachadora de mail 
           $codeSendEmailUser=new CodeSendEmailUser($request);
           $codeSendEmailUser->sendNotificacionAlquiler($sendDataMail);
-                                                                  
-         /* se sustituye esta version por la clase 
-           dispatch(function () use ($sendDataMail){ 
-            Mail::to("gerencia@posadaloshumacos.com")
-                     ->send(new EmailAquiler($sendDataMail)); 
-           
-           
-           Mail::to("sistema@posadaloshumacos.com")
-                     ->send(new EmailAquiler($sendDataMail)); 
-
-
-           })
-           */
-          //------------------------       
-           
-           return redirect()->route("dashboard")->with("message","Cliente registrado, Recuerda registrar el pago");
-
-
+          return redirect()->route("dashboard")->with("message","Cliente registrado, Recuerda registrar el pago");
 
         } catch (\Throwable $th) {
             //throw $th;
@@ -254,9 +231,7 @@ class FichaRegistroHuespeController extends Controller
 
      //------------------------------
      //Formulario de pago 
-     
-
-     //--------------------
+     //------------------------------
 
 
      public function formularioPago($posada_id){

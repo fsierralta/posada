@@ -97,10 +97,21 @@ function sumarDias(fechaActual, dias) {
  */
 function restarAnios(fecha, anios) {
     const nuevaFecha = new Date(fecha);
+    console.log("restar año a esta fecha",nuevaFecha)
     nuevaFecha.setFullYear(nuevaFecha.getFullYear() - anios);
     return nuevaFecha;
 }
 
+
+
+/**
+ * Fetches data for a guest based on their ID (cedula).
+ *
+ * @param {string} cedula - The ID of the guest to fetch data for.
+ * @returns {Promise<Object>} A promise that resolves to an object containing either the guest data or an error.
+ * @property {Object|null} data - The guest data if the request was successful, otherwise null.
+ * @property {string|null} error - The error message if the request failed, otherwise null.
+ */
 const getDataHuespede=async(cedula)=>{
     //e.preventDefault()
     try {
@@ -133,6 +144,11 @@ const getDataHuespede=async(cedula)=>{
 
  }
 
+function diasDeEstadia(fecha_salida,fecha_entrada){
+
+    return Math.ceil((new Date(fecha_salida) - new Date(fecha_entrada)) / (1000 * 60 * 60 * 24))
+}
+
 export {
     fechaFormato_dmy,
     findPrecio,
@@ -140,8 +156,11 @@ export {
     sumarDias,
     toISOStringDate,
     getDataHuespede,
-    mostrarToast
+    mostrarToast,
+    diasDeEstadia
+
 
 }
+
 
 let date=new Date();

@@ -169,7 +169,8 @@ class ReservacionController extends Controller
                 "fecha_salida"=>Carbon::parse($request->fecha_salida),
                 'estatuspago'=>'C',
                  'monto'=>$totalPagar,
-                 'formapago_id'=>$precio->id,
+                 'formapago_id'=>$request->pago_id,
+                 'precio_id'=>$request->precio_id,
                  'cantidad_cabana_reservadas'=>$request->cantidad_cabana_reservadas,
                  'created_at'=>Carbon::now(),
                  'updated_a'=>Carbon::now(),
@@ -198,5 +199,30 @@ class ReservacionController extends Controller
 
     }
 
+
+
+    public function edit(Request $request, Reservacion $reservacion)
+    {
+        info("dataResevacion",["data"=>$reservacion->huespede]);
+       try {
+        if($reservacion){
+            return Inertia::render('Reservacion/ReservacionEdit', [
+                'reservacion' => $reservacion,
+                'precios' => Precio::all(),
+                'formaPagos' => FormaPago::all(),
+               
+            ]);
+
+        }
+
+
+        
+    }
+    catch (\Throwable $th) {
+         info('',['error'=>$th->getMessage()]);
+         return back()->with('message',$th->getMessage());
+
+    }
    
+}
 }
