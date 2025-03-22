@@ -116,7 +116,7 @@ class Reservacion
                 });
         })->count();
 
-        info('disponibilidad',['resultado'=>"reservacion $reservacion , solicita nro de cabana:$cantidadCabana , ocupada: $ocupada"]);
+        info('disponibilidad',['resultado'=>"reservaciones $reservaciones , solicita nro de cabana:$cantidadCabana , ocupada: $ocupada"]);
         $disponibilidad = $this->totalCabana() - ($reservaciones + $cantidadCabana+$ocupada);
         info('disponibilidad', ["total" => $disponibilidad, "reservaciones" => $reservaciones]);
         return $disponibilidad > 0 && $disponibilidad <= $this->totalCabana();
