@@ -21,7 +21,7 @@ class ReservacionSeeder extends Seeder
         $huespedes = Huespede::all(); // Obtén todos los huéspedes
         $formasPago = FormaPago::all(); // Obtén todas las formas de pago
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 67; $i++) {
             $huespede = $huespedes->random(); // Selecciona un huésped al azar
             $formaPago = $formasPago->random(); // Selecciona una forma de pago al azar
 

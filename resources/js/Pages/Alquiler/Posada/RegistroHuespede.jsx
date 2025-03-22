@@ -134,6 +134,7 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
               setMensaje("Registro Encontrado")
               setMostrar(true)
               setNombreApellidos(nombre.concat(" ", apellidos));
+              setData('cedula',cedula);
            }
            //console.log(response)
             
@@ -164,8 +165,8 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
 
          }
          try {
-           
-            post(route("registrohuespede.store",{data,acompanante}),{
+           setData({...data,cedula});
+                    post(route("registrohuespede.store",{data,acompanante}),{
                 onBefore:()=>window.confirm("Desea Enviar"),
                 onError:(error)=>console.log(error)
             })

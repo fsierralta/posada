@@ -29,6 +29,9 @@ class CabanaCerradaController extends Controller
     public function store(Request $request)
     {
         //
+        $cabananaCerrada = new CabanaCerrada();
+        
+
     }
 
     /**

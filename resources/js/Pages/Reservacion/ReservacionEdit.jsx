@@ -1,5 +1,5 @@
 import Authenticated from '@/Layouts/AuthenticatedLayout';
-import { usePage,useForm } from '@inertiajs/react';
+import { usePage,useForm,router } from '@inertiajs/react';
 import InputFecha from './Components/InputFecha';
 import InputDatosPersonales from './Components/InputDatosPersonales';
 import InputPersona from './Components/InputPersona';
@@ -8,7 +8,7 @@ import MainHtml  from '@/Components/MainHtml';
 import { ToastContainer } from 'react-toastify';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { sumarDias,findPrecio,diasDeEstadia,getDataHuespede} from '../Helper/help';
-
+import { mostrarToast } from '../Helper/help';
 
 
 export default function ReservacionEdit() {
@@ -58,8 +58,8 @@ export default function ReservacionEdit() {
    const goBack=(e)=>{
     e.preventDefault()
     router.get(route('reservaciones.index'),{
-      fecha_entrada:backRangoFechas[0],
-      fecha_salida:backRangoFechas[1]
+      fecha_entrada:reservacion.fecha_entrada,
+      fecha_salida:reservacion.fecha_salida
     })
     }         
   const onUpdateFechaSalida=()=>{
@@ -100,7 +100,7 @@ export default function ReservacionEdit() {
     e.preventDefault()
     console.log(data);
 
-   router.post(route('reservaciones.store'),data,{
+   router.put(route('reservaciones.update',reservacion.id),data,{
      onSuccess:()=>console.log('eviado'),
      onError:(error)=>console.log(error)
    })

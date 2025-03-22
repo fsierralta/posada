@@ -164,7 +164,7 @@ class FichaRegistroHuespeController extends Controller
             ]);
 
             $movimientoHuespede=MovimientoHuespede::create([
-                  "ficha_registro_huespe_id"=>$huespede->id,
+                  "ficha_registro_huespe_id"=>$fichaRegistroHuespe->id,
                                    "precio_id"=>$precio_id,
                                    "cantidad"=> $request->nrodias,
                                    "nropersonas"=>$request->nropersonas,
@@ -191,7 +191,7 @@ class FichaRegistroHuespeController extends Controller
         //-----------------se carga el monto de la reservacion/
         
         $findReservacionHuespede=$this->customReservacion->findReservacionHuespede((int) $request->reservacion_id);
-         if($findReservacionHuespede){
+         if($findReservacionHuespede!=null){
               $request->merge([
                 "posada_id"=>$posada->id,
                 'nroficha' =>$fichaRegistroHuespe->nroficha,
@@ -212,6 +212,7 @@ class FichaRegistroHuespeController extends Controller
            
 
          }
+
         
 
         //se va a crear un classe despachadora de mail 
@@ -339,7 +340,7 @@ class FichaRegistroHuespeController extends Controller
         }
         $pagoHuespede=PagoHuespede::create([
              "formapago_id"=>$request->formaPago_id,
-             "ficha_registro_huespe_id"=>$request->huespede_id,
+             "ficha_registro_huespe_id"=>$movimientohuespede->ficha_registro_huespe_id,
              "monto"=>$request->monto,
              "fechapago"=>Carbon::now()->format('Y-m-d'),
              "referencia"=>$request->referencia,

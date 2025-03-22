@@ -3,11 +3,12 @@
 namespace App\CustomTool;
 use App\Models\Posada;
 use Closure;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use App\Models\Reservacion as ModelReservacion;
-
+use App\Models\FichaRegistroHuespe;
 
 class Reservacion
 {
@@ -92,7 +93,7 @@ class Reservacion
      */
     public function verificarDisponibilidad($fechaEntrada, $fechaSalida, $reservacion, $cantidadCabana)
     {
-        $reservaciones = $reservacion->where(function ($query) use ($fechaEntrada, $fechaSalida) {
+        $reservaciones = $reservacion->where(function (Builder $query) use ($fechaEntrada, $fechaSalida) {
             $query->whereBetween('fecha_entrada', [$fechaEntrada, $fechaSalida])
                 ->orWhereBetween('fecha_salida', [$fechaEntrada, $fechaSalida])
                 ->orWhere(function ($query) use ($fechaEntrada, $fechaSalida) {
@@ -100,9 +101,26 @@ class Reservacion
                         ->where('fecha_salida', '>=', $fechaSalida);
                 });
         })->sum("cantidad_cabana_reservadas");
-        $disponibilidad = $this->totalCabana() - ($reservaciones + $cantidadCabana);
+        /* //--------------------------------
+        * Se debe tomar en cuenta las ocupadas 
+        * para la fecha solicitante 
+        * en la base de datos ficha_registro_huespes
+        //- */
+        $ocupada=FichaRegistroHuespe::where('estatus','A')
+        ->where(function (Builder $query) use ($fechaEntrada, $fechaSalida) {
+            $query->whereBetween('fechaEntrada', [$fechaEntrada, $fechaSalida])
+                ->orWhereBetween('fechaSalida', [$fechaEntrada, $fechaSalida])
+                ->orWhere(function ($query) use ($fechaEntrada, $fechaSalida) {
+                    $query->where('fechaEntrada', '<=', $fechaEntrada)
+                        ->where('fechaSalida', '>=', $fechaSalida);
+                });
+        })->count();
+
+        info('disponibilidad',['resultado'=>"reservacion $reservacion , solicita nro de cabana:$cantidadCabana , ocupada: $ocupada"]);
+        $disponibilidad = $this->totalCabana() - ($reservaciones + $cantidadCabana+$ocupada);
         info('disponibilidad', ["total" => $disponibilidad, "reservaciones" => $reservaciones]);
-        return ($disponibilidad > 0 && $disponibilidad <= $this->totalCabana());
+        return $disponibilidad > 0 && $disponibilidad <= $this->totalCabana();
+
 
     }
 
@@ -164,10 +182,10 @@ class Reservacion
      * @param int $posada_id El ID de la posada.
      * @return reservacion
      */
-    public function findReservacionHuespede(int $reservacion_id): ?ModelReservacion
+    public function findReservacionHuespede(int $reservacion_id): ModelReservacion|null
     {
-        $reservacion = ModelReservacion::findOrFail($reservacion_id);
-        return $reservacion;
+        $reservacion = ModelReservacion::find($reservacion_id);
+        return $reservacion instanceof ModelReservacion ? $reservacion : null;
 
 
 

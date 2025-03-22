@@ -27,6 +27,10 @@ return new class extends Migration
             $table->foreign('formapago_id')->references('id')->on('forma_pagos');
             $table->integer('cantidad_cabana_reservadas')->default(1);
             $table->string('cargado_pago_huespede',12)->default('no');//se actualiza al registrar huespede
+            $table->softDeletes("deleted_at",0);
+            $table->unsignedBigInteger("precio_id")->nullable();
+            $table->foreign("precio_id")->references("id")->on("precios");
+
 
 
 

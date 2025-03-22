@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Reservacion extends Model
 {
     use HasFactory;
     protected $table = 'reservaciones';
-    
+    use SoftDeletes;
     protected $fillable = [
         'nro_reservacion',
         'huespede_id',
@@ -25,6 +25,9 @@ class Reservacion extends Model
         'cargado_pago_huespede',
         'created_at',
         'updated_at',
+        'precio_id',
+        'deleted_at'
+
          
     ];
 

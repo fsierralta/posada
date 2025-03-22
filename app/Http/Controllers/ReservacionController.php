@@ -90,7 +90,7 @@ class ReservacionController extends Controller
 
     public function store(Request $request)
     {
-        info("store",['data'=>$request]) ;
+        //info("store",['data'=>$request]) ;
 
          $validate=$request->validate([
             'fecha_entrada' => 'required|date',
@@ -160,7 +160,7 @@ class ReservacionController extends Controller
 
             }
             $nroResevacion=FichaRegistro::find(1);
-            info($nroResevacion->mostrarNroReservacion());
+            //info($nroResevacion->mostrarNroReservacion());
             $newReservacion=Reservacion::create([
                 "nro_reservacion"=>$nroResevacion->mostrarNroReservacion(),
                 'huespede_id'=>$huespede->id,
@@ -170,7 +170,7 @@ class ReservacionController extends Controller
                 'estatuspago'=>'C',
                  'monto'=>$totalPagar,
                  'formapago_id'=>$request->pago_id,
-                 'precio_id'=>$request->precio_id,
+                 'precio_id'=>$precio->id,
                  'cantidad_cabana_reservadas'=>$request->cantidad_cabana_reservadas,
                  'created_at'=>Carbon::now(),
                  'updated_a'=>Carbon::now(),
@@ -225,4 +225,12 @@ class ReservacionController extends Controller
     }
    
 }
+
+public function update(Request $request, Reservacion $reservacion){
+    info('update',["reservacion"=>$reservacion]);
+    return back()->with("message","update ");
+
+
+}
+
 }

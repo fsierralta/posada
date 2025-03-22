@@ -26,13 +26,7 @@ class UserSeeder extends Seeder
                         'email' => "recepcionista@posadaloshumacos.com",
                         'password' => Hash::make('aUF9bjUt6rbZZXZ')
                         ],
-                        [
-                            'name' => "Sistema",
-                            'email' => "sistema@posadaloshumacos.com",
-                            'password' => Hash::make('aUF9bjUt6rbZZXZ')
-
-                        ],
-                        [
+                         [
                             'name' => "Sistema",
                             'email' => "sistema@posadaloshumacos.com",
                             'password' => Hash::make('pyG@m@XY0qa1')

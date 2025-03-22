@@ -31,6 +31,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+Route::get("layout",function (){
+    $user=[
+        "name"=>"freddu"
+    ];
+
+    return Inertia::render("LayoutInertia/Home", ["user"=>$user]);
+});
+
 //require aqui huespede.php
 require __DIR__.'/huespede.php';
 //requirre aqui posada.php 
