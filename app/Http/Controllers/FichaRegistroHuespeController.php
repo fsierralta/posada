@@ -164,7 +164,7 @@ class FichaRegistroHuespeController extends Controller
             ]);
 
             $movimientoHuespede=MovimientoHuespede::create([
-                  "ficha_registro_huespe_id"=>$fichaRegistroHuespe->id,
+                                  "ficha_registro_huespe_id"=>$fichaRegistroHuespe->id,
                                    "precio_id"=>$precio_id,
                                    "cantidad"=> $request->nrodias,
                                    "nropersonas"=>$request->nropersonas,
@@ -195,7 +195,7 @@ class FichaRegistroHuespeController extends Controller
               $request->merge([
                 "posada_id"=>$posada->id,
                 'nroficha' =>$fichaRegistroHuespe->nroficha,
-                     'monto'=>$findReservacionHuespede->monto,
+                'monto'=>$findReservacionHuespede->monto,
                 "formaPago_id"=>$findReservacionHuespede->formapago_id,
                 "referencia"=>$findReservacionHuespede->nro_reservacion,
                 "observacion"=>$findReservacionHuespede->observacion,

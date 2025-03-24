@@ -45,8 +45,7 @@ class ReservacionController extends Controller
         
         
         //info($reservaciones);
-        $reservaciones = $this->customReservacion->
-                         reservacionesEnRangoFecha($fecha_entrada, $fecha_salida,new Reservacion());
+        $reservaciones = $this->customReservacion->reservacionesEnRangoFecha($fecha_entrada, $fecha_salida,new Reservacion());
         /*  Reservacion::where(function ($query) use ($fecha_entrada, $fecha_salida) {
                                         $query->whereBetween('fecha_entrada', [$fecha_entrada, $fecha_salida])
                                               ->orWhereBetween('fecha_salida', [$fecha_entrada, $fecha_salida])
@@ -60,7 +59,8 @@ class ReservacionController extends Controller
                                     ->with('huespede')
                                     ->paginate(10);  */
       // info($reservaciones);
-        $nroCabana=$reservaciones->sum('cantidad_cabana_reservadas');
+
+        $nroCabana=$reservaciones ? $reservaciones->sum('cantidad_cabana_reservadas'):0 ;
        
         return Inertia::render('Reservacion/ReservacionIndex',["reservaciones"=>$reservaciones,
                                                                 "precios"=>Precio::all(),
@@ -190,13 +190,6 @@ class ReservacionController extends Controller
 
         } 
 
-
-       
-
-
-        
-        
-
     }
 
 
@@ -227,8 +220,105 @@ class ReservacionController extends Controller
 }
 
 public function update(Request $request, Reservacion $reservacion){
+
     info('update',["reservacion"=>$reservacion]);
-    return back()->with("message","update ");
+    $validate=$request->validate([
+        'fecha_entrada' => 'required|date',
+        'fecha_salida' => 'required|date|after_or_equal:fecha_entrada',
+        'dias_estadias'=>'required|min:1|',
+        'precio_id' => 'required|exists:precios,id',
+        "nro_personas"=>'required|min:1|integer',
+        'cantidad_cabana_reservadas'=>'required|min:1|max:9|integer',
+        'totalPagar' => 'required|numeric|min:1',
+        'pago_id' => 'required|exists:forma_pagos,id',
+        'observacion' => 'nullable|string|max:255',
+        'huespede_id' => 'nullable|min:0|integer',
+        'nacionalidad' => 'required|string|in:V,E',
+        'cedula' => 'required|string|max:20',
+        'nombre' => 'required|string|max:255',
+        'apellidos' => 'required|string|max:255',
+        'nacimiento' => 'required|date|before_or_equal:' . now()->subYears(18)->toDateString(),
+        'email' => 'required|email|max:255',
+        'celular' => 'required|string|max:20',
+        'procedencia' => 'required|string|max:255',
+        'profesion' => 'required|string|max:255',
+
+        // ...validaciones adicionales...
+    ]);
+    try {
+        //code...
+        $precio=Precio::findOrFail($request->precio_id);
+        $totalPagar= intval($request->nro_personas)*intval($request->dias_estadias)*floatval($precio->precio);
+        if($totalPagar!=$request->totalPagar){
+            throw new Exception("Revise el total a pagar", 1);
+            
+        }
+        $huespede=new Huespede();
+        if (intval($request->huespede_id) != 0) {
+            $huespede = Huespede::findOrFail($request->huespede_id);
+            $request->merge(['huespede_id' => $huespede->id]);
+        } else {
+            //para crear el huespde si es null
+             $huespede= $huespede->where("nacionalidad", '=', $request->nacionalidad)  
+                            ->where('cedula', '=', $request->cedula)
+                            ->first();
+        }
+        //--------calculado disponibilidad 
+        $disponible = $this->customReservacion->verificarDisponibilidad($request->fecha_entrada, 
+                                                                       $request->fecha_salida,
+                                                                       new Reservacion(),
+                                                                       intval($request->input('cantidad_cabana_reservadas'))
+       
+        );
+        if (!$disponible) {
+            throw new Exception('No hay disponibilidad para las fechas seleccionadas');
+        }
+        //
+        if($huespede==null){
+            $huespede=Huespede::create([
+                'nombre'=>$request->nombre,
+                'apellidos'=>$request->apellidos,
+                'cedula'=>$request->cedula,
+                'nacimiento'=>Carbon::parse($request->nacimiento),
+                'nacionalidad' => strtoupper($request->nacionalidad),
+                'procedencia'=>$request->procedencia,
+                'profesion'=>$request->profesion,
+                'email'=>$request->email,
+                'celular'=>$request->celular,
+                'direccion'=>"al registrarse"
+            ]);
+
+        }
+       // $nroResevacion=FichaRegistro::find(1);
+        //info($nroResevacion->mostrarNroReservacion());
+        $newReservacion=$reservacion->update([
+            'huespede_id'=>$huespede->id,
+            'nro_personas'=>$request->nro_personas,
+            'fecha_entrada'=>Carbon::parse($request->fecha_entrada),
+            "fecha_salida"=>Carbon::parse($request->fecha_salida),
+            'estatuspago'=>'C',
+            'monto'=>$totalPagar,
+            'formapago_id'=>$request->pago_id,
+             'precio_id'=>$precio->id,
+             'cantidad_cabana_reservadas'=>$request->cantidad_cabana_reservadas,
+             'created_at'=>Carbon::now(),
+             'updated_a'=>Carbon::now(),
+             'observacion'=>$request->observacion
+             
+           ]);
+           
+          return redirect(route('reservaciones.index'))->with('message','Reservacion actualizada nro:'.$reservacion->nro_reservacion);
+
+
+                            
+
+        } catch (\Throwable $th) {
+        //throw $th;
+        info('errr',['error'=>$th->getMessage()]);
+         return back()->with('message',$th->getMessage());
+
+    } 
+    
 
 
 }

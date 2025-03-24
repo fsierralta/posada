@@ -12,8 +12,8 @@ const ReservacionIndex = () => {
     fecha_entrada: rangoFechas[0],
     fecha_salida: rangoFechas[1],
   });
-  console.log(reservaciones)
-  const { links } = reservaciones;
+  //console.log(reservaciones)
+  const { links } = reservaciones?reservaciones:[] ;
 
   const getDataOnClick = (e) => {
     e.preventDefault();
@@ -75,13 +75,13 @@ const ReservacionIndex = () => {
               </PrimaryButton>
             </div>
           </div>
-           {reservaciones.data.length>0 ?(
+           {reservaciones!==null? (reservaciones.data.length>0 ?(
                   <div>
                  < ReservacionTable reservaciones={reservaciones} data={data} links={links} />
                      <div>{`Cantida de Resevaciones en este PAGINA:${nroCabana}`}</div> 
                 </div>):(
           <h1>no hay data</h1>
-                )
+                )):(<h1>no hay data</h1>)
               }     
           
         </>

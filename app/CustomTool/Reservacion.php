@@ -59,7 +59,7 @@ class Reservacion
      * @param
      */
 
-    public static function asignarCabana(\Closure $callback, Request $request = null): bool
+    public static function asignarCabana(\Closure $callback, Request $request ): bool
     {
         $validatea = $request->validate([
             'nombre' => 'required',
@@ -146,14 +146,14 @@ class Reservacion
                 });
 
         })
-            ->where('cargado_pago_huespede', 'no')
-            ->with('huespede')
-            ->paginate(10);
+          ->where('cargado_pago_huespede', 'no')
+          ->with('huespede')
+          ->paginate(10);
         info("claseCustom", [
             "data" => $reservaciones
 
         ]);
-        return $reservaciones;
+        return $reservaciones ? $reservaciones:null;
     }
 
     public function reservacionesEnFechaActual($fecha_entrada, $fecha_salida, $reservacion = null)
@@ -172,7 +172,7 @@ class Reservacion
             ->get();
 
 
-        return $reservaciones;
+        return $reservaciones ;
     }
 
     /**
@@ -182,7 +182,7 @@ class Reservacion
      * @param int $posada_id El ID de la posada.
      * @return reservacion
      */
-    public function findReservacionHuespede(int $reservacion_id): ModelReservacion|null
+    public function findReservacionHuespede(int $reservacion_id)
     {
         $reservacion = ModelReservacion::find($reservacion_id);
         return $reservacion instanceof ModelReservacion ? $reservacion : null;
