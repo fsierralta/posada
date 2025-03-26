@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use App\Models\Reservacion as ModelReservacion;
 use App\Models\FichaRegistroHuespe;
-
+use Carbon\Carbon;
 class Reservacion
 {
     /**
@@ -61,7 +61,7 @@ class Reservacion
 
     public static function asignarCabana(\Closure $callback, Request $request ): bool
     {
-        $validatea = $request->validate([
+        $validate = $request->validate([
             'nombre' => 'required',
             'apellido' => 'required',
             'cedula' => 'required',
@@ -148,9 +148,11 @@ class Reservacion
         })
           ->where('cargado_pago_huespede', 'no')
           ->with('huespede')
+          ->orderBy("fecha_entrada",'ASC')
           ->paginate(10);
         info("claseCustom", [
-            "data" => $reservaciones
+            "data" => $reservaciones, 
+            "rangoFecha"=>"entrada:$fecha_entrada salidad:$fecha_salida"
 
         ]);
         return $reservaciones ? $reservaciones:null;
@@ -169,6 +171,7 @@ class Reservacion
         })
             ->where('cargado_pago_huespede', 'no')
             ->with('huespede')
+            ->orderBy("fecha_entrada",'ASC')
             ->get();
 
 

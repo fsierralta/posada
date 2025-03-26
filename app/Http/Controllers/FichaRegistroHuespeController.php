@@ -189,7 +189,7 @@ class FichaRegistroHuespeController extends Controller
         ];
 
         //-----------------se carga el monto de la reservacion/
-        
+      
         $findReservacionHuespede=$this->customReservacion->findReservacionHuespede((int) $request->reservacion_id);
          if($findReservacionHuespede!=null){
               $request->merge([
@@ -516,7 +516,7 @@ class FichaRegistroHuespeController extends Controller
             };
 
             $movimientoHuespede=MovimientoHuespede::create([
-                                               "ficha_registro_huespe_id"=>$request->huespede_id,
+                                               "ficha_registro_huespe_id"=>$fichaRegistroHuespe->id,
                                                "precio_id"=>$request->precio_id,
                                                'cantidad'=>$request->cantidad,
                                                "precio"=>$request->precio,
