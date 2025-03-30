@@ -147,6 +147,7 @@ class Reservacion
 
         })
           ->where('cargado_pago_huespede', 'no')
+          ->orWhere("monto",">",0)
           ->with('huespede')
           ->orderBy("fecha_entrada",'ASC')
           ->paginate(10);
@@ -170,6 +171,7 @@ class Reservacion
 
         })
             ->where('cargado_pago_huespede', 'no')
+            ->orWhere("monto",">",0)
             ->with('huespede')
             ->orderBy("fecha_entrada",'ASC')
             ->get();
@@ -194,6 +196,6 @@ class Reservacion
 
     }
 
-
-
+ 
+ 
 }

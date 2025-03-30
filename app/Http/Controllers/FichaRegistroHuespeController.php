@@ -189,29 +189,32 @@ class FichaRegistroHuespeController extends Controller
         ];
 
         //-----------------se carga el monto de la reservacion/
-      
+        
         $findReservacionHuespede=$this->customReservacion->findReservacionHuespede((int) $request->reservacion_id);
          if($findReservacionHuespede!=null){
-              $request->merge([
-                "posada_id"=>$posada->id,
-                'nroficha' =>$fichaRegistroHuespe->nroficha,
-                'monto'=>$findReservacionHuespede->monto,
-                "formaPago_id"=>$findReservacionHuespede->formapago_id,
-                "referencia"=>$findReservacionHuespede->nro_reservacion,
-                "observacion"=>$findReservacionHuespede->observacion,
-                'huespede_id'=>$huespede->id
-                ])  ;
-              $findReservacionHuespede->cargado_pago_huespede="si";
-              $findReservacionHuespede->save();
-              $findReservacionHuespede->posadas()->attach($posada_id);
-             
-           $codeSendEmailUser=new CodeSendEmailUser($request);
-           $codeSendEmailUser->sendNotificacionAlquiler($sendDataMail);   
-           //se envia al pago      
-           return  $this->storepago($request);//se realiza el pago
+           return $this->procesarReservacion($request,  $totalVerificado,$posada,$huespede,$fichaRegistroHuespe,  $sendDataMail);
+         }
+
+        //       $ ->merge([
+        //         "posada_id"=>$posada->id,
+        //         'nroficha' =>$fichaRegistroHuespe->nroficha,
+        //         'monto'=>$findReservacionHuespede->monto,
+        //         "formaPago_id"=>$findReservacionHuespede->formapago_id,
+        //         "referencia"=>$findReservacionHuespede->nro_reservacion,
+        //         "observacion"=>$findReservacionHuespede->observacion,
+        //         'huespede_id'=>$huespede->id
+        //         ])  ;
+        //        $findReservacionHuespede->cargado_pago_huespede="si";
+        //        $findReservacionHuespede->save();
+        //        $findReservacionHuespede->posadas()->attach($posada_id);
+                
+        //        $codeSendEmailUser=new CodeSendEmailUser($request);
+        //        $codeSendEmailUser->sendNotificacionAlquiler($sendDataMail);   
+        //    //se envia al pago      
+        //    return  $this->storepago($request);//se realiza el pago
            
 
-         }
+        //  }
 
         
 
@@ -230,9 +233,47 @@ class FichaRegistroHuespeController extends Controller
 
     }
 
+    public function procesarReservacion($request,$totalVerificado,$posada,$huespede,$fichaRegistroHuespe,  $sendDataMail){
+
+         $findReservacionHuespede=$this->customReservacion->findReservacionHuespede((int) $request->reservacion_id);
+         if($findReservacionHuespede!=null){
+              $request->merge([
+                "posada_id"=>$posada->id,
+                'nroficha' =>$fichaRegistroHuespe->nroficha,
+                'monto'=>$findReservacionHuespede->monto,
+                "formaPago_id"=>$findReservacionHuespede->formapago_id,
+                "referencia"=>$findReservacionHuespede->nro_reservacion,
+                "observacion"=>$findReservacionHuespede->observacion,
+                'huespede_id'=>$huespede->id
+                ])  ;
+                if ($findReservacionHuespede->monto >= $totalVerificado) {
+                    $findReservacionHuespede->monto = $findReservacionHuespede->monto - $totalVerificado;
+                } else {
+                    $findReservacionHuespede->monto = 0;
+                };
+
+               $findReservacionHuespede->cargado_pago_huespede="si";
+               $findReservacionHuespede->save();
+               $findReservacionHuespede->posadas()->attach($posada->id);
+                
+               $codeSendEmailUser=new CodeSendEmailUser($request);
+               $codeSendEmailUser->sendNotificacionAlquiler($sendDataMail);   
+           //se envia al pago      
+           return  $this->storepago($request);//se realiza el pago
+           
+
+         }
+
+
+
+
+    }
+
      //------------------------------
      //Formulario de pago 
      //------------------------------
+
+
 
 
      public function formularioPago($posada_id){
@@ -295,8 +336,8 @@ class FichaRegistroHuespeController extends Controller
 
 
     //----------------------------------------
-    //Se registran los pago
-    //------------------------------------
+    //Se registran los pago                  -
+    //----------------------------------------
     public function storepago(Request $request){
 
         //Se procesa el pago del huespede 
@@ -649,14 +690,6 @@ class FichaRegistroHuespeController extends Controller
 
 
         ]);  */
-
-
-
-
-
-
-
-
 
     }
 

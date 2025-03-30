@@ -5,7 +5,7 @@ import Mensaje from "@/Components/Mensaje";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Head, useForm,Link } from "@inertiajs/react";
+import { Head, useForm,Link,router } from "@inertiajs/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {toISOStringDate}   from "@/Pages/Helper/help"
@@ -26,7 +26,7 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
 
      
 })
- console.log("entrada data",data)
+  // console.log("entrada data",data)
   const [nombreApellido,setNombreApellidos]=useState("");
   const [mostrar,setMostrar]=useState(false)
   const [mensaje,setMensaje]=useState("")
@@ -166,9 +166,11 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
          }
          try {
            setData({...data,cedula});
-                    post(route("registrohuespede.store",{data,acompanante}),{
+        post(route("registrohuespede.store"),
+                          {data,acompanante},
+                                                     {
                 onBefore:()=>window.confirm("Desea Enviar"),
-                onError:(error)=>console.log(error)
+                onError:(error)=>console.log("eror:",error)
             })
          } catch (error) {
             console.log
@@ -236,7 +238,7 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
             if (Array.isArray(reserva) && reserva.length>0){
                  const cedula=reserva[0].huespede.nacionalidad.concat(reserva[0].huespede.cedula)
                 const nombreApellido=reserva[0].huespede.nombre.concat(reserva[0].huespede.apellidos)
-                const fechaEntrada= toISOStringDate(reserva[0].fecha_entrada,1) //el segun parametro es para que nos reste anos 
+              // const fechaEntrada= toISOStringDate(reserva[0].fecha_entrada,1) //el segun parametro es para que nos reste anos 
                 const fechaSalida= toISOStringDate(reserva[0].fecha_salida,1)
                 const montoTotal=reserva[0].monto
                 const precio_id=reserva[0].formapago_id
@@ -245,8 +247,7 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
                 setCedula(cedula)
                 setNombreApellidos(nombreApellido)
                 setData({...data,
-                           fechaEntrada,
-                           fechaSalida,
+                          fechaSalida,
                            cedula,
                            montoTotal,
                            precio_id,
@@ -255,14 +256,7 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
                            
                           }
                         )
-                
-               
-               
-               
-                
-
-
-            }   
+       }   
         
         }
 
