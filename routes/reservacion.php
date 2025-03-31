@@ -27,8 +27,7 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::get('/reservaciones', [ReservacionController::class, 'index'])
     ->name('reservaciones.index');
 
-    Route::get('/reservaciones/{reservacion}/pdf', [ReservacionController::class, 'pdf']);
-
+    
 
 });
 

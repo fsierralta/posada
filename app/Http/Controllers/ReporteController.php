@@ -64,7 +64,7 @@ class ReporteController extends Controller
           
           
           
-         $pdf=pdf::loadView('reporte.ticketconsumo',$data);
+         $pdf=Pdf::loadView('reporte.ticketconsumo',$data);
         
           return $pdf->download($name);   
  
@@ -133,7 +133,7 @@ class ReporteController extends Controller
          $pdf->loadHTML($htm);
          return $pdf->stream($name); */
 
-          $pdf=pdf::loadView("reporte.estadocta",$data); 
+          $pdf=Pdf::loadView("reporte.estadocta",$data); 
           return $pdf->download($name); 
 
 
@@ -188,7 +188,7 @@ class ReporteController extends Controller
 
          //return view("reporte.estadocta",$data);
          $name=$huespede->nacionalidad.$huespede->cedula."_".Str::random(6).".pdf";      
-         $pdf=pdf::loadView("reporte.notadefactura",$data);
+         $pdf=Pdf::loadView("reporte.notadefactura",$data);
         return $pdf->download($name);
 
 
@@ -207,7 +207,7 @@ class ReporteController extends Controller
           $pagosPorRango=$pagoHuespede->pagosPorRangoReporte(Carbon::parse($request->fechainicial),Carbon::parse($request->fechafinal));
           
           $name="repocaja.pdf";
-          $pdf=pdf::loadView("reporte.movimientosPagos",[
+          $pdf=Pdf::loadView("reporte.movimientosPagos",[
                                                                     "fechaInicial"=>$request->fechainicial,
                                                                     "fechaFinal"  =>$request->fechafinal,
                                                                     "pagos"=>$pagosPorRango,
@@ -247,7 +247,7 @@ class ReporteController extends Controller
                                                       ]
                                                    );  */
           $name="repoInformeMes_".$fechaInicial->month."_".$fechaInicial->year.".pdf";
-          $pdf=pdf::loadView('reporte.informePolicialMensual',["fechaInicial"=>$fechaInicial->format('d-m-Y'),
+          $pdf=Pdf::loadView('reporte.informePolicialMensual',["fechaInicial"=>$fechaInicial->format('d-m-Y'),
                                                                 "fechaFinal" =>$fechaFinal->format('d-m-Y')   ,
                                                                "huespedesMes"=>$huespedesMes
                                                       ]) ;                                      
@@ -261,6 +261,57 @@ class ReporteController extends Controller
       
 
 
+    }
+
+    /**
+     * Genera un reporte PDF del informe policial mensual
+     * 
+     * Este método genera un reporte PDF con los registros de huéspedes para un período específico.
+     * Utiliza la clase RegistroLibroPolicial para obtener los datos y genera un archivo PDF en formato A3 horizontal.
+     *
+     * @param Request $request Contiene los parámetros fechainicial y fechafinal para el período del reporte
+     * @return \Illuminate\Http\Response Descarga el archivo PDF generado
+     * @throws \Throwable Si ocurre algún error durante la generación del reporte
+     */
+
+
+    public function reservacionPdf($id)
+    {
+        try {
+            $reservacion = \App\Models\Reservacion::with(['huespede', 'posadas'])->find($id);
+            
+            if (!$reservacion) {
+                return back()->with('message', 'Reservación no encontrada');
+            }
+
+            $fechaActual = Carbon::now()->format('d-m-Y');
+            
+            $cabezera = [
+                'fechaActual' => $fechaActual,
+                'nombreCliente' => $reservacion->huespede->nombre . ' ' . $reservacion->huespede->apellidos,
+                'cedula' => $reservacion->huespede->nacionalidad . $reservacion->huespede->cedula,
+                'telefonos' => $reservacion->huespede->telefono,
+                'direccion' => $reservacion->huespede->direccion,
+                'fechaEntrada' => Carbon::parse($reservacion->fecha_entrada)->format('d-m-Y'),
+                'fechaSalida' => Carbon::parse($reservacion->fecha_salida)->format('d-m-Y'),
+                'nroPersonas' => $reservacion->nro_personas,
+                'observacion' => $reservacion->observacion,
+                'monto' => $reservacion->monto,
+                'cantidad_cabana_reservadas'=>$reservacion->cantidad_cabana_reservadas
+            ];
+
+            $name = "r".$reservacion->nro_reservacion.".pdf";
+            $pdf = Pdf::loadView('reservaciones.reservacion',[
+                'cabezera' => $cabezera,
+                'reservacion' => $reservacion
+            ]);
+            
+            return $pdf->download($name);
+
+        } catch (\Throwable $th) {
+            info("error", ["message" => $th->getMessage()]);
+            return back()->with("message", $th->getMessage());
+        }
     }
 
 }

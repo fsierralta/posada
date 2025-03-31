@@ -19,7 +19,8 @@ const ReservacionTable = ({ reservaciones, data, links }) => {
             <th className="border border-collapse rounded-md">Fecha Entrada</th>
             <th className="border border-collapse rounded-md">Fecha Salida</th>
             <th className="border border-collapse rounded-md">$ Pago</th>
-            <th>Editar</th>
+            <th className="border border-collapse rounded-md">Editar</th>
+            <th className="border border-collapse rounded-md">Imprimir</th>
           </tr>
         </thead>
         <tbody>
@@ -37,6 +38,9 @@ const ReservacionTable = ({ reservaciones, data, links }) => {
                 <td className="border border-collapse rounded-md">{reservacion.monto}</td>
                 <td className="justify-center text-center items-center">
                   <Link  href={route('reservaciones.edit',reservacion.id)} as="button" className="bg-yellow-500 py-2 rounded-md px-2">Editar</Link>
+                </td>
+                <td className="justify-center text-center items-center">
+                  <Link href={route('repo.06', reservacion.id)} as="button" className="bg-blue-500 py-2 rounded-md px-2">Imprimir</Link>
                 </td>
               </tr>
             ))
