@@ -2,14 +2,14 @@
 @extends('layouts.layout')
 
 @section("content")
-    <h1>Fecha Impresion:{{ $cabezera["fechaActual"] }}  
-    <h1>Reservacion</h1>
+    <h1>Fecha Impresion:{{ $cabezera["fechaActual"] }} </h1> 
+    <h1>Reservación</h1>
     <hr/>
-    <h3> {{'Nro:'.$reservacion["nro_reservacion"]}}
+    <h3> {{'Nro:'.$reservacion["nro_reservacion"]}}</h3>
     <p><hr/></p>   
     <p>Cliente: {{$cabezera['nombreCliente']}}</p>
     <p>RIF-Cedula:{{$cabezera['cedula']}}</p>
-    <p>Telefono:{{$cabezera['telefonos']}}
+    <p>Telefono:{{$cabezera['telefonos']}}</p>
     <p>Dirección:{{$cabezera['direccion']}}</p>   
     <p>Fecha Entrada: {{$cabezera['fechaEntrada']}}</p>
     <p>Fecha Salida: {{$cabezera['fechaSalida']}}</p>

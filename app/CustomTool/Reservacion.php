@@ -151,11 +151,11 @@ class Reservacion
           ->with('huespede')
           ->orderBy("fecha_entrada",'ASC')
           ->paginate(10);
-        info("claseCustom", [
+      /*   info("claseCustom", [
             "data" => $reservaciones, 
             "rangoFecha"=>"entrada:$fecha_entrada salidad:$fecha_salida"
 
-        ]);
+        ]); */
         return $reservaciones ? $reservaciones:null;
     }
 

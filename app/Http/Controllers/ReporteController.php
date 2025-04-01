@@ -8,6 +8,7 @@ use App\Models\Huespede;
 use App\Models\MovimientoHuespede;
 use App\Models\PagoHuespede;
 use App\Models\Posada;
+use App\Models\Reservacion;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -77,7 +78,7 @@ class ReporteController extends Controller
                return: pdf->consumo 
     */
     public function nroticketConsumo($movimientoHuespede_id){
-        return view("reporte.linkticket",["data"=>$movimientoHuespede_id]);
+       // return view("reporte.linkticket",["data"=>$movimientoHuespede_id]);
 
 
 
@@ -278,7 +279,7 @@ class ReporteController extends Controller
     public function reservacionPdf($id)
     {
         try {
-            $reservacion = \App\Models\Reservacion::with(['huespede', 'posadas'])->find($id);
+            $reservacion =Reservacion::with(['huespede', 'posadas'])->find($id);
             
             if (!$reservacion) {
                 return back()->with('message', 'Reservación no encontrada');
@@ -301,11 +302,13 @@ class ReporteController extends Controller
             ];
 
             $name = "r".$reservacion->nro_reservacion.".pdf";
-            $pdf = Pdf::loadView('reservaciones.reservacion',[
-                'cabezera' => $cabezera,
-                'reservacion' => $reservacion
+            //info('nombre',['nombre'=>$name]);
+           // return view('reservaciones.reservacion',['cabezera'=>$cabezera, "reservacion"=>$reservacion]);
+            $pdf = Pdf::loadView('reservaciones.reservacion',
+            ['cabezera' => $cabezera,
+             'reservacion' => $reservacion->only('nro_reservacion')
             ]);
-            
+
             return $pdf->download($name);
 
         } catch (\Throwable $th) {
