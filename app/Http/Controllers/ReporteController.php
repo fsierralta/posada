@@ -12,8 +12,6 @@ use App\Models\Reservacion;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Dompdf\Dompdf;
-use Fpdf\Fpdf;
 use App\CustomTool\RegistroLibroPolicial;
 use Carbon\Month;
 use Illuminate\Support\Str;
@@ -304,9 +302,8 @@ class ReporteController extends Controller
             $name = "r".$reservacion->nro_reservacion.".pdf";
             //info('nombre',['nombre'=>$name]);
            // return view('reservaciones.reservacion',['cabezera'=>$cabezera, "reservacion"=>$reservacion]);
-            $pdf = Pdf::loadView('reservaciones.reservacion',
-            ['cabezera' => $cabezera,
-             'reservacion' => $reservacion->only('nro_reservacion')
+            $pdf = Pdf::loadView('reservaciones.reservacion',['cabezera' => $cabezera,
+             'reservacion' => $reservacion
             ]);
 
             return $pdf->download($name);

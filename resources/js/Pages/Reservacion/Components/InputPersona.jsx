@@ -21,9 +21,9 @@ export default function InputPersona({data,setData,errors,precioValor,formaPagos
                                  
                                   {errors.nro_personas && <div className="text-red-500">{errors.nro_personas}</div>}
                                 </div>
-                                <div className=''>
+                                <div className='w-full'>
                 
-                                  <InputLabel>Cabaña Reservar
+                                  <InputLabel>Cant. C
                                   <TextInput
                                     type='number'
                                     name='cantidad_cabana_reservadas'
@@ -32,7 +32,7 @@ export default function InputPersona({data,setData,errors,precioValor,formaPagos
                                     required
                                     min="1"
                                     max="9"
-                                    className=''
+                                    className='w-full'
                                   />
                                   </InputLabel>
                                  
@@ -63,7 +63,7 @@ export default function InputPersona({data,setData,errors,precioValor,formaPagos
                                            onClick={precioValor}
                                         >Calcular</PrimaryButton>
                                  </div>
-                                 <div className=''>
+                                 <div className='w-full'>
                                     <InputLabel>Forma de Pago
                                     <select
                                       name="pago_id"
