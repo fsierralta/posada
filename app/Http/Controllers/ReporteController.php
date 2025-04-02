@@ -277,7 +277,7 @@ class ReporteController extends Controller
     public function reservacionPdf($id)
     {
         try {
-            $reservacion =Reservacion::with(['huespede', 'posadas'])->find($id);
+            $reservacion = Reservacion::with(['huespede', 'posadas'])->find($id);
             
             if (!$reservacion) {
                 return back()->with('message', 'Reservación no encontrada');
@@ -296,22 +296,40 @@ class ReporteController extends Controller
                 'nroPersonas' => $reservacion->nro_personas,
                 'observacion' => $reservacion->observacion,
                 'monto' => $reservacion->monto,
-                'cantidad_cabana_reservadas'=>$reservacion->cantidad_cabana_reservadas
+                'cantidad_cabana_reservadas' => $reservacion->cantidad_cabana_reservadas
             ];
 
-            $name = "r".$reservacion->nro_reservacion.".pdf";
-            //info('nombre',['nombre'=>$name]);
-           // return view('reservaciones.reservacion',['cabezera'=>$cabezera, "reservacion"=>$reservacion]);
-            $pdf = Pdf::loadView('reservaciones.reservacion',['cabezera' => $cabezera,
-             'reservacion' => $reservacion
-            ]);
+            $name = "reservacion_" . $reservacion->nro_reservacion . ".pdf";
+            
+            // Limpiamos cualquier salida previa
+            ob_end_clean();
 
+            $pdf = Pdf::loadView('reservaciones.reservacion', [
+                'cabezera' => $cabezera,
+                'reservacion' => $reservacion
+            ]);
+            $pdf->setPaper('a4');
+            $pdf->setOption('isHtml5ParserEnabled', true);
+            $pdf->setOption('isRemoteEnabled', true);
             return $pdf->download($name);
+            //->download($name);
+          //  return view('reservaciones.reservacion',['cabezera'=>$cabezera, "reservacion"=>$reservacion]) ;
+            // Configuramos el PDF
+            
+
+            // Retornamos el PDF como descarga
+           
+            /*   return $pdf->stream($name, [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="'.$name.'"'
+                ]);
+ */
 
         } catch (\Throwable $th) {
             info("error", ["message" => $th->getMessage()]);
-            return back()->with("message", $th->getMessage());
+            return back()->with("message", "Error al generar el PDF: " . $th->getMessage());
         }
     }
 
 }
+;
