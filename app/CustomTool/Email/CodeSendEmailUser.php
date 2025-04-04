@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Contacto;
 use App\Mail\EmailPromocion;
 use PhpParser\Node\Stmt\TryCatch;
+use App\Mail\ReservacionMail;
 
 class CodeSendEmailUser{
 
@@ -199,7 +200,20 @@ class CodeSendEmailUser{
    
 
  }
+ function sendEmailReservacionToHuespede($cabezera,$reservacion){
+    try {
+        //code...
+        $toemail=$reservacion->huespede->email;
+        info("email",["emailReservacion"=>$toemail]);
+        Mail::to($toemail)
+       ->cc(env('MAIL_FROM_ADDRESS'))
+       ->send(new ReservacionMail($reservacion,$cabezera));
+        //se envia a la gerencia
+    } catch (\Exception $th) {
+        //throw $th;
+        Log::error("Error al enviar correo a: ".$toemail.": ".$th->getMessage());
+    }
 
 
-
+}
 }

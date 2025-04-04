@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\FichaRegistro;
+
 use App\Models\FichaRegistroHuespe;
-use App\Models\Huespede;
 use App\Models\MovimientoHuespede;
 use App\Models\PagoHuespede;
 use App\Models\Posada;
@@ -13,8 +12,10 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use App\CustomTool\RegistroLibroPolicial;
-use Carbon\Month;
 use Illuminate\Support\Str;
+
+
+
 class ReporteController extends Controller
 {
     //recibe el ticket a imprimir
@@ -274,10 +275,10 @@ class ReporteController extends Controller
      */
 
 
-    public function reservacionPdf($id)
+    public function reservacionPdf(Request $request,$id)
     {
         try {
-            $reservacion = Reservacion::with(['huespede', 'posadas'])->find($id);
+            $reservacion =Reservacion::with(['huespede', 'posadas'])->find($id);
             
             if (!$reservacion) {
                 return back()->with('message', 'Reservación no encontrada');
@@ -298,32 +299,22 @@ class ReporteController extends Controller
                 'monto' => $reservacion->monto,
                 'cantidad_cabana_reservadas' => $reservacion->cantidad_cabana_reservadas
             ];
-
-            $name = "reservacion_" . $reservacion->nro_reservacion . ".pdf";
+            
+            $name = "r".$reservacion->nro_reservacion.".pdf";
             
             // Limpiamos cualquier salida previa
-            ob_end_clean();
-
-            $pdf = Pdf::loadView('reservaciones.reservacion', [
+            
+            // ob_end_clean();
+            
+             $pdf = Pdf::loadView('reservaciones.reservacion', [
                 'cabezera' => $cabezera,
-                'reservacion' => $reservacion
+                'reservacion' => $reservacion->only('nro_reservacion')
             ]);
             $pdf->setPaper('a4');
             $pdf->setOption('isHtml5ParserEnabled', true);
-            $pdf->setOption('isRemoteEnabled', true);
             return $pdf->download($name);
-            //->download($name);
-          //  return view('reservaciones.reservacion',['cabezera'=>$cabezera, "reservacion"=>$reservacion]) ;
-            // Configuramos el PDF
-            
-
-            // Retornamos el PDF como descarga
-           
-            /*   return $pdf->stream($name, [
-                    'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="'.$name.'"'
-                ]);
- */
+                                    
+ 
 
         } catch (\Throwable $th) {
             info("error", ["message" => $th->getMessage()]);

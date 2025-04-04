@@ -10,6 +10,7 @@ use App\Models\FormaPago;
 use Carbon\Carbon;
 use Exception;
 use App\Models\Huespede;
+use App\CustomTool\Email\CodeSendEmailUser;
 use App\CustomTool\Reservacion as CustomReservacion;
 use App\Models\FichaRegistro;
 class ReservacionController extends Controller
@@ -176,6 +177,7 @@ public function update(Request $request, Reservacion $reservacion){
                 'cantidad_cabana_reservadas' => $request->cantidad_cabana_reservadas,
                 'observacion' => $request->observacion,
             ];
+            
 
             if ($reservacion) {
                 $reservacion->update($data);
@@ -186,7 +188,9 @@ public function update(Request $request, Reservacion $reservacion){
                 $reservacion = Reservacion::create($data);
                 $message = 'Reservación registrada nro: ' . $reservacion->nro_reservacion;
             }
-
+            //-----------------------
+           
+            $this->enviarCorreoReservacion($request,$huespede,$reservacion);
             return redirect(route('reservaciones.index'))->with('message', $message);
         } catch (\Throwable $th) {
             info('Error', ['error' => $th->getMessage()]);
@@ -218,8 +222,37 @@ public function update(Request $request, Reservacion $reservacion){
         return $huespede;
     }
     //-------
+    /**
+     * Sends a reservation confirmation email to the specified recipient.
+     *
+     * This function is responsible for composing and sending an email
+     * to confirm a reservation. It typically includes details such as
+     * reservation date, time, and other relevant information.
+     *
+     * @param string $email The recipient's email address.
+     * @param array $reservationDetails An associative array containing reservation details.
+     *                                   Example keys: 'date', 'time', 'name', etc.
+     * @return bool Returns true if the email was sent successfully, false otherwise.
+     */
+    public function enviarCorreoReservacion(Request $request,Huespede $huespede, Reservacion $reservacion){
+        $codeSendMail =new CodeSendEmailUser($request);
+        $fechaActual = Carbon::now()->format('d-m-Y');
+        $cabezera = [
+            'fechaActual' => $fechaActual,
+            'nombreCliente' => $huespede->nombre . ' ' . $huespede->apellidos,
+            'cedula' => $huespede->nacionalidad . $huespede->cedula,
+            'telefonos' => $huespede->telefono,
+            'direccion' => $huespede->direccion,
+            'fechaEntrada' => Carbon::parse($request->fecha_entrada)->format('d-m-Y'),
+            'fechaSalida' => Carbon::parse($request->fecha_salida)->format('d-m-Y'),
+            'nroPersonas' => $request->nro_personas,
+            'observacion' => $request->observacion,
+            'monto' => $reservacion->monto,
+            'cantidad_cabana_reservadas' => $reservacion->cantidad_cabana_reservadas
+        ];
+        $codeSendMail->sendEmailReservacionToHuespede($cabezera,$reservacion); 
 
-    
+    }
 
    
 
