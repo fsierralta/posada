@@ -302,6 +302,9 @@ class ReporteController extends Controller
             
             $name = "r".$reservacion->nro_reservacion.".pdf";
             
+
+
+            
             // Limpiamos cualquier salida previa
             
             // ob_end_clean();

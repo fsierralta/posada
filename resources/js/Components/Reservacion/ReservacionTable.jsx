@@ -3,8 +3,11 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import Pagination from '@/Components/Pagination';
 import { fechaFormato_dmy, dateTimeToDate } from '../../Pages/Helper/help';
 import { Link } from '@inertiajs/react';
-
+import axios from 'axios';
 const ReservacionTable = ({ reservaciones, data, links }) => {
+
+
+
   return (
     <div className="w-full mt-4">
       <table className="w-full border-collapse border border-green-400 border-rounded-md">
@@ -40,7 +43,7 @@ const ReservacionTable = ({ reservaciones, data, links }) => {
                   <Link  href={route('reservaciones.edit',reservacion.id)} as="button" className="bg-yellow-500 py-2 rounded-md px-2">Editar</Link>
                 </td>
                 <td className="justify-center text-center items-center">
-                  <Link href={route('repo.06', reservacion.id)} as="button" className="bg-blue-500 py-2 rounded-md px-2">Imprimir</Link>
+                  <a  href={route('repo.06', reservacion.id)}  className="bg-blue-500 py-2 rounded-md px-2">Imprimir</a>
                 </td>
               </tr>
             ))
