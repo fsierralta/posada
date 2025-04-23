@@ -16,5 +16,5 @@ class Contacto extends Model
 
 
 ];
-    
+
 }

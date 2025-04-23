@@ -18,7 +18,7 @@
     <p><hr/></p>
     <p>Cantida de Cabaña:{{ $cabezera["cantidad_cabana_reservadas"] }}</p>
     <p>Monto Total: {{number_format($cabezera['monto'],2,',','.')}}</p>
-
+  
 
 
 @endsection

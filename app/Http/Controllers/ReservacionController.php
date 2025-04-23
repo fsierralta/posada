@@ -254,7 +254,16 @@ public function update(Request $request, Reservacion $reservacion){
 
     }
 
-   
+   function destroy(Reservacion $reservacion){
+        try {
+            $reservacion->delete();
+            return redirect(route('reservaciones.index'))->with('message', 'Reservación eliminada correctamente');
+        } catch (\Throwable $th) {
+            info('Error', ['error' => $th->getMessage()]);
+            return back()->with('message', 'Error al eliminar la reservación: ' . $th->getMessage());
+        }   
 
 
+
+}
 }
