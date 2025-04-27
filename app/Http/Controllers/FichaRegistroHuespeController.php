@@ -242,16 +242,23 @@ class FichaRegistroHuespeController extends Controller
                 'nroficha' =>$fichaRegistroHuespe->nroficha,
                 'monto'=>$findReservacionHuespede->monto,
                 "formaPago_id"=>$findReservacionHuespede->formapago_id,
-                "referencia"=>$findReservacionHuespede->nro_reservacion,
-                "observacion"=>$findReservacionHuespede->observacion,
+                "referencia"=>  $findReservacionHuespede->nro_reservacion,
+                "observacion"=> $findReservacionHuespede->observacion ?
+                                    $findReservacionHuespede->observacion
+                                    :
+                                    "Sin observacion",
+
                 'huespede_id'=>$huespede->id
                 ])  ;
+                //se carga el monto de la reservacion/
+
                 if ($findReservacionHuespede->monto >= $totalVerificado) {
+                     
                     $findReservacionHuespede->monto = $findReservacionHuespede->monto - $totalVerificado;
                 } else {
                     $findReservacionHuespede->monto = 0;
                 };
-
+              
                $findReservacionHuespede->cargado_pago_huespede="si";
                $findReservacionHuespede->save();
                $findReservacionHuespede->posadas()->attach($posada->id);
@@ -437,6 +444,7 @@ class FichaRegistroHuespeController extends Controller
                                          "precios.precio as pvpprecio",
                                          "precios.id as pvpid")
                                 ->get();
+            info("detalleCargos",["data"=>$detalleCargos]);
 
              
              $detalleAbonos=DB::table('pago_huespedes')
@@ -445,7 +453,8 @@ class FichaRegistroHuespeController extends Controller
                                 ->select("pago_huespedes.*","forma_pagos.nombre as fpagonombre")
                                 ->get();
               
-                                             
+              info("detalleAbonos",["data"=>$detalleAbonos]);
+
              return Inertia::render("Catalogo/Huespede/EstadoCta/EstadoCta",["dataEstadoCuenta"=>
                                                                                 [ "posada"=>$posada,
                                                                                             "fichaRegistro"=>$ficharegistroHuespede,

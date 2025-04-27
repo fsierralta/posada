@@ -29,7 +29,7 @@ class EmailAquiler extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Gracias por su reservacion de este dia: '.now()->format('d-m-Y'),
+            subject: 'Gracias por hospedarse  de este dia: '.now()->format('d-m-Y'),
             from:new Address("reservaciones@posadaloshumacos.com",'Dpto: Reservaciones Posada Los Humacos'),
         );
     }

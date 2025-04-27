@@ -42,10 +42,10 @@ class Posada extends Model
 
     public function obtenerHuespedes(){
         $huespedesRegistrado=DB::table('posadas')
-                                 ->where('posadas.estatus','O')
-                                 ->join('ficha_registro_huespes',function(JoinClause $join){
+                                ->where('posadas.estatus','O')
+                                ->join('ficha_registro_huespes',function(JoinClause $join){
                                       $join->on('posadas.id','=','ficha_registro_huespes.posada_id')
-                                          ->join('huespedes','huespedes.id','=','ficha_registro_huespes.huespede_id')
+                                           ->join('huespedes','huespedes.id','=','ficha_registro_huespes.huespede_id')
                                            ->where('ficha_registro_huespes.estatus','=','A');
                                  })
                                   ->get();

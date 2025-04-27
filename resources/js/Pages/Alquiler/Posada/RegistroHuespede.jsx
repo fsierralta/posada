@@ -314,217 +314,145 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
           </div>
         <main>
             <Tabs>
-              
-                <TabList className='flex gap-4'>
-                    <Tab  >Registro Huespedes</Tab>
-                    <Tab >Registro Acompañante</Tab>
+                <TabList className='flex flex-wrap gap-4'>
+                    <Tab>Registro Huespedes</Tab>
+                    <Tab>Registro Acompañante</Tab>
                 </TabList>
-            
-              
-              <TabPanel className='border '>
-                    <form onSubmit={onSubmitHuespede}
-                      className="mt-4"
-                    >
-                      <div className="flex gap-2">
-                      <div>
-                        <InputLabel
-                                            
-                            value={"Nombre Posada"}
-                            
-                        />
-                        <TextInput
-                            type="text"
-                            value={data.posada.nombre}
-                            name='posadanombre'
-                            disabled={true}
-                        />
-                       </div> 
 
-                    
-                       <div>
-                         <InputLabel 
-                           value={'Reservaciones'}
-                         />
-                         <select 
-                           name="reservaciones"
-                           defaultValue={data.reservacion_id}
-                           className="rounded-md border-green-500"
-                           onChange={onChangeReservacion}
-                          
-
-
-                         >
-                          <option value={"0"}>Selecciones una reservacion</option>
-                          {
-                            reservaciones.length>0 ?(
-                            reservaciones.map(item=>(
-
-                              <option
-                              key={item.id}
-                               value={item.id}
-                              >{`Id:${item.id}|Nro:${item.nro_reservacion}|${item.huespede.nombre} ${item.huespede.apellidos} |Cedula:${item.huespede.cedula}|Monto:${item.monto}`}</option>
-                            ))
-                          ): <p>No hay servaciones este dia</p>
-                          }
-
-
-                         </select>
-
-                       </div>
-                      </div> 
-                      <div className=" flex grid-cols-3 space-x-2 mt-2">
-                        <div>
-                      <InputLabel
-                          htmlFor="cedula"                       
-                            value={"Cedula"}
-                            
-                        />
-                        <TextInput
-                            type="text"
-                            value={cedula}
-                            name='cedula'
-                            onChange={e=>setCedula(e.target.value.toUpperCase())}
-                            className="font-bold"
-                            placeholder={"cedula comienza con V o E"}
-                            required
-                        />
-                        <InputError message={errors.cedula} className="mt-2" />
-                        
-                        </div>
-                        <div>
-                        <InputLabel
-                                          
-                            value={"Buscar "}
-                            
-                        />
-                        <PrimaryButton
-                          name="btnBuscar"
-                          value={data.cedula}
-                          onClick={getDataHuespede}
-                        
-                        >Cedula</PrimaryButton>
-                        </div>  
-                        
-                        
-                        <div className="block w-full" >
-                                <InputLabel
-                                htmlFor="nombrehuespedes"                       
-                                    value={"Nombre Huespede"}
-                                    
+                <TabPanel className='border p-2'>
+                    <form onSubmit={onSubmitHuespede} className="mt-4">
+                        {/* Agrupa los campos principales en grid responsivo */}
+                        <div className="flex flex-col md:flex-row gap-2">
+                            <div className="flex-1 min-w-[180px]">
+                                <InputLabel value={"Nombre Posada"} />
+                                <TextInput
+                                    type="text"
+                                    value={data.posada.nombre}
+                                    name='posadanombre'
+                                    disabled={true}
                                 />
+                            </div>
+                            <div className="flex-1 min-w-[220px]">
+                                <InputLabel value={'Reservaciones'} />
+                                <select
+                                    name="reservaciones"
+                                    defaultValue={data.reservacion_id}
+                                    className="rounded-md border-green-500 w-full"
+                                    onChange={onChangeReservacion}
+                                >
+                                    <option value={"0"}>Selecciones una reservacion</option>
+                                    {reservaciones.length > 0 ? (
+                                        reservaciones.map(item => (
+                                            <option
+                                                key={item.id}
+                                                value={item.id}
+                                            >{`Id:${item.id}|Nro:${item.nro_reservacion}|${item.huespede.nombre} ${item.huespede.apellidos} |Cedula:${item.huespede.cedula}|Monto:${item.monto}`}</option>
+                                        ))
+                                    ) : <option>No hay reservaciones este día</option>}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-2">
+                            <div>
+                                <InputLabel htmlFor="cedula" value={"Cedula"} />
+                                <TextInput
+                                    type="text"
+                                    value={cedula}
+                                    name='cedula'
+                                    onChange={e => setCedula(e.target.value.toUpperCase())}
+                                    className="font-bold w-full"
+                                    placeholder={"cedula comienza con V o E"}
+                                    required
+                                />
+                                <InputError message={errors.cedula} className="mt-2" />
+                            </div>
+                            <div className="flex items-end">
+                                <div className="w-full">
+                                    <InputLabel value={"Buscar "} />
+                                    <PrimaryButton
+                                        name="btnBuscar"
+                                        value={data.cedula}
+                                        onClick={getDataHuespede}
+                                        className="w-full"
+                                    >Cedula</PrimaryButton>
+                                </div>
+                            </div>
+                            <div>
+                                <InputLabel htmlFor="nombrehuespedes" value={"Nombre Huespede"} />
                                 <TextInput
                                     type="text"
                                     value={`${nombreApellido}`}
                                     name='nombrehuespedes'
                                     className="w-full font-bold"
                                     disabled={true}
-                                    
-                                    
                                 />
                                 <InputError message={errors.nombrehuespedes} className="mt-2" />
-
+                            </div>
                         </div>
-
-
-                      
-
-
-
-                      </div>
-                      <div className="mt-6 grid-cols-2 flex   space-x-2  ">
-                                <div className="w-full">
-                                        <InputLabel
-                                          
-                                            value={"Fecha Entrada"}
-
-                                        
-                                        />
-                                        <TextInput
-                                            type="date"
-                                            required
-                                            name="fechaEntrada"
-                                            value={data.fechaEntrada}
-                                            min={new Date().toISOString().split('T')[0]}
-                                            onChange={(e)=>setData("fechaEntrada",e.target.value)}
-                                            disabled
-                                        
-                                        />
-                                          <InputError message={errors.fechaEntrada} className="mt-2" />
-                                </div>
-
-                            
-                                <div className="w-full">
-                                        <InputLabel
-                                               
-                                                value={"Fecha Salida"}
-
-                                            
-                                            />
-                                            <TextInput
-                                                type="date"
-                                                required
-                                                name="fechaSalida"
-                                                value={data.fechaSalida}
-                                                min={new Date().toISOString().split('T')[0]}
-                                                onChange={(e)=>setData("fechaSalida",e.target.value)}
-                                            
-                                            />
-                                            <InputError message={errors.fechaSalida} className="mt-2" />
-                                </div>
-
-                      </div>
-                      <div className="mt-2 flex  space-x-2">
-                          <div className="w-full">
-                                <InputLabel
-                                    value={'Asignar Cargo Inicial '}
-
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-6">
+                            <div>
+                                <InputLabel value={"Fecha Entrada"} />
+                                <TextInput
+                                    type="date"
+                                    required
+                                    name="fechaEntrada"
+                                    value={data.fechaEntrada}
+                                    min={new Date().toISOString().split('T')[0]}
+                                    onChange={(e) => setData("fechaEntrada", e.target.value)}
+                                    disabled
+                                    className="w-full"
                                 />
-                                <select className="w-full mt-2 rounded-lg "
+                                <InputError message={errors.fechaEntrada} className="mt-2" />
+                            </div>
+                            <div>
+                                <InputLabel value={"Fecha Salida"} />
+                                <TextInput
+                                    type="date"
+                                    required
+                                    name="fechaSalida"
+                                    value={data.fechaSalida}
+                                    min={new Date().toISOString().split('T')[0]}
+                                    onChange={(e) => setData("fechaSalida", e.target.value)}
+                                    className="w-full"
+                                />
+                                <InputError message={errors.fechaSalida} className="mt-2" />
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+                            <div>
+                                <InputLabel value={'Asignar Cargo Inicial '} />
+                                <select className="w-full mt-2 rounded-lg"
                                     name="precio_id"
                                     value={data.precio_id}
-                                    onChange={(e)=>setData("precio_id",e.target.value)}
+                                    onChange={(e) => setData("precio_id", e.target.value)}
                                 >
                                     <option>{`|id|Descripcion|Precio $|`}</option>
-                                    {data.precios.map((item,idx)=>(
-                                            <option value={item.id}
-                                            key={item.id}
-                                            >{`|${item.id}|${item.descripcion}|${item.precio}$|`}</option>
-
-                                    ))
-                                    }
-
-
+                                    {data.precios.map((item, idx) => (
+                                        <option value={item.id} key={item.id}>
+                                            {`|${item.id}|${item.descripcion}|${item.precio}$|`}
+                                        </option>
+                                    ))}
                                 </select>
                                 <InputError message={errors.precio_id} className="mt-2" />
-
-                          </div>  
-                        </div>
-                        <div className="w-full ">
-                        <InputLabel
-                                        htmlFor="descripcion" 
-                                        value={"Descripcion"}
-                                    />
-                                    <TextInput
+                            </div>
+                            <div>
+                                <InputLabel htmlFor="descripcion" value={"Descripcion"} />
+                                <TextInput
                                     className="mt-2 w-full"
                                     type="text"
                                     required
                                     name="descripcion"
                                     value={data.descripcion}
-                                    onChange={(e)=>setData("descripcion",e.target.value)}
-
-                                    />
-                                    <InputError message={errors.descripcion} className="mt-2" />
-
-
+                                    onChange={(e) => setData("descripcion", e.target.value)}
+                                />
+                                <InputError message={errors.descripcion} className="mt-2" />
+                            </div>
                         </div>
-                        <div className="flex mt-2 space-x-2 sm:flex-wrap md:flex-wrap">   
-                          <div>
-                                    <InputLabel
-                                        htmlFor="nrodias" 
-                                        value={"Dias de Estadias"}
-                                    />
-                                    <TextInput
-                                    className="mt-2"
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mt-2">
+                            <div>
+                                <InputLabel htmlFor="nrodias" value={"Dias de Estadias"} />
+                                <TextInput
+                                    className="mt-2 w-full"
                                     type="number"
                                     step="1"
                                     required
@@ -532,142 +460,108 @@ export default function RegistroHuespede({auth,flash,dataRegistro}) {
                                     name="nrodias"
                                     value={data.nrodias}
                                     disabled
-                                    onChange={(e)=>setData("nrodias",e.target.value)}
-
-                                    />
-                                    <InputError message={errors.nrodias} className="mt-2" />
-                          </div>
-                          <div>
-                                    <InputLabel
-                                        htmlFor="nropersonas" 
-                                        value={"Nro de Personas"}
-                                    />
-                                    <TextInput
-                                    className="mt-2"
+                                    onChange={(e) => setData("nrodias", e.target.value)}
+                                />
+                                <InputError message={errors.nrodias} className="mt-2" />
+                            </div>
+                            <div>
+                                <InputLabel htmlFor="nropersonas" value={"Nro de Personas"} />
+                                <TextInput
+                                    className="mt-2 w-full"
                                     type="number"
                                     step="1"
                                     required
                                     min="1"
                                     name="nropersonas"
                                     value={data.nropersonas}
-                                    onChange={(e=>setData("nropersonas",e.target.value))}
-                                    
-                                    />
-                                      <InputError message={errors.nropersonas} className="mt-2" />
-                          </div>
-                          <div>
-                                    <InputLabel
-                                        htmlFor="montoTotal" 
-                                        value={"Total"}
-                                    />
-                                    <TextInput
-                                    className="mt-2"
+                                    onChange={(e => setData("nropersonas", e.target.value))}
+                                />
+                                <InputError message={errors.nropersonas} className="mt-2" />
+                            </div>
+                            <div>
+                                <InputLabel htmlFor="montoTotal" value={"Total"} />
+                                <TextInput
+                                    className="mt-2 w-full"
                                     type="text"
                                     step="1"
                                     required
                                     name="montoTotal"
                                     disabled={true}
                                     value={data.montoTotal}
-                                    
-                                    />
-                                      <InputError message={errors.montoTotal} className="mt-2" />
-                          </div>
-                          <div>
-                              <InputLabel
-                                
-                                value="Calcular"
-                              />
-
-                              <PrimaryButton
-                                className="mt-2 py-3"
-                                onClick={calcularTotal}
-                                name="btnCalcular"
-                              >Calcular</PrimaryButton>
-                          </div>
-
+                                />
+                                <InputError message={errors.montoTotal} className="mt-2" />
+                            </div>
+                            <div className="flex items-end">
+                                <PrimaryButton
+                                    className="mt-2 py-3 w-full"
+                                    onClick={calcularTotal}
+                                    name="btnCalcular"
+                                >Calcular</PrimaryButton>
+                            </div>
                         </div>
-                      <div className="mt-2">
-                        <PrimaryButton
-                          type="submit"
-                          name="btnSumit"
-                          disabled={processing}
-                        >Enviar</PrimaryButton>
-                      </div>
-
-
-
-
-                    </form>
-              </TabPanel>   
-            
-                   
-                
-              <TabPanel className='border '>
-                  <div className="flex  gap-4 mt-6">
-                    <div>
-                      <InputLabel 
-                      htmlFor="cedula"
-                          value="Cedula"
-                      >
-                              
-                      
-                      </InputLabel>
-                      <TextInput
-                          name="cedula"
-                          value={cedula}
-                          onChange={e=>setCedula(e.target.value.toUpperCase())}
-                          
-                      />
-                      
-                    </div>
-                    <div>
-                            <InputLabel
-                              htmlFor=""                       
-                                value={"Buscar "}
-                                
-                            />
+                        <div className="mt-2">
                             <PrimaryButton
-                              name="btnBuscar"
-                              value={cedula}
-                              onClick={buscarAcom}
-                              className="py-3"
-                            
-                            >Cedula</PrimaryButton>
-                    </div>  
-                  </div>   
-                  
-                  <table className="border-collapse border border-slate-400 w-full mt-4 py-2" >
-                        <thead>
-                          <tr >
-                          <th className="border-collapse border border-slate-400  bg-green-400" >Item</th>
-                            <th className="border-collapse border border-slate-400 bg-green-400">Cedula</th>
-                            <th className="border-collapse border border-slate-400 bg-late-400 bg-green-400">Nombre y Apellidos</th>
-                            <th className="border-collapse border border-slate-400 bg-late-400 bg-green-400">Eliminar</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                              {acompanante.length>0 && (acompanante.map((item_a,idx_a)=>(
-                                  <tr  key={`a_${idx_a}`}>
-                                    <td className="border-collapse border border-slate-400">{idx_a}</td>
-                                    <td className="border-collapse border border-slate-400">{item_a.cedula} </td>
-                                    <td className="border-collapse border border-slate-400"> {item_a.nombre} </td>
-                                    <td className="border-collapse border border-slate-400 text-center"><PrimaryButton
-                                                                    name="btnBuscarAcom"
-                                                                    value={cedula}
-                                                                    onClick={e=>delAcompanante(e.target.value)}
-                                                                    >Eliminar</PrimaryButton>
-                                                              
-                                                              </td>
-                                  </tr> 
+                                type="submit"
+                                name="btnSumit"
+                                disabled={processing}
+                            >Enviar</PrimaryButton>
+                        </div>
+                    </form>
+                </TabPanel>
 
-
-                              )))}   
-                      </tbody>
-                  </table>
-
-              </TabPanel>
-
-            </Tabs>     
+                <TabPanel className='border p-2'>
+                    <div className="flex flex-col md:flex-row gap-4 mt-6">
+                        <div className="flex-1">
+                            <InputLabel htmlFor="cedula" value="Cedula" />
+                            <TextInput
+                                name="cedula"
+                                value={cedula}
+                                onChange={e => setCedula(e.target.value.toUpperCase())}
+                                className="w-full"
+                            />
+                        </div>
+                        <div className="flex-1 flex items-end">
+                            <div className="w-full">
+                                <InputLabel value={"Buscar "} />
+                                <PrimaryButton
+                                    name="btnBuscar"
+                                    value={cedula}
+                                    onClick={buscarAcom}
+                                    className="py-3 w-full"
+                                >Cedula</PrimaryButton>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="overflow-x-auto mt-4">
+                        <table className="border-collapse border border-slate-400 w-full min-w-[600px]">
+                            <thead>
+                                <tr>
+                                    <th className="border border-slate-400 bg-green-400">Item</th>
+                                    <th className="border border-slate-400 bg-green-400">Cedula</th>
+                                    <th className="border border-slate-400 bg-green-400">Nombre y Apellidos</th>
+                                    <th className="border border-slate-400 bg-green-400">Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {acompanante.length > 0 && (acompanante.map((item_a, idx_a) => (
+                                    <tr key={`a_${idx_a}`}>
+                                        <td className="border border-slate-400">{idx_a}</td>
+                                        <td className="border border-slate-400">{item_a.cedula} </td>
+                                        <td className="border border-slate-400">{item_a.nombre} </td>
+                                        <td className="border border-slate-400 text-center">
+                                            <PrimaryButton
+                                                name="btnBuscarAcom"
+                                                value={cedula}
+                                                onClick={e => delAcompanante(e.target.value)}
+                                            >Eliminar</PrimaryButton>
+                                        </td>
+                                    </tr>
+                                )))}
+                            </tbody>
+                        </table>
+                    </div>
+                </TabPanel>
+            </Tabs>
         </main>
          
 
