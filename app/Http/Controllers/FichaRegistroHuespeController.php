@@ -385,6 +385,7 @@ class FichaRegistroHuespeController extends Controller
             return redirect()
                    ->route('dashboard')
                    ->with("message","Este abono:".$request->monto." $ Supera los cargo, Revise bien:".$totalCargo);
+                   
         }
         $pagoHuespede=PagoHuespede::create([
              "formapago_id"=>$request->formaPago_id,
