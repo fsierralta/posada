@@ -192,7 +192,12 @@ class FichaRegistroHuespeController extends Controller
         
         $findReservacionHuespede=$this->customReservacion->findReservacionHuespede((int) $request->reservacion_id);
          if($findReservacionHuespede!=null){
-           return $this->procesarReservacion($request,  $totalVerificado,$posada,$huespede,$fichaRegistroHuespe,  $sendDataMail);
+           return $this->procesarReservacion($request,
+                                             $totalVerificado,
+                                             $posada,
+                                             $huespede,
+                                             $fichaRegistroHuespe,
+                                             $sendDataMail);
          }
 
         //       $ ->merge([
@@ -233,7 +238,8 @@ class FichaRegistroHuespeController extends Controller
 
     }
 
-    public function procesarReservacion($request,$totalVerificado,$posada,$huespede,$fichaRegistroHuespe,  $sendDataMail){
+    public function procesarReservacion($request,$totalVerificado,$posada,
+                                         $huespede,$fichaRegistroHuespe,  $sendDataMail){
 
          $findReservacionHuespede=$this->customReservacion->findReservacionHuespede((int) $request->reservacion_id);
          if($findReservacionHuespede!=null){
@@ -266,7 +272,8 @@ class FichaRegistroHuespeController extends Controller
                $codeSendEmailUser=new CodeSendEmailUser($request);
                $codeSendEmailUser->sendNotificacionAlquiler($sendDataMail);   
            //se envia al pago      
-           return  $this->storepago($request);//se realiza el pago
+           $pagoPorReservacion=true;
+           return  $this->storepago($request,$pagoPorReservacion);//se realiza el pago
            
 
          }
@@ -345,7 +352,7 @@ class FichaRegistroHuespeController extends Controller
     //----------------------------------------
     //Se registran los pago                  -
     //----------------------------------------
-    public function storepago(Request $request){
+    public function storepago(Request $request, $pagoPorReservacion=false){
 
         //Se procesa el pago del huespede 
         $validate=$request->validate([
@@ -372,6 +379,7 @@ class FichaRegistroHuespeController extends Controller
                                 
         //Si se registra el primer pago entonces no existe el abono// 
         $totalAbono=0;
+        $diferencia=0;
         $pagohuespede=PagoHuespede::where('nroficha',$request->nroficha)
                                     ->first();
 
@@ -382,10 +390,12 @@ class FichaRegistroHuespeController extends Controller
         }                          
         
         if($totalAbono>$totalCargo) {
+           If(!$pagoPorReservacion){
             return redirect()
                    ->route('dashboard')
                    ->with("message","Este abono:".$request->monto." $ Supera los cargo, Revise bien:".$totalCargo);
-                   
+           }       
+
         }
         $pagoHuespede=PagoHuespede::create([
              "formapago_id"=>$request->formaPago_id,
