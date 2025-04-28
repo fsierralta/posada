@@ -243,10 +243,19 @@ class FichaRegistroHuespeController extends Controller
 
          $findReservacionHuespede=$this->customReservacion->findReservacionHuespede((int) $request->reservacion_id);
          if($findReservacionHuespede!=null){
+            //se carga el monto de la reservacion/
+            if ($findReservacionHuespede->monto >=$totalVerificado) {
+                     
+                $findReservacionHuespede->monto =$findReservacionHuespede->monto-$totalVerificado;
+            }else{
+                $totalVerificado=$findReservacionHuespede->monto;
+                $findReservacionHuespede->monto=0;
+            } 
+
               $request->merge([
                 "posada_id"=>$posada->id,
                 'nroficha' =>$fichaRegistroHuespe->nroficha,
-                'monto'=>$findReservacionHuespede->monto,
+                'monto'=>$totalVerificado,
                 "formaPago_id"=>$findReservacionHuespede->formapago_id,
                 "referencia"=>  $findReservacionHuespede->nro_reservacion,
                 "observacion"=> $findReservacionHuespede->observacion ?
@@ -258,12 +267,7 @@ class FichaRegistroHuespeController extends Controller
                 ])  ;
                 //se carga el monto de la reservacion/
 
-                if ($findReservacionHuespede->monto >= $totalVerificado) {
-                     
-                    $findReservacionHuespede->monto = $findReservacionHuespede->monto - $totalVerificado;
-                } else {
-                    $findReservacionHuespede->monto = 0;
-                };
+               
               
                $findReservacionHuespede->cargado_pago_huespede="si";
                $findReservacionHuespede->save();
