@@ -139,6 +139,10 @@ export default function Authenticated({ user, header, children }) {
                             <ResponsiveNavLink  href={route("libromensual.show")}>
                                 Informe Policial Mensual
                             </ResponsiveNavLink>
+                            <ResponsiveNavLink href={route("reservaciones.index")}>
+                                Reservaciones
+                             
+                            </ResponsiveNavLink>
                             
 
                         </div>
