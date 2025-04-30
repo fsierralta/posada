@@ -155,7 +155,7 @@ class ReservacionController extends Controller
                 'nro_personas' => $request->nro_personas,
                 'fecha_entrada' => Carbon::parse($request->fecha_entrada),
                 'fecha_salida' => Carbon::parse($request->fecha_salida),
-                'estatuspago' => 'C',
+                'estatuspago' => 'C',//confirmado pago
                 'monto' => $totalPagar,
                 'formapago_id' => $request->pago_id,
                 'precio_id' => $precio->id,

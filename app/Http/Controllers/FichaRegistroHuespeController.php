@@ -15,6 +15,7 @@ use App\Models\Posada;
 use App\Models\Precio;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,8 +36,9 @@ class FichaRegistroHuespeController extends Controller
 
     public function verificaEstatusPosada($id)
     {
+          
 
-        try {
+          try {
             // code...
 
             $posada = Posada::find($id);
@@ -235,7 +237,7 @@ class FichaRegistroHuespeController extends Controller
         $findReservacionHuespede = $this->customReservacion->findReservacionHuespede((int) $request->reservacion_id);
         if ($findReservacionHuespede != null) {
             // se carga el monto de la reservacion/
-            if ($findReservacionHuespede->monto >= $totalVerificado) {
+            if (isset($findReservacionHuespede->monto) && $findReservacionHuespede->monto >= $totalVerificado) {
 
                 $findReservacionHuespede->monto = $findReservacionHuespede->monto - $totalVerificado;
             } else {
@@ -674,7 +676,7 @@ class FichaRegistroHuespeController extends Controller
             ->first();
         $posada = $fichaRegistroHuespe->posada;
         $huespede = $fichaRegistroHuespe->huespede;
-
+        
         return Inertia::render('Catalogo/Huespede/Factura/Factura',['datahuespede' => [
             'ficharegistro' => $fichaRegistroHuespe]]);
 

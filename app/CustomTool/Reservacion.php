@@ -177,7 +177,7 @@ class Reservacion
      * @param  int  $posada_id  El ID de la posada.
      * @return reservacion
      */
-    public function findReservacionHuespede(int $reservacion_id)
+    public function findReservacionHuespede(int $reservacion_id):ModelReservacion |null
     {
         $reservacion = ModelReservacion::find($reservacion_id);
 

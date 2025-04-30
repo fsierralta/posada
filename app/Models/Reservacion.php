@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 
 class Reservacion extends Model
 {
@@ -44,4 +48,19 @@ class Reservacion extends Model
         return $this->belongsToMany(Posada::class, 'posada_reservacion', 'reservacion_id', 'posada_id');
 
     }
+    /**
+     * La función `pagoHuespedes` se encarga de gestionar los pagos realizados por los huéspedes.
+     * Maneja el cálculo, validación y registro de los detalles de pago
+     * para las personas que se hospedan en el establecimiento.
+     *
+     * @function pagoHuespedes
+     * @return HasMany - Retorna una relación HasMany con los pagos asociados al huésped.
+     */
+    public function pagoHuespedes():HasMany {
+        return $this->hasMany(PagoHuespede::class, 'referencia', 'nro_reservacion');
+    }
+    
+    
+
+    
 }
