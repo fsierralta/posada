@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('verification_code')->nullable();
             $table->timestamp('verification_code_expire_at')->nullable();
 
-
         });
     }
 

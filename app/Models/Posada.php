@@ -11,46 +11,50 @@ use Illuminate\Support\Facades\DB;
 class Posada extends Model
 {
     use HasFactory;
-   protected $fillable=[
+
+    protected $fillable = [
         'nombre',
         'descripcion',
         'capacidad',
-        'foto_url'
+        'foto_url',
     ];
-    
-    public function obtenerHuespede()  {
-           //Aqui se indica quien es el huespede registrado en la cabaña
-           //a una ficha de registro le pertene a un huespde
-          $fichaRegistro=FichaRegistroHuespe::where("estatus","A")
-                          ->where("posada_id",$this->id)
-                          ->first();
-          
-          return $fichaRegistro;  //que contiene la relacion con huespede
 
+    public function obtenerHuespede()
+    {
+        // Aqui se indica quien es el huespede registrado en la cabaña
+        // a una ficha de registro le pertene a un huespde
+        $fichaRegistro = FichaRegistroHuespe::where('estatus', 'A')
+            ->where('posada_id', $this->id)
+            ->first();
 
-    }
-    public function estatus(){
-        return $this->estatus=="D" ?true :false;
+        return $fichaRegistro;  // que contiene la relacion con huespede
 
     }
 
-    public function fichaRegistroHuespedes():HasMany{
+    public function estatus()
+    {
+        return $this->estatus == 'D' ? true : false;
+
+    }
+
+    public function fichaRegistroHuespedes(): HasMany
+    {
         return $this->hasMany(FichaRegistroHuespe::class);
 
-
     }
 
-    public function obtenerHuespedes(){
-        $huespedesRegistrado=DB::table('posadas')
-                                ->where('posadas.estatus','O')
-                                ->join('ficha_registro_huespes',function(JoinClause $join){
-                                      $join->on('posadas.id','=','ficha_registro_huespes.posada_id')
-                                           ->join('huespedes','huespedes.id','=','ficha_registro_huespes.huespede_id')
-                                           ->where('ficha_registro_huespes.estatus','=','A');
-                                 })
-                                  ->get();
+    public function obtenerHuespedes()
+    {
+        $huespedesRegistrado = DB::table('posadas')
+            ->where('posadas.estatus', 'O')
+            ->join('ficha_registro_huespes', function (JoinClause $join) {
+                $join->on('posadas.id', '=', 'ficha_registro_huespes.posada_id')
+                    ->join('huespedes', 'huespedes.id', '=', 'ficha_registro_huespes.huespede_id')
+                    ->where('ficha_registro_huespes.estatus', '=', 'A');
+            })
+            ->get();
 
-     return $huespedesRegistrado;
+        return $huespedesRegistrado;
 
     }
 
@@ -63,7 +67,4 @@ class Posada extends Model
     {
         return $this->belongsToMany(Reservacion::class, 'posada_reservacion', 'posada_id', 'reservacion_id');
     }
-    
-
-   
 }

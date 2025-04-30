@@ -14,15 +14,11 @@ return new class extends Migration
         Schema::create('informe_policial', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId("huespede_id")->constrained("huespedes",'id');
-            $table->foreignId("posada_id")->constrained("posadas","id");
-            $table->foreignId('ficha_registro_huespe_id')->constrained('ficha_registro_huespes','id');
+            $table->foreignId('huespede_id')->constrained('huespedes', 'id');
+            $table->foreignId('posada_id')->constrained('posadas', 'id');
+            $table->foreignId('ficha_registro_huespe_id')->constrained('ficha_registro_huespes', 'id');
             $table->string('nroficha');
-            $table->date("fechaRegistro");
-           
-           
-     
-
+            $table->date('fechaRegistro');
 
         });
     }

@@ -16,8 +16,8 @@ require __DIR__.'/../vendor/autoload.php';
 (require_once __DIR__.'/../bootstrap/app.php')
     ->handleRequest(Request::capture());
 
-    try {
-        //code...
-    } catch (\Throwable $th) {
-        //throw $th;
-    }
+try {
+    // code...
+} catch (\Throwable $th) {
+    // throw $th;
+}

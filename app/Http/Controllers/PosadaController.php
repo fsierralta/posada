@@ -4,39 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Models\Posada;
 use Exception;
-use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
-use App\Models\User;
-
 
 class PosadaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-      private $currenUser;
-     public function  __construct(
-        
-        )
-       
-     {
-     
-       }
+    private $currenUser;
 
+    public function __construct(
+
+    ) {}
 
     public function index()
     {
         //
-        $data=Posada::orderByDesc("id")->paginate(4);
-       // $huespedesRegistrados=(new Posada())->obtenerHuespedes();
+        $data = Posada::orderByDesc('id')->paginate(4);
+        // $huespedesRegistrados=(new Posada())->obtenerHuespedes();
 
-
-        return Inertia::render('Catalogo/Posada/Index',["data"=>$data]); 
-
-
-
+        return Inertia::render('Catalogo/Posada/Index', ['data' => $data]);
 
     }
 
@@ -45,8 +34,8 @@ class PosadaController extends Controller
      */
     public function create()
     {
-        //-----------------------------
-        return Inertia::render("Catalogo/Posada/Create");
+        // -----------------------------
+        return Inertia::render('Catalogo/Posada/Create');
     }
 
     /**
@@ -55,32 +44,32 @@ class PosadaController extends Controller
     public function store(Request $request)
     {
         //
-        //Log::info("paso",["data"=>$request]);
-        
-        $validate=$request->validate(
-            ["nombre"=>['required'],
-             'descripcion'=>['required','max:200'],
-             'capacidad'=>['required','numeric',"min:1","max:100"]
+        // Log::info("paso",["data"=>$request]);
+
+        $validate = $request->validate(
+            ['nombre' => ['required'],
+                'descripcion' => ['required', 'max:200'],
+                'capacidad' => ['required', 'numeric', 'min:1', 'max:100'],
             ]
         );
         try {
-            //code...
-           $posada=Posada::create([
-                "nombre"=>$request->nombre,
-                'descripcion'=>$request->descripcion,
-                'capacidad'=>$request->capacidad
+            // code...
+            $posada = Posada::create([
+                'nombre' => $request->nombre,
+                'descripcion' => $request->descripcion,
+                'capacidad' => $request->capacidad,
             ]);
+
             return redirect()->route('posada.get')
-            ->with("message","Registro creado:".$posada->id);
-            //return $this->index();
+                ->with('message', 'Registro creado:'.$posada->id);
+            // return $this->index();
 
         } catch (\Throwable $th) {
-            //throw $th;
-            Log::info("error",["error"=>$th->getMessage()]);
+            // throw $th;
+            Log::info('error', ['error' => $th->getMessage()]);
+
             return back()->with($th->getMessage());
         }
-            
-       
 
     }
 
@@ -90,7 +79,6 @@ class PosadaController extends Controller
     public function show(Posada $posada)
     {
         //
-       
 
     }
 
@@ -100,8 +88,9 @@ class PosadaController extends Controller
     public function edit(Posada $posada)
     {
         //
-        Log::info("edit",["data"=>$posada]);
-        return Inertia::render('Catalogo/Posada/Editar',["editData"=>$posada]);
+        Log::info('edit', ['data' => $posada]);
+
+        return Inertia::render('Catalogo/Posada/Editar', ['editData' => $posada]);
     }
 
     /**
@@ -109,38 +98,37 @@ class PosadaController extends Controller
      */
     public function update(Request $request)
     {
-        
-        Log::info("update",["data"=>$request,
-                            ]);
-        $validate=$request->validate(
-                                ["nombre"=>['required'],
-                                 'descripcion'=>['required','max:200'],
-                                 'capacidad'=>['required','numeric',"min:1","max:100"],
-                                 'id'=>['required']
-                                ]
-                            );                    
-     try {
-        //code...
-        
-        $posada=Posada::find($request->id);
-       
-        if ($posada===null ){
-            Log::info("grabo",['posada'=>$posada]);
-            throw new Exception("No existe registro");
-        }else{
-            $posada->nombre=$request->nombre;
-            $posada->descripcion=$request->descripcion;
-            $posada->capacidad=$request->capacidad;
-            $posada->save();
-            return redirect()->route("posada.get",$absulute=true)
-            ->with("message","Registro Actulizado:".$request->id);
+
+        Log::info('update', ['data' => $request,
+        ]);
+        $validate = $request->validate(
+            ['nombre' => ['required'],
+                'descripcion' => ['required', 'max:200'],
+                'capacidad' => ['required', 'numeric', 'min:1', 'max:100'],
+                'id' => ['required'],
+            ]
+        );
+        try {
+            // code...
+
+            $posada = Posada::find($request->id);
+
+            if ($posada === null) {
+                Log::info('grabo', ['posada' => $posada]);
+                throw new Exception('No existe registro');
+            } else {
+                $posada->nombre = $request->nombre;
+                $posada->descripcion = $request->descripcion;
+                $posada->capacidad = $request->capacidad;
+                $posada->save();
+
+                return redirect()->route('posada.get', $absulute = true)
+                    ->with('message', 'Registro Actulizado:'.$request->id);
+            }
+        } catch (\Exception $th) {
+            // throw $th;
+            return back()->with('message', $th->getMessage().$th->getLine());
         }
-     } catch (\Exception $th) {
-        //throw $th;
-        return back()->with("message",$th->getMessage().$th->getLine());
-     }                    
-       
-        
 
     }
 
@@ -152,31 +140,29 @@ class PosadaController extends Controller
         //
 
         try {
-            //code...
-            $posada=Posada::find($id);
-            if($posada!=null){ 
-                  $fregsitros=$posada->fichaRegistroHuespedes
-                             ->count();
-                    if($fregsitros==0){
-                 
-                                $posada->delete();
-                                return back()->with("message","Registro eliminado");
-                        
-                            }else{
-                                return back()->with("message","Esta cabaña tiene historial.. no se puede eliminar");
-                            }
+            // code...
+            $posada = Posada::find($id);
+            if ($posada != null) {
+                $fregsitros = $posada->fichaRegistroHuespedes
+                    ->count();
+                if ($fregsitros == 0) {
 
+                    $posada->delete();
 
+                    return back()->with('message', 'Registro eliminado');
+
+                } else {
+                    return back()->with('message', 'Esta cabaña tiene historial.. no se puede eliminar');
+                }
+
+            } else {
+                throw new Exception('Registro no existe esta cabaña...');
             }
-            else{           
-                            throw new Exception("Registro no existe esta cabaña...");
-                 }
 
         } catch (\Throwable $th) {
-            //throw $th;
-            return back()->with("message",$th->getMessage());
+            // throw $th;
+            return back()->with('message', $th->getMessage());
         }
-       
-        
+
     }
 }

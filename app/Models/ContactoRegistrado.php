@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class ContactoRegistrado extends Model
 {
     use HasFactory;
-    protected $table="contacto_registrados";
-    protected $fillable=[
-         "email",
+
+    protected $table = 'contacto_registrados';
+
+    protected $fillable = [
+        'email',
         'nombre',
         'apellidos',
         'nacionalidad',
@@ -18,8 +20,7 @@ class ContactoRegistrado extends Model
         'nacimiento',
         'celular',
         'direccion',
-        'contacto_id'
-      
-    ];
+        'contacto_id',
 
+    ];
 }

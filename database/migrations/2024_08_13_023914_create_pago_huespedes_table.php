@@ -15,16 +15,15 @@ return new class extends Migration
         Schema::create('pago_huespedes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId("formapago_id")
-                    ->constrained("forma_pagos","id");
-            $table->foreignId("ficha_registro_huespe_id")
-                   ->constrained("ficha_registro_huespes","id");
-            $table->decimal("monto",12,2);
-            $table->date("fechapago")->default(Carbon::now()->format("Y-m-d"));
-            $table->string("referencia");
-            $table->string("observacion");
-            $table->string("nroficha",12);
-
+            $table->foreignId('formapago_id')
+                ->constrained('forma_pagos', 'id');
+            $table->foreignId('ficha_registro_huespe_id')
+                ->constrained('ficha_registro_huespes', 'id');
+            $table->decimal('monto', 12, 2);
+            $table->date('fechapago')->default(Carbon::now()->format('Y-m-d'));
+            $table->string('referencia');
+            $table->string('observacion');
+            $table->string('nroficha', 12);
 
         });
     }

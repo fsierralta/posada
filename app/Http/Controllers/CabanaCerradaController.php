@@ -29,8 +29,7 @@ class CabanaCerradaController extends Controller
     public function store(Request $request)
     {
         //
-        $cabananaCerrada = new CabanaCerrada();
-        
+        $cabananaCerrada = new CabanaCerrada;
 
     }
 
@@ -40,7 +39,7 @@ class CabanaCerradaController extends Controller
     public function show(CabanaCerrada $cabanaCerrada)
     {
         //
-    
+
     }
 
     /**

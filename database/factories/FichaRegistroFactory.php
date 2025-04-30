@@ -18,7 +18,7 @@ class FichaRegistroFactory extends Factory
     {
         return [
             //
-            "nro"=>str_pad("0",12,"0",STR_PAD_LEFT),
+            'nro' => str_pad('0', 12, '0', STR_PAD_LEFT),
         ];
     }
 }

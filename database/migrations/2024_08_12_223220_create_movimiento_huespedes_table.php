@@ -15,19 +15,16 @@ return new class extends Migration
         Schema::create('movimiento_huespedes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId("ficha_registro_huespe_id")->constrained("ficha_registro_huespes","id");
-            $table->foreignId("precio_id")->constrained("precios","id");
-            $table->decimal("cantidad",12,2)->default(0);
-            $table->decimal("precio",12,2)->default(0);
-            $table->string("descripcion")->nullable();
+            $table->foreignId('ficha_registro_huespe_id')->constrained('ficha_registro_huespes', 'id');
+            $table->foreignId('precio_id')->constrained('precios', 'id');
+            $table->decimal('cantidad', 12, 2)->default(0);
+            $table->decimal('precio', 12, 2)->default(0);
+            $table->string('descripcion')->nullable();
             $table->decimal('nropersonas')->default(0);
-            $table->decimal("totalitem")->default(0);
-            $table->string("nroficharegistro");
-            $table->date("fecharegistro")->default(Carbon::now()->format("Y-m-d"));
-            $table->string("estatus")->default("P"); //[P->Pendiente el pago, C->pago el item"]
-            
-
-
+            $table->decimal('totalitem')->default(0);
+            $table->string('nroficharegistro');
+            $table->date('fecharegistro')->default(Carbon::now()->format('Y-m-d'));
+            $table->string('estatus')->default('P'); // [P->Pendiente el pago, C->pago el item"]
 
         });
     }

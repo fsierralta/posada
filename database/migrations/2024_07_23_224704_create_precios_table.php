@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('precios', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->decimal("precio",12,2);
-            $table->string("descripcion");
-            $table->string("tipo",1)->default("C"); //cargo
-            
+            $table->decimal('precio', 12, 2);
+            $table->string('descripcion');
+            $table->string('tipo', 1)->default('C'); // cargo
+
         });
     }
 

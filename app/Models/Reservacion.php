@@ -6,11 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Reservacion extends Model
 {
     use HasFactory;
+
     protected $table = 'reservaciones';
+
     use SoftDeletes;
+
     protected $fillable = [
         'nro_reservacion',
         'huespede_id',
@@ -26,12 +30,11 @@ class Reservacion extends Model
         'created_at',
         'updated_at',
         'precio_id',
-        'deleted_at'
+        'deleted_at',
 
-         
     ];
 
-    public function huespede():BelongsTo
+    public function huespede(): BelongsTo
     {
         return $this->belongsTo(Huespede::class, 'huespede_id');
     }
@@ -39,12 +42,6 @@ class Reservacion extends Model
     public function posadas()
     {
         return $this->belongsToMany(Posada::class, 'posada_reservacion', 'reservacion_id', 'posada_id');
-                   
 
-
-
-
-
-    
-}
+    }
 }

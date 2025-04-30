@@ -3,12 +3,11 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Mailables\Address;
 
 class ReservacionMail extends Mailable
 {
@@ -18,12 +17,14 @@ class ReservacionMail extends Mailable
      * Create a new message instance.
      */
     public $reservacion;
+
     public $cabezera;
-    public function __construct($reservacion,$cabezera)
+
+    public function __construct($reservacion, $cabezera)
     {
         //
-        $this->reservacion=$reservacion;
-        $this->cabezera=$cabezera;
+        $this->reservacion = $reservacion;
+        $this->cabezera = $cabezera;
     }
 
     /**

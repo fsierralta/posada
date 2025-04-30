@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\CustomTool\Email\CodeSendEmailUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\CustomTool\Email\CodeSendEmailUser;
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -29,17 +30,18 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $codeSendEmailUser=new CodeSendEmailUser($request);
-        $passcode=$codeSendEmailUser->verifiCodeSender();
-        info("passcode",["code"=>$passcode ]);
-        if($passcode) { 
-                $request->authenticate();
-                $request->session()->regenerate();
-                return redirect()->intended(route('dashboard', absolute: false));
-       }else {
-        return back()->with("message",session('codeemail'));
-        
-        } 
+        $codeSendEmailUser = new CodeSendEmailUser($request);
+        $passcode = $codeSendEmailUser->verifiCodeSender();
+        info('passcode', ['code' => $passcode]);
+        if ($passcode) {
+            $request->authenticate();
+            $request->session()->regenerate();
+
+            return redirect()->intended(route('dashboard', absolute: false));
+        } else {
+            return back()->with('message', session('codeemail'));
+
+        }
     }
 
     /**
@@ -47,17 +49,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        
-        
-            Auth::guard('web')->logout();
 
-            $request->session()->invalidate();
+        Auth::guard('web')->logout();
 
-            $request->session()->regenerateToken();
+        $request->session()->invalidate();
 
-            return redirect('/');
+        $request->session()->regenerateToken();
 
-        
+        return redirect('/');
 
     }
 }

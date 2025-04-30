@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ocupada;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class OcupadaController extends Controller
 {
@@ -37,12 +37,13 @@ class OcupadaController extends Controller
      */
     public function show(Ocupada $ocupada)
     {
-        //determinar si la habitacion esta ocupada donde estatus=ocupada 
-        //y la fecha de salida sea mayor a la fecha actual
-        //si es asi devolver la habitacion ocupada
-        $ocupada= Ocupada::where('estatus','ocupada')
-        ->where('fecha_salida','>',Carbon::now())
-        ->get();
+        // determinar si la habitacion esta ocupada donde estatus=ocupada
+        // y la fecha de salida sea mayor a la fecha actual
+        // si es asi devolver la habitacion ocupada
+        $ocupada = Ocupada::where('estatus', 'ocupada')
+            ->where('fecha_salida', '>', Carbon::now())
+            ->get();
+
         return response()->json($ocupada);
     }
 

@@ -18,11 +18,10 @@ class PosadaFactory extends Factory
     {
         return [
             //
-            "nombre"=>fake()->name(),
-            "capacidad"=>4,
-            "descripcion"=>fake()->text(),
-            'foto_url'=>fake()->url(),
-
+            'nombre' => fake()->name(),
+            'capacidad' => 4,
+            'descripcion' => fake()->text(),
+            'foto_url' => fake()->url(),
 
         ];
     }

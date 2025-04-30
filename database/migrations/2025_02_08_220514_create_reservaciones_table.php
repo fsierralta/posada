@@ -19,23 +19,17 @@ return new class extends Migration
             $table->integer('nro_personas');
             $table->dateTime('fecha_entrada');
             $table->dateTime('fecha_salida');
-            $table->string('estatuspago',20)->default('p');//Confirmado,Pendiente/Pago
+            $table->string('estatuspago', 20)->default('p'); // Confirmado,Pendiente/Pago
             $table->string('observacion')->nullable();
             $table->foreign('huespede_id')->references('id')->on('huespedes');
             $table->decimal('monto', 12, 2)->default(0.00);
             $table->bigInteger('formapago_id')->unsigned();
             $table->foreign('formapago_id')->references('id')->on('forma_pagos');
             $table->integer('cantidad_cabana_reservadas')->default(1);
-            $table->string('cargado_pago_huespede',12)->default('no');//se actualiza al registrar huespede
-            $table->softDeletes("deleted_at",0);
-            $table->unsignedBigInteger("precio_id")->nullable();
-            $table->foreign("precio_id")->references("id")->on("precios");
-
-
-
-
-
-
+            $table->string('cargado_pago_huespede', 12)->default('no'); // se actualiza al registrar huespede
+            $table->softDeletes('deleted_at', 0);
+            $table->unsignedBigInteger('precio_id')->nullable();
+            $table->foreign('precio_id')->references('id')->on('precios');
 
         });
     }

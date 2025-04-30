@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('ficha_registros', function (Blueprint $table) {
             //
-            if(!Schema::hasColumn('ficha_registro','nro_reservacion')){
-                $table->string('nro_reservacion',12)->default('000000000000');
+            if (! Schema::hasColumn('ficha_registro', 'nro_reservacion')) {
+                $table->string('nro_reservacion', 12)->default('000000000000');
             }
         });
     }

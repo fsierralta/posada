@@ -3,12 +3,12 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Mailables\Address;
+
 class EmailAquiler extends Mailable
 {
     use Queueable, SerializesModels;
@@ -16,11 +16,12 @@ class EmailAquiler extends Mailable
     /**
      * Create a new message instance.
      */
-     public $sendDataMail;
+    public $sendDataMail;
+
     public function __construct($sendDataMail)
     {
         //
-        $this->sendDataMail=$sendDataMail;
+        $this->sendDataMail = $sendDataMail;
     }
 
     /**
@@ -30,7 +31,7 @@ class EmailAquiler extends Mailable
     {
         return new Envelope(
             subject: 'Gracias por hospedarse  de este dia: '.now()->format('d-m-Y'),
-            from:new Address("reservaciones@posadaloshumacos.com",'Dpto: Reservaciones Posada Los Humacos'),
+            from: new Address('reservaciones@posadaloshumacos.com', 'Dpto: Reservaciones Posada Los Humacos'),
         );
     }
 
@@ -41,7 +42,7 @@ class EmailAquiler extends Mailable
     {
         return new Content(
             view: 'reservaciones.email',
-           
+
         );
     }
 

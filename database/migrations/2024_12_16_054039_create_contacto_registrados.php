@@ -16,12 +16,12 @@ return new class extends Migration
             $table->timestamps();
             $table->string('nombre');
             $table->string('apellidos');
-            $table->string('nacionalidad',1)->default("V");
+            $table->string('nacionalidad', 1)->default('V');
             $table->string('cedula')->unique();
             $table->date('nacimiento');
             $table->string('celular');
             $table->string('direccion');
-            $table->foreignId("contacto_id")->constrained("contactos",'id');
+            $table->foreignId('contacto_id')->constrained('contactos', 'id');
         });
     }
 

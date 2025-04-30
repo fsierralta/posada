@@ -2,10 +2,9 @@
 
 namespace App\Mail;
 
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -17,12 +16,12 @@ class SenderVerifCodeEmail extends Mailable
     /**
      * Create a new message instance.
      */
-     public $codeVerification;
+    public $codeVerification;
 
     public function __construct($codeVerification)
     {
         //
-        $this->codeVerification=$codeVerification;
+        $this->codeVerification = $codeVerification;
     }
 
     /**
@@ -32,7 +31,7 @@ class SenderVerifCodeEmail extends Mailable
     {
         return new Envelope(
             subject: 'Sender Verif Code Email',
-            from:new Address("sistema@posadaloshumacos.com","Sistema De acceso al ssitema")
+            from: new Address('sistema@posadaloshumacos.com', 'Sistema De acceso al ssitema')
         );
     }
 

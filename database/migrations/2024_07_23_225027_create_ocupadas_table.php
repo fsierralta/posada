@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('ocupadas', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId("posada_id")->constrained();
-            $table->date("fecha");
-
+            $table->foreignId('posada_id')->constrained();
+            $table->date('fecha');
 
         });
     }

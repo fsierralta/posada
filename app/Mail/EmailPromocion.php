@@ -2,14 +2,13 @@
 
 namespace App\Mail;
 
-
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Mailables\Address;
+
 class EmailPromocion extends Mailable
 {
     use Queueable, SerializesModels;
@@ -17,12 +16,12 @@ class EmailPromocion extends Mailable
     /**
      * Create a new message instance.
      */
-    public  $sendDataMail;
-    public function __construct($sendDataMail)
+    public $sendDataMail;
 
+    public function __construct($sendDataMail)
     {
         //
-        $this->sendDataMail=$sendDataMail;
+        $this->sendDataMail = $sendDataMail;
     }
 
     /**
@@ -32,7 +31,7 @@ class EmailPromocion extends Mailable
     {
         return new Envelope(
             subject: 'Promocion opticas Myoptic',
-            from: new Address('gerencia@posadaloshumacos.com','Optica MyOptic')
+            from: new Address('gerencia@posadaloshumacos.com', 'Optica MyOptic')
         );
     }
 

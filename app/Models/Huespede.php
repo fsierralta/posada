@@ -8,23 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class Huespede extends Model
 {
     use HasFactory;
-    protected $fillable=[
-        "nombre",
-        "apellidos",
-        "cedula",
-        "nacimiento",
-        "nacionalidad",
-        "pasaporte",
-         "procedencia",
-        "destino",
-        "vehiculo",
-        "placa",
-        "direccion",
-        "telefono",
-        "celular",
-        "email",
-        "profesion",
-        'estadocivil' //Soltero/Casado,Viudo/Divorciado
-];
 
+    protected $fillable = [
+        'nombre',
+        'apellidos',
+        'cedula',
+        'nacimiento',
+        'nacionalidad',
+        'pasaporte',
+        'procedencia',
+        'destino',
+        'vehiculo',
+        'placa',
+        'direccion',
+        'telefono',
+        'celular',
+        'email',
+        'profesion',
+        'estadocivil', // Soltero/Casado,Viudo/Divorciado
+    ];
 }

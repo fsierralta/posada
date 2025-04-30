@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::table('ficha_registros', function (Blueprint $table) {
 
-           if(!Schema::hasColumn("ficha_registros",'nro_factura')) {
-         
-            $table->string('nro_factura',12)->default('000000000000')
-                   ->nullable()    ;
-           }         
+            if (! Schema::hasColumn('ficha_registros', 'nro_factura')) {
+
+                $table->string('nro_factura', 12)->default('000000000000')
+                    ->nullable();
+            }
         });
-        
+
     }
 
     /**

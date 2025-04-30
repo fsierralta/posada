@@ -2,13 +2,12 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-//--
-use App\Models\Reservacion; // Importa tu modelo de Reservación
-use App\Models\Huespede; // Importa tu modelo de Huesped
-use App\Models\FormaPago; // Importa tu modelo de FormaPago
-use Carbon\Carbon; // Para trabajar con fechas
+use App\Models\FormaPago;
+// --
+use App\Models\Huespede; // Importa tu modelo de Reservación
+use App\Models\Reservacion; // Importa tu modelo de Huesped
+use Carbon\Carbon; // Importa tu modelo de FormaPago
+use Illuminate\Database\Seeder; // Para trabajar con fechas
 
 class ReservacionSeeder extends Seeder
 {
@@ -42,7 +41,6 @@ class ReservacionSeeder extends Seeder
             ]);
         }
 
-        
     }
 
     private function fechaAleatoria()
@@ -53,7 +51,6 @@ class ReservacionSeeder extends Seeder
 
         return sprintf('%04d-%02d-%02d', $year, $month, $day);
     }
-
 
     private function observacionAleatoria()
     {
@@ -66,6 +63,4 @@ class ReservacionSeeder extends Seeder
 
         return $observaciones[array_rand($observaciones)];
     }
-
-
 }

@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\UserAliado;
 use App\Models\Aliado;
+use App\Models\UserAliado;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+
 class AliadoSeeder extends Seeder
 {
     /**

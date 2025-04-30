@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('posada_reservacion', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("posada_id");
-            $table->unsignedBigInteger("reservacion_id");
+            $table->unsignedBigInteger('posada_id');
+            $table->unsignedBigInteger('reservacion_id');
             $table->timestamps();
-            $table->foreign("posada_id")->references("id")->on("posadas");
-            $table->foreign("reservacion_id")->references("id")->on("reservaciones");
+            $table->foreign('posada_id')->references('id')->on('posadas');
+            $table->foreign('reservacion_id')->references('id')->on('reservaciones');
         });
     }
 

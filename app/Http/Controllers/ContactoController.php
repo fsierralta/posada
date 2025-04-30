@@ -2,171 +2,140 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\CustomTool\Email\CodeSendEmailUser;
 use App\Models\Contacto;
 use App\Models\ContactoRegistrado;
-use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
 use App\Rules\FechaNacimientoRule;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
-
-
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class ContactoController extends Controller
 {
+    public function index()
+    {
 
-   public function index(){
-      
-      return Inertia::render('Publicidad/Publicidad');   
-   }
-   
-    public function show (Request $request){
-    
-     
-    
-      try {
-         //code...
-         return Inertia::render('Publicidad/Contacto');   
-      } catch (\Exception $th){
-         info('error:'.$th->getMessage());
+        return Inertia::render('Publicidad/Publicidad');
+    }
 
-      }
-      
+    public function show(Request $request)
+    {
 
+        try {
+            // code...
+            return Inertia::render('Publicidad/Contacto');
+        } catch (\Exception $th) {
+            info('error:'.$th->getMessage());
+
+        }
 
     }
-    public function senderCode(Request $request){
-      
-        
-           //code...
-         
-           $validate=$request->validate(
-             [ "email"=>['required','string','lowercase', 'email', 'max:255'],
-               'nombre'=>['required'],
-               'apellidos'=>['required'],
-               'nacionalidad'=>['required','in:V,E'],
-               'cedula'=>['required'],
-               'nacimiento'=>['required','date',new FechaNacimientoRule],
-               'celular'=>['required'],
-               'direccion'=>['required']
-               
-       
 
-               
-               
-     
-             ]) ;
-             info('validate',["validate"=>$validate]);
-            try{    
+    public function senderCode(Request $request)
+    {
 
-             $contactoExist=Contacto::where('email',$request->email)->first();
-            
-             if($contactoExist==null){
-                $contactoExist=Contacto::create([
-                     'email'=>$request->email,
-                     'created_at'=>now(),
-                     'updated_at'=>now(),
+        // code...
 
+        $validate = $request->validate(
+            ['email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
+                'nombre' => ['required'],
+                'apellidos' => ['required'],
+                'nacionalidad' => ['required', 'in:V,E'],
+                'cedula' => ['required'],
+                'nacimiento' => ['required', 'date', new FechaNacimientoRule],
+                'celular' => ['required'],
+                'direccion' => ['required'],
 
+            ]);
+        info('validate', ['validate' => $validate]);
+        try {
+
+            $contactoExist = Contacto::where('email', $request->email)->first();
+
+            if ($contactoExist == null) {
+                $contactoExist = Contacto::create([
+                    'email' => $request->email,
+                    'created_at' => now(),
+                    'updated_at' => now(),
 
                 ]);
-                info('contactoNull',['contacto'=>$contactoExist]);
-             }
-             info('contacto',['contacto'=>$contactoExist->id]);
-             $contactoRegistrado=DB::table('contacto_registrados')
-                                 ->where('contacto_id',"=",$contactoExist->id)
-                                 ->get(); //se puede utilizar first()
-              info('contactoRegistrao',['data'=>$contactoRegistrado->count()])   ;                
-              if($contactoRegistrado->count()>0)  {                
-                       return response()->json(['message'=>'Ya usted esta registrado'],200)  ;
-               }
-             
+                info('contactoNull', ['contacto' => $contactoExist]);
+            }
+            info('contacto', ['contacto' => $contactoExist->id]);
+            $contactoRegistrado = DB::table('contacto_registrados')
+                ->where('contacto_id', '=', $contactoExist->id)
+                ->get(); // se puede utilizar first()
+            info('contactoRegistrao', ['data' => $contactoRegistrado->count()]);
+            if ($contactoRegistrado->count() > 0) {
+                return response()->json(['message' => 'Ya usted esta registrado'], 200);
+            }
 
+            $codeSendEmail = new CodeSendEmailUser($request, 'Contacto');
 
-            
-            $codeSendEmail=new CodeSendEmailUser($request,"Contacto");
-           return  $codeSendEmail->sendVerificationCode();
-     
-         } catch (\Exception $th) {
-           //throw $th;
-           Log::error('Error en sendcodeEmail'.$th->getMessage());
-           return response()->json($th->getMessage(),500);
-         }
- 
- 
-         
-        
- 
- 
-     }
+            return $codeSendEmail->sendVerificationCode();
+
+        } catch (\Exception $th) {
+            // throw $th;
+            Log::error('Error en sendcodeEmail'.$th->getMessage());
+
+            return response()->json($th->getMessage(), 500);
+        }
+
+    }
+
     //
-    public function registerContactoStore (Request $request ):RedirectResponse{
-      //  info('storeContacto',["data"=>$request]);
-        $validate=$request->validate(
-            [ "email"=>['required','string','lowercase', 'email', 'max:255'],
-              'nombre'=>['required'],
-              'apellidos'=>['required'],
-              'nacionalidad'=>['required','in:V,E'],
-              'cedula'=>['required'],
-              'nacimiento'=>['required','date',new FechaNacimientoRule],
-              'celular'=>['required'],
-              'direccion'=>['required'],
-              'verificationcode'=>['required']
-              
-      
+    public function registerContactoStore(Request $request): RedirectResponse
+    {
+        //  info('storeContacto',["data"=>$request]);
+        $validate = $request->validate(
+            ['email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
+                'nombre' => ['required'],
+                'apellidos' => ['required'],
+                'nacionalidad' => ['required', 'in:V,E'],
+                'cedula' => ['required'],
+                'nacimiento' => ['required', 'date', new FechaNacimientoRule],
+                'celular' => ['required'],
+                'direccion' => ['required'],
+                'verificationcode' => ['required'],
 
-              
-              
-    
-            ]) ;
-         try {
-            //code...
-             $codeSendEmailUser=new CodeSendEmailUser($request,'Contacto');
-             $passcode=$codeSendEmailUser->verifiCodeSender();
-             info("passcode",["code"=>$passcode ]);
-             if($passcode){
-                $contacto=Contacto::where('email',$request->email)->first();
-                $contacto->email_verified_at=Carbon::now();
+            ]);
+        try {
+            // code...
+            $codeSendEmailUser = new CodeSendEmailUser($request, 'Contacto');
+            $passcode = $codeSendEmailUser->verifiCodeSender();
+            info('passcode', ['code' => $passcode]);
+            if ($passcode) {
+                $contacto = Contacto::where('email', $request->email)->first();
+                $contacto->email_verified_at = Carbon::now();
                 $contacto->save();
-                $contactoRegistrado=ContactoRegistrado::create([
-                    "nombre"=>$request->nombre,
-                    'apellidos'=>$request->apellidos,
-                    'nacionalidad'=>$request->nacionalidad,
-                    'cedula'=>$request->cedula,
-                    'nacimiento'=>$request->nacimiento,
-                    'celular'=>$request->celular,
-                    'direccion'=>$request->direccion,
-                    'contacto_id'=>$contacto->id
-
-
+                $contactoRegistrado = ContactoRegistrado::create([
+                    'nombre' => $request->nombre,
+                    'apellidos' => $request->apellidos,
+                    'nacionalidad' => $request->nacionalidad,
+                    'cedula' => $request->cedula,
+                    'nacimiento' => $request->nacimiento,
+                    'celular' => $request->celular,
+                    'direccion' => $request->direccion,
+                    'contacto_id' => $contacto->id,
 
                 ]);
-                $codeSendEmailUser->SendNotificacionPromocion($contactoRegistrado,$contacto->email);
-                return back()->with("message","Felicitaciones usted se ha registrado, revise su correo");
+                $codeSendEmailUser->SendNotificacionPromocion($contactoRegistrado, $contacto->email);
 
+                return back()->with('message', 'Felicitaciones usted se ha registrado, revise su correo');
 
+            } else {
+                return back()->with('message', session('codeemail'));
+            }
 
-
-
-             }else{
-                return back()->with("message",session('codeemail'));
-             }
-             
-
-            
-         } catch (\Exception $th) {
-            //throw $th;
+        } catch (\Exception $th) {
+            // throw $th;
             Log::error('Ha ocurrido un error en store Contacto:'.$th->getMessage());
-         }   
+        }
 
-
-      return redirect()->route('/') ;
-
-
+        return redirect()->route('/');
 
     }
 }

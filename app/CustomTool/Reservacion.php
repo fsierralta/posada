@@ -1,15 +1,15 @@
 <?php
 
 namespace App\CustomTool;
-use App\Models\Posada;
-use Closure;
-use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
-use Illuminate\Http\Request;
-use App\Models\Reservacion as ModelReservacion;
+
 use App\Models\FichaRegistroHuespe;
-use Carbon\Carbon;
+use App\Models\Posada;
+use App\Models\Reservacion as ModelReservacion;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+
 class Reservacion
 {
     /**
@@ -31,35 +31,31 @@ class Reservacion
             ->groupBy('capacidad')
             ->orderBy('capacidad', 'asc')
             ->get();
-        if ($groupCapcity->count() == 0)
+        if ($groupCapcity->count() == 0) {
             return null;
+        }
 
         return $groupCapcity;
     }
 
     /**
      * determinar posada segun capacidad y agrupar por capacidad
-     * @param $posadas
      */
     public static function totalCabana($posadas = null): int
     {
         $totalcabana = Posada::count();
-        if ($totalcabana == 0)
+        if ($totalcabana == 0) {
             return 0;
+        }
 
         return $totalcabana;
-
 
     }
 
     /**
      * determinar si si el huespede se le puede asignar una cabana
-     * @param $request
-     * @param 
-     * @param
      */
-
-    public static function asignarCabana(\Closure $callback, Request $request ): bool
+    public static function asignarCabana(\Closure $callback, Request $request): bool
     {
         $validate = $request->validate([
             'nombre' => 'required',
@@ -75,20 +71,17 @@ class Reservacion
             'user_id' => 'required',
         ]);
 
-
         return true;
 
     }
 
-
-
     /**
      * Verifica la disponibilidad de cabañas para las fechas proporcionadas.
      *
-     * @param string $fechaEntrada Fecha de entrada en formato 'Y-m-d'.
-     * @param string $fechaSalida Fecha de salida en formato 'Y-m-d'.
-     * @param \Illuminate\Database\Eloquent\Builder $reservacion Instancia del modelo de reservación.
-     * @param int $cantidadCabana Cantidad de cabañas que se desean reservar.
+     * @param  string  $fechaEntrada  Fecha de entrada en formato 'Y-m-d'.
+     * @param  string  $fechaSalida  Fecha de salida en formato 'Y-m-d'.
+     * @param  \Illuminate\Database\Eloquent\Builder  $reservacion  Instancia del modelo de reservación.
+     * @param  int  $cantidadCabana  Cantidad de cabañas que se desean reservar.
      * @return bool Retorna true si hay disponibilidad de cabañas, de lo contrario false.
      */
     public function verificarDisponibilidad($fechaEntrada, $fechaSalida, $reservacion, $cantidadCabana)
@@ -100,39 +93,36 @@ class Reservacion
                     $query->where('fecha_entrada', '<=', $fechaEntrada)
                         ->where('fecha_salida', '>=', $fechaSalida);
                 });
-        })->sum("cantidad_cabana_reservadas");
+        })->sum('cantidad_cabana_reservadas');
         /* //--------------------------------
-        * Se debe tomar en cuenta las ocupadas 
-        * para la fecha solicitante 
+        * Se debe tomar en cuenta las ocupadas
+        * para la fecha solicitante
         * en la base de datos ficha_registro_huespes
         //- */
-        $ocupada=FichaRegistroHuespe::where('estatus','A')
-        ->where(function (Builder $query) use ($fechaEntrada, $fechaSalida) {
-            $query->whereBetween('fechaEntrada', [$fechaEntrada, $fechaSalida])
-                ->orWhereBetween('fechaSalida', [$fechaEntrada, $fechaSalida])
-                ->orWhere(function ($query) use ($fechaEntrada, $fechaSalida) {
-                    $query->where('fechaEntrada', '<=', $fechaEntrada)
-                        ->where('fechaSalida', '>=', $fechaSalida);
-                });
-        })->count();
+        $ocupada = FichaRegistroHuespe::where('estatus', 'A')
+            ->where(function (Builder $query) use ($fechaEntrada, $fechaSalida) {
+                $query->whereBetween('fechaEntrada', [$fechaEntrada, $fechaSalida])
+                    ->orWhereBetween('fechaSalida', [$fechaEntrada, $fechaSalida])
+                    ->orWhere(function ($query) use ($fechaEntrada, $fechaSalida) {
+                        $query->where('fechaEntrada', '<=', $fechaEntrada)
+                            ->where('fechaSalida', '>=', $fechaSalida);
+                    });
+            })->count();
 
-        info('disponibilidad',['resultado'=>"reservaciones $reservaciones , solicita nro de cabana:$cantidadCabana , ocupada: $ocupada"]);
-        $disponibilidad = $this->totalCabana() - ($reservaciones + $cantidadCabana+$ocupada);
-        info('disponibilidad', ["total" => $disponibilidad, "reservaciones" => $reservaciones]);
+        info('disponibilidad', ['resultado' => "reservaciones $reservaciones , solicita nro de cabana:$cantidadCabana , ocupada: $ocupada"]);
+        $disponibilidad = $this->totalCabana() - ($reservaciones + $cantidadCabana + $ocupada);
+        info('disponibilidad', ['total' => $disponibilidad, 'reservaciones' => $reservaciones]);
+
         return $disponibilidad > 0 && $disponibilidad <= $this->totalCabana();
 
-
     }
-
-
-
 
     /**
      * Obtiene las reservaciones dentro de un rango de fechas especificado.
      *
-     * @param string $fecha_entrada La fecha de entrada para el rango de búsqueda.
-     * @param string $fecha_salida La fecha de salida para el rango de búsqueda.
-     * @param mixed $reservacion (Opcional) Información adicional de la reservación.
+     * @param  string  $fecha_entrada  La fecha de entrada para el rango de búsqueda.
+     * @param  string  $fecha_salida  La fecha de salida para el rango de búsqueda.
+     * @param  mixed  $reservacion  (Opcional) Información adicional de la reservación.
      * @return \Illuminate\Pagination\LengthAwarePaginator Paginador con las reservaciones encontradas.
      */
     public function reservacionesEnRangoFecha($fecha_entrada, $fecha_salida, $reservacion = null)
@@ -146,17 +136,18 @@ class Reservacion
                 });
 
         })
-          ->where('cargado_pago_huespede', 'no')
-          ->orWhere("monto",">",0)
-          ->with('huespede')
-          ->orderBy("fecha_entrada",'ASC')
-          ->paginate(10);
-      /*   info("claseCustom", [
-            "data" => $reservaciones, 
-            "rangoFecha"=>"entrada:$fecha_entrada salidad:$fecha_salida"
+            ->where('cargado_pago_huespede', 'no')
+            ->orWhere('monto', '>', 0)
+            ->with('huespede')
+            ->orderBy('fecha_entrada', 'ASC')
+            ->paginate(10);
 
-        ]); */
-        return $reservaciones ? $reservaciones:null;
+        /*   info("claseCustom", [
+              "data" => $reservaciones,
+              "rangoFecha"=>"entrada:$fecha_entrada salidad:$fecha_salida"
+
+          ]); */
+        return $reservaciones ? $reservaciones : null;
     }
 
     public function reservacionesEnFechaActual($fecha_entrada, $fecha_salida, $reservacion = null)
@@ -171,31 +162,26 @@ class Reservacion
 
         })
             ->where('cargado_pago_huespede', 'no')
-            ->orWhere("monto",">",0)
+            ->orWhere('monto', '>', 0)
             ->with('huespede')
-            ->orderBy("fecha_entrada",'ASC')
+            ->orderBy('fecha_entrada', 'ASC')
             ->get();
 
-
-        return $reservaciones ;
+        return $reservaciones;
     }
 
     /**
      * Carga el pago de una reservación a un hospedaje.
      *
-     * @param int $reservacion_id El ID de la reservación.
-     * @param int $posada_id El ID de la posada.
+     * @param  int  $reservacion_id  El ID de la reservación.
+     * @param  int  $posada_id  El ID de la posada.
      * @return reservacion
      */
     public function findReservacionHuespede(int $reservacion_id)
     {
         $reservacion = ModelReservacion::find($reservacion_id);
+
         return $reservacion instanceof ModelReservacion ? $reservacion : null;
 
-
-
     }
-
- 
- 
 }

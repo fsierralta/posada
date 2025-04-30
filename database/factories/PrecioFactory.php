@@ -18,9 +18,9 @@ class PrecioFactory extends Factory
     {
         return [
             //
-            "precio"=>16,
-            "descripcion"=>'Precio por persona incluye desayuno',
-            "tipo"=>"C"
+            'precio' => 16,
+            'descripcion' => 'Precio por persona incluye desayuno',
+            'tipo' => 'C',
         ];
     }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ficha_registros', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string("nro",12);
+            $table->string('nro', 12);
         });
     }
 

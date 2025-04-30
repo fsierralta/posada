@@ -6,7 +6,6 @@ use App\Models\Posada;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-
 class DashboardController extends Controller
 {
     /**
@@ -15,12 +14,12 @@ class DashboardController extends Controller
     public function index()
     {
         //
-        $posada=Posada::all();
-          $huespedesRegistrados=(new Posada())->obtenerHuespedes();
-        info('dasboardController',['data'=>$huespedesRegistrados]);
-        return Inertia::render("Dashboard",["dataPosada"=>$posada,
-                                            'huespedesRegistrados'=>$huespedesRegistrados]);
+        $posada = Posada::all();
+        $huespedesRegistrados = (new Posada)->obtenerHuespedes();
+        info('dasboardController', ['data' => $huespedesRegistrados]);
 
+        return Inertia::render('Dashboard', ['dataPosada' => $posada,
+            'huespedesRegistrados' => $huespedesRegistrados]);
 
     }
 

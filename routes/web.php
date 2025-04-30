@@ -2,13 +2,12 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SendGetCodeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\SendGetCodeController;
-use App\Http\Controllers\ReservacionController;
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -17,42 +16,42 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-//----------------------------
-Route::get("/codeverification",[SendGetCodeController::class,"senderCode"])
-       ->name("codeverification.get");
- //------------------      
+// ----------------------------
+Route::get('/codeverification', [SendGetCodeController::class, 'senderCode'])
+    ->name('codeverification.get');
+// ------------------
 
-Route::get('/dashboard', [DashboardController::class,"index"])
-      ->middleware(['auth', 'verified'])
-      ->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::get("layout",function (){
-    $user=[
-        "name"=>"freddu"
+Route::get('layout', function () {
+    $user = [
+        'name' => 'freddu',
     ];
 
-    return Inertia::render("LayoutInertia/Home", ["user"=>$user]);
+    return Inertia::render('LayoutInertia/Home', ['user' => $user]);
 });
 
-//require aqui huespede.php
+// require aqui huespede.php
 require __DIR__.'/huespede.php';
-//requirre aqui posada.php 
+// requirre aqui posada.php
 require __DIR__.'/posada.php';
-//requirre aqui precio.php
+// requirre aqui precio.php
 require __DIR__.'/precio.php';
-//requirre aqui contacto.php
+// requirre aqui contacto.php
 require __DIR__.'/contacto.php';
-//requirre aqui reporte.php
+// requirre aqui reporte.php
 require __DIR__.'/reporte.php';
-//require aqui pago 
+// require aqui pago
 require __DIR__.'/pago.php';
 //  requirre aqui auth.php
 require __DIR__.'/auth.php';
 
-//require aqui reservacion 
+// require aqui reservacion
 require __DIR__.'/reservacion.php';

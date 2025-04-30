@@ -2,12 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-
 use App\Models\UserAliado;
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Faker\Factory as Faker;
 
 class UserAliadoSeeder extends Seeder
 {
@@ -29,7 +27,6 @@ class UserAliadoSeeder extends Seeder
                 'remember_token' => \Illuminate\Support\Str::random(10),
             ]);
         }
-    
 
     }
 }

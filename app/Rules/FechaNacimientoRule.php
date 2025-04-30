@@ -16,9 +16,9 @@ class FechaNacimientoRule implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         //
-        $fnacimiento=Carbon::parse($value);
-        if(Carbon::now()->diffInYears($fnacimiento)>17){
-            $fail('La  :attribute debe se mayor o igual a 18 años')   ;
+        $fnacimiento = Carbon::parse($value);
+        if (Carbon::now()->diffInYears($fnacimiento) > 17) {
+            $fail('La  :attribute debe se mayor o igual a 18 años');
         }
 
     }

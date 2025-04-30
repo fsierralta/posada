@@ -3,11 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\FichaRegistro;
-use App\Models\FormaPago;
-use App\Models\Posada;
 use App\Models\Precio;
 use App\Models\User;
-
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -26,14 +23,12 @@ class DatabaseSeeder extends Seeder
             UserAliadoSeeder::class,
             AliadoSeeder::class,
 
-
         ]
         );
-         
-          Precio::factory(1)->create() ;  
-          FichaRegistro::factory(1)->create();
-          //User::factory(1)->create();
-           
-        
+
+        Precio::factory(1)->create();
+        FichaRegistro::factory(1)->create();
+        // User::factory(1)->create();
+
     }
 }

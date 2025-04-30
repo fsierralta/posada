@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('clientes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string("nombre");
-            $table->string("apellidos");
-            $table->string("cedula")->unique();
-            $table->date("nacimiento");
-            $table->string("email");
-            $table->string("nrocelular");
-            $table->string("nrolocal");
-            $table->string("direccion");
-            $table->bigInteger("estado_id");
-            $table->bigInteger("municipio_id");
+            $table->string('nombre');
+            $table->string('apellidos');
+            $table->string('cedula')->unique();
+            $table->date('nacimiento');
+            $table->string('email');
+            $table->string('nrocelular');
+            $table->string('nrolocal');
+            $table->string('direccion');
+            $table->bigInteger('estado_id');
+            $table->bigInteger('municipio_id');
 
         });
     }

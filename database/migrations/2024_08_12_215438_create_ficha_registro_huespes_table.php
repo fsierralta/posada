@@ -5,7 +5,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-
 return new class extends Migration
 {
     /**
@@ -16,16 +15,13 @@ return new class extends Migration
         Schema::create('ficha_registro_huespes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId("huespede_id")->constrained();
-            $table->foreignId("posada_id")->constrained();
-            $table->date("fechaEntrada")->default(Carbon::now()->format('Y-m-d'));
+            $table->foreignId('huespede_id')->constrained();
+            $table->foreignId('posada_id')->constrained();
+            $table->date('fechaEntrada')->default(Carbon::now()->format('Y-m-d'));
             $table->date('fechaSalida')->nullable();
             $table->date('fechacierre')->nullable();
-            $table->string('estatus')->default("A"); //Abierto Cerrado
-            $table->string("nroficha");
-
-
-
+            $table->string('estatus')->default('A'); // Abierto Cerrado
+            $table->string('nroficha');
 
         });
     }
