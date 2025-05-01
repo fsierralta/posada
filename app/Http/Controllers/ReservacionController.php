@@ -39,9 +39,11 @@ class ReservacionController extends Controller
 
         }
 
-        // info($reservaciones);
+
+
         $reservaciones = $this->customReservacion->reservacionesEnRangoFecha($fecha_entrada, $fecha_salida, new Reservacion);
         $nroCabana = $reservaciones ? $reservaciones->sum('cantidad_cabana_reservadas') : 0;
+        info($reservaciones);
 
         return Inertia::render('Reservacion/ReservacionIndex', ['reservaciones' => $reservaciones,
             'precios' => Precio::all(),
@@ -156,7 +158,8 @@ class ReservacionController extends Controller
                 'fecha_entrada' => Carbon::parse($request->fecha_entrada),
                 'fecha_salida' => Carbon::parse($request->fecha_salida),
                 'estatuspago' => 'C',//confirmado pago
-                'monto' => $totalPagar,
+                'monto' => $totalPagar, //cambia segun los pagos
+                'monto_original' => $totalPagar, //se agrego para el control del monto original 
                 'formapago_id' => $request->pago_id,
                 'precio_id' => $precio->id,
                 'cantidad_cabana_reservadas' => $request->cantidad_cabana_reservadas,
@@ -164,6 +167,11 @@ class ReservacionController extends Controller
             ];
 
             if ($reservacion) {
+                //se debe puede modificar si la reservacion no tiene pagos
+                if ($reservacion->pagoHuespedes()->count() > 0) {
+                    throw new Exception('No se puede modificar la reservación, ya tiene pagos asociados');
+                }
+
                 $reservacion->update($data);
                 $message = 'Reservación actualizada nro: '.$reservacion->nro_reservacion;
             } else {

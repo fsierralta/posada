@@ -35,6 +35,7 @@ class Reservacion extends Model
         'updated_at',
         'precio_id',
         'deleted_at',
+        'monto_original'
 
     ];
 

@@ -136,8 +136,8 @@ class Reservacion
                 });
 
         })
-            ->where('cargado_pago_huespede', 'no')
-            ->orWhere('monto', '>', 0)
+           // ->where('cargado_pago_huespede', 'no')
+            ->orwhere('monto', '>', 0)
             ->with('huespede')
             ->orderBy('fecha_entrada', 'ASC')
             ->paginate(10);
