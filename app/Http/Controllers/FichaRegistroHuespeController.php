@@ -237,7 +237,7 @@ class FichaRegistroHuespeController extends Controller
         $findReservacionHuespede = $this->customReservacion->findReservacionHuespede((int) $request->reservacion_id);
         if ($findReservacionHuespede != null) {
             // se carga el monto de la reservacion/
-            if (isset($findReservacionHuespede->monto) && $findReservacionHuespede->monto >= $totalVerificado) {
+             if (isset($findReservacionHuespede->monto) && $findReservacionHuespede->monto >= $totalVerificado) {
 
                 $findReservacionHuespede->monto = $findReservacionHuespede->monto - $totalVerificado;
             } else {
