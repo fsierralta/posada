@@ -9,6 +9,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\TestRunner\TestResult\Collector;
 
 class Reservacion
 {
@@ -183,5 +184,26 @@ class Reservacion
 
         return $reservacion instanceof ModelReservacion ? $reservacion : null;
 
+    }
+    
+    /**
+     * Obtiene las reservaciones confirmadas dentro de un rango de fechas especificado.
+     *
+     * @param  string  $fecha_inicio  Fecha de inicio del rango.
+     * @param  string  $fecha_final  Fecha final del rango.
+     * @return \Illuminate\Pagination\LengthAwarePaginator Paginador con las reservaciones confirmadas.
+     */
+    public function reservacionesConfirmadas(string $fecha_inicio, string $fecha_final)
+    {
+
+     $re=ModelReservacion::with(['huespede', 'posadas', 'pagoHuespedes'])
+            ->where('cargado_pago_huespede', 'si')
+            ->whereBetween('fecha_entrada', [$fecha_inicio, $fecha_final])
+            ->paginate(10); 
+      info('reservacionesConfirmadas', ['data' => $re]);
+      return $re ? $re : null;
+
+
+           
     }
 }

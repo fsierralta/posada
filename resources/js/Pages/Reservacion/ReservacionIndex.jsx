@@ -4,8 +4,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import InputLabel from '@/Components/InputLabel';
 import { usePage, Head, useForm, router } from '@inertiajs/react';
 import ReservacionTable from '@/Components/Reservacion/ReservacionTable';
-import { useEffect } from 'react';
-import axios from 'axios';
+
 
 const ReservacionIndex = () => {
   const { reservaciones, auth, rangoFechas, flash, nroCabana } = usePage().props;
@@ -26,9 +25,22 @@ const ReservacionIndex = () => {
 
   const createReservacion = (e) => {
     e.preventDefault();
+   
     router.get(route('reservaciones.create'), { rangoFechas });
   };
-
+  const reservacionHospedadas=(e)=>{
+    e.preventDefault()
+    try {
+      console.log("llamado",rangoFechas[0])
+     router.get(route('reservaciones.confirmadas',{
+        fecha_inicio:rangoFechas[0],
+        fecha_final:rangoFechas[1]}
+      ));
+    } catch (error) {
+      console.log(error)
+    }
+    
+  }
   return (
     <Authenticated user={auth.user} header="Reservaciones">
       <Head title="Reservaciones" />
@@ -37,12 +49,18 @@ const ReservacionIndex = () => {
           <div className='mt-2 bg-green-400 w-full py-2 rounded-md'>
             {flash?.message ? <p>{flash.message}</p> : <p>{`Resevaciones en rango de fecha`}</p>}
           </div>
-          <div className="flex flex-col md:flex-row justify-between gap-2 mt-2">
+          <div className="flex flex-col md:flex-row gap-2 mt-2">
             <div>
               <PrimaryButton className="bg-green-500 w-full md:w-auto" onClick={createReservacion}>
                 Crear Reservación
               </PrimaryButton>
             </div>
+            <div>
+              <PrimaryButton className="bg-green-700 w-full md:w-auto" onClick={reservacionHospedadas}>
+                Reservaciones Hospedadas
+              </PrimaryButton>
+            </div>
+
           </div>
           <div className="flex flex-col md:flex-row mt-2 gap-2">
             <div className="w-full md:w-1/3">

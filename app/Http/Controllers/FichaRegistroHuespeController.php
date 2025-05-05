@@ -195,26 +195,6 @@ class FichaRegistroHuespeController extends Controller
                     $sendDataMail);
             }
 
-            //       $ ->merge([
-            //         "posada_id"=>$posada->id,
-            //         'nroficha' =>$fichaRegistroHuespe->nroficha,
-            //         'monto'=>$findReservacionHuespede->monto,
-            //         "formaPago_id"=>$findReservacionHuespede->formapago_id,
-            //         "referencia"=>$findReservacionHuespede->nro_reservacion,
-            //         "observacion"=>$findReservacionHuespede->observacion,
-            //         'huespede_id'=>$huespede->id
-            //         ])  ;
-            //        $findReservacionHuespede->cargado_pago_huespede="si";
-            //        $findReservacionHuespede->save();
-            //        $findReservacionHuespede->posadas()->attach($posada_id);
-
-            //        $codeSendEmailUser=new CodeSendEmailUser($request);
-            //        $codeSendEmailUser->sendNotificacionAlquiler($sendDataMail);
-            //    //se envia al pago
-            //    return  $this->storepago($request);//se realiza el pago
-
-            //  }
-
             // se va a crear un classe despachadora de mail
             $codeSendEmailUser = new CodeSendEmailUser($request);
             $codeSendEmailUser->sendNotificacionAlquiler($sendDataMail);
@@ -262,7 +242,12 @@ class FichaRegistroHuespeController extends Controller
 
             $findReservacionHuespede->cargado_pago_huespede = 'si';
             $findReservacionHuespede->save();
-            $findReservacionHuespede->posadas()->attach($posada->id);
+            $findReservacionHuespede->posadas()->attach($posada->id,
+            [   "created_at"=> Carbon::now()->format('Y-m-d'),
+                'updated_at' => Carbon::now()->format('Y-m-d'),
+            ]);
+            
+
 
             $codeSendEmailUser = new CodeSendEmailUser($request);
             $codeSendEmailUser->sendNotificacionAlquiler($sendDataMail);
@@ -418,7 +403,7 @@ class FichaRegistroHuespeController extends Controller
     }
 
     // Estado de cuenta //-
-
+    
     public function estadocta($posada_id)
     {
 

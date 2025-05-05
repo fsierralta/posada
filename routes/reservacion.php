@@ -15,8 +15,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         ->name('reservaciones.store');
     Route::get('/reservaciones/create', [ReservacionController::class, 'create'])
         ->name('reservaciones.create');
-    Route::get('/reservaciones/{reservacion}', [ReservacionController::class, 'show'])
-        ->name('reservaciones.show');
+  /*   Route::get('/reservaciones/{reservacion}', [ReservacionController::class, 'show'])
+        ->name('reservaciones.show'); */
     Route::get('/reservaciones/{reservacion}/edit', [ReservacionController::class, 'edit'])
         ->name('reservaciones.edit');
     Route::put('/reservaciones/{reservacion}', [ReservacionController::class, 'update'])
@@ -25,5 +25,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         ->name('reservaciones.destroy');
     Route::get('/reservaciones', [ReservacionController::class, 'index'])
         ->name('reservaciones.index');
+    Route::get('/reservaciones/{fecha_inicio}/confirmadas/{fecha_final}',
+                                 [ReservacionController::class,'reservacionesConfirmadas'])
+        ->name('reservaciones.confirmadas');    
+
 
 });

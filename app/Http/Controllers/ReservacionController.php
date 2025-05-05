@@ -243,7 +243,7 @@ class ReservacionController extends Controller
             'fechaSalida' => Carbon::parse($request->fecha_salida)->format('d-m-Y'),
             'nroPersonas' => $request->nro_personas,
             'observacion' => $request->observacion,
-            'monto' => $reservacion->monto,
+            'monto' => $reservacion->monto_original,
             'cantidad_cabana_reservadas' => $reservacion->cantidad_cabana_reservadas,
         ];
         $codeSendMail->sendEmailReservacionToHuespede($cabezera, $reservacion);
@@ -263,4 +263,32 @@ class ReservacionController extends Controller
         }
 
     }
+
+    public function reservacionesConfirmadas(Request $request)
+       {
+        try{
+        $fecha_inicio=$request->has('fecha_inicio')  ? Carbon::parse($request->fecha_inicio)->toDateString() 
+                     : Carbon::now()->startOfMonth()->toDateString();
+
+        $fecha_final=$request->has('fecha_final')  ?   Carbon::parser($request->fecha_final)->toDateString()           
+                     : Carbon::now()->endOfMonth()->toDateString();
+                     
+        info('fecha',['fi'=>$fecha_inicio,'ff'=>$fecha_final]) ;
+      
+            //code...
+            $reservaciones = $this->customReservacion->reservacionesConfirmadas($fecha_inicio,$fecha_final);
+            return Inertia::render('Reservacion/ReservacionesConfirmadas',['reservaciones'=>$reservaciones]);
+
+            return response()->json($reservaciones);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json($th->getMessage());
+        }
+
+     
+
+
+        //return Inertia::render('Reservacion/ReservacionConfirmada', ['reservaciones' => $reservaciones]);
+    }
+
 }

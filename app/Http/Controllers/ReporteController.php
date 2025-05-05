@@ -274,7 +274,7 @@ class ReporteController extends Controller
                 'fechaSalida' => Carbon::parse($reservacion->fecha_salida)->format('d-m-Y'),
                 'nroPersonas' => $reservacion->nro_personas,
                 'observacion' => $reservacion->observacion,
-                'monto' => $reservacion->monto,
+                'monto' => $reservacion->monto_original,
                 'cantidad_cabana_reservadas' => $reservacion->cantidad_cabana_reservadas,
             ];
 
