@@ -7,8 +7,8 @@ import ReservacionTable from '@/Components/Reservacion/ReservacionTable';
 
 
 const ReservacionIndex = () => {
-  const { reservaciones, auth, rangoFechas, flash, nroCabana } = usePage().props;
-  const { data, setData } = useForm({
+  const { reservaciones, auth, rangoFechas, flash, nroCabana, } = usePage().props;
+  const { data, setData,processing } = useForm({
     fecha_entrada: rangoFechas[0],
     fecha_salida: rangoFechas[1],
   });
@@ -51,12 +51,16 @@ const ReservacionIndex = () => {
           </div>
           <div className="flex flex-col md:flex-row gap-2 mt-2">
             <div>
-              <PrimaryButton className="bg-green-500 w-full md:w-auto" onClick={createReservacion}>
+              <PrimaryButton className="bg-green-500 w-full md:w-auto" onClick={createReservacion}
+               disabled={processing}
+              >
                 Crear Reservación
               </PrimaryButton>
             </div>
             <div>
-              <PrimaryButton className="bg-green-700 w-full md:w-auto" onClick={reservacionHospedadas}>
+              <PrimaryButton className="bg-green-700 w-full md:w-auto" onClick={reservacionHospedadas}
+                 disabled={processing}
+              >
                 Reservaciones Hospedadas
               </PrimaryButton>
             </div>

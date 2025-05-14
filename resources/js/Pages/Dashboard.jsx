@@ -18,41 +18,41 @@ function AccionesPosada({
   CajaShow
 }) {
   return (
-    <div className='justify-center mx-auto flex flex-wrap gap-2 py-2 sm:mb-14 rounded-lg my-3 space-x-2 md:bg-slate-300 sm:bg-white'>
-      <PrimaryButton className='bg-green-400'
+    <div className='grid grid-cols-2 md:grid-cols-4 gap-4 py-4 sm:mb-14 rounded-lg my-3 md:bg-slate-300 sm:bg-white'>
+      <PrimaryButton className='bg-green-400 w-full'
         id="btnAlquilar"
         name="btnAlquilar"
         onClick={alquilarPosada}
       >Alquilar</PrimaryButton>
-      <PrimaryButton className='bg-green-500'
+      <PrimaryButton className='bg-green-500 w-full'
         id="btnPago"
         name="btnPago"
         onClick={registrarPago}
       >Registrar Pago</PrimaryButton>
       <PrimaryButton
-        className='bg-green-600'
+        className='bg-green-600 w-full'
         onClick={registrarConsumo}
         name="btnConsumo"
       >Cargar un consumo</PrimaryButton>
       <PrimaryButton
-        className='bg-green-700'
+        className='bg-green-700 w-full'
         name="btnEstadoCta"
         id="btnEstadoCta"
         onClick={estadoCta}
       >Estado Cta</PrimaryButton>
       <PrimaryButton
-        className='bg-green-800'
+        className='bg-green-800 w-full'
       >Cambiar de Cabaña</PrimaryButton>
       <PrimaryButton
-        className='bg-green-800'
+        className='bg-green-800 w-full'
       >F. Salida</PrimaryButton>
       <PrimaryButton
-        className='bg-green-900'
+        className='bg-green-900 w-full'
         name={"btnDarDeAlta"}
         onClick={darDeAlta}
       >Dar de Alta</PrimaryButton>
       <PrimaryButton
-        className='bg-green-400'
+        className='bg-green-400 w-full'
         name={"btnCaja"}
         onClick={CajaShow}
       >Caja</PrimaryButton>
@@ -63,7 +63,9 @@ function AccionesPosada({
 // Componente para mostrar cada posada
 function PosadaCard({ item, seleccionada, onSelectPosada, urlImg }) {
   return (
-    <div className={seleccionada(item.id)}
+    <div className={`${seleccionada(item.id)}
+    rounded-lg transition-transform duration-300 ease-in-out hover:scale-110 hover:border-2 hover:border-green-500
+    `}
       key={item.id}
       onClick={() => onSelectPosada(item.id)}
     >
@@ -76,7 +78,10 @@ function PosadaCard({ item, seleccionada, onSelectPosada, urlImg }) {
       </div>
       <div>
         <img src="/imagenes/logo.png" alt="posada"
-          className='bg-green-50 object-fill rounded-lg'
+          className='bg-green-50 object-fill rounded-lg
+          transition-transform duration-300
+          ease-in-out hover:scale-110 
+          hover:border-2 hover:border-green-500'
           width={100}
           height={100}
           loading="lazy"
@@ -206,7 +211,7 @@ export default function Dashboard({ auth, flash, dataPosada, huespedesRegistrado
     >
       <Head title="Dashboard" />
       <MainHtml>
-        <div className="w-full h-6 my-6">
+        <div className="w-full h-6 my-8">
           {mostrar ? (
             <Mensaje
               mensaje={flash.message}
@@ -255,7 +260,9 @@ export default function Dashboard({ auth, flash, dataPosada, huespedesRegistrado
         {isLoading ? (
           <p>Cargando...</p>
         ) : dataPosada.length > 0 ? (
-          <div className='grid md:grid-cols-3 gap-4 sm:grid-cols-1'>
+          <div className='grid md:grid-cols-3 gap-8 sm:grid-cols-1
+          
+          '>
             {dataPosada.map((item) => (
               <PosadaCard
                 key={item.id}

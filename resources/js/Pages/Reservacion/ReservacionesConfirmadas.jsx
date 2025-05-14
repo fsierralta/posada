@@ -9,10 +9,9 @@ import Pagination from '@/Components/Pagination';
 export default function ReservacionesConfirmadas() {
     const {reservaciones,auth}=(usePage().props);
     const {data,links}=reservaciones
+    const {pago_huespedes}=data
     const {fecha_inicio,fecha_final}=route().params
-    console.log(route().params) 
-   
-    console.log(data)
+
      const goBack=(e)=>{
       e.preventDefault()
       router.get(route('reservaciones.index'),{
@@ -52,7 +51,8 @@ export default function ReservacionesConfirmadas() {
                 <th className="border border-collapse rounded-md">Huespede</th>
                 <th className="border border-collapse rounded-md">Monto </th>
                 <th className="border border-collapse rounded-md">Residuo</th>
-                <th className="border border-collapse rounded-md">Posada</th>
+                <th className="border border-collapse rounded-md">Cabaña</th>
+                <th className="border border-collapse rounded-md">Pago</th>
               </tr> 
              </thead>
              <tbody>
@@ -69,6 +69,19 @@ export default function ReservacionesConfirmadas() {
                         <td className="border border-collapse rounded-md py-2">{item.monto_original}</td>
                         <td className="border border-collapse rounded-md py-2">{item.monto}</td>
                         <td className="border border-collapse rounded-md py-2">{item.posadas[0].nombre}</td>
+                        <td className="border border-collapse rounded-md py-2">
+                            {item.pago_huespedes.length > 0 ? (
+                              <ul>
+                                {item.pago_huespedes.map((pago) => (
+                                  <li key={pago.id} className='text-sm text-blue-500 font-bold'>
+                                    {`Monto: ${pago.monto}, Fecha: ${pago.fechapago}, Ref: ${pago.referencia}`}
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              'Sin pagos'
+                            )}
+                    </td>
                     </tr>
 
                     ))
@@ -89,10 +102,7 @@ export default function ReservacionesConfirmadas() {
           </table>
           <div>  
                <Pagination links={links}/>
-                       
-              
-
-          </div>
+           </div>
        </div>
 
        </MainHtml>
