@@ -295,7 +295,7 @@ class ReporteController extends Controller
 
         } catch (\Throwable $th) {
             info('error', ['message' => $th->getMessage()]);
-            Log::
+          
 
             return back()->with('message', 'Error al generar el PDF: '.$th->getMessage());
         }
