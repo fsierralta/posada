@@ -21,4 +21,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/huespedecargoconsumo', [FichaRegistroHuespeController::class, 'storeConsumo'])->name('cargoconsumo.store');
     Route::patch('/huespededardealta/{id}', [FichaRegistroHuespeController::class, 'darDeAlta'])->name('dardealta.patch');
     Route::get('/huespedenotafactura/{id}', [FichaRegistroHuespeController::class, 'notaFactura'])->name('notafactura.get');
+    Route::get('/huespedecambiofechasalida/{id}',[FichaRegistroHuespeController::class,'llamarcargoConsumo'])
+    ->name('huespedecambiofechasalida.get');
+
 });

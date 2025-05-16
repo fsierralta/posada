@@ -12,7 +12,7 @@ import { useEffect, useState } from "react"
 
 function Consumo({auth,flash,dataPago}) {
   
-  const {posada,huespede,fichaRegistroH,precios}=dataPago 
+  const {posada,huespede,fichaRegistroH,precios,fechaSalidaUpdate}=dataPago 
   
   const [mostrar,setMostrar]=useState(false)
   const [mensaje,setMensaje]=useState("")
@@ -31,12 +31,14 @@ function Consumo({auth,flash,dataPago}) {
        nroficha:fichaRegistroH.nroficha,
        posada_id:posada.id,
        huespede_id:huespede.id,
-       precio:0
+       precio:0,
+       fechaSalidaUpdate:fechaSalidaUpdate,
+       updateFechaSalida:fichaRegistroH.fechaSalida,
        
        
 
   })
-
+  
 
   //---------------------------
   const onSubmitHuespede=async(e)=>{
@@ -136,7 +138,6 @@ function Consumo({auth,flash,dataPago}) {
   useEffect(()=>{
      const objePrecio=(precio_id)=>{
                 let itemprecio= precios.find(item=>item.id===precio_id)
-                console.log(itemprecio)
                 const previodata=data
                 previodata.descripcion=itemprecio?.descripcion
                 previodata.precio=itemprecio?.precio
@@ -295,6 +296,28 @@ function Consumo({auth,flash,dataPago}) {
                                         />
                                         
                             </div>
+                            { parseInt(fechaSalidaUpdate) &&(
+                            <div className="">
+                                    <InputLabel
+                                            htmlFor="NuevafechaSalida"
+                                            value={"Nueva Fecha Salida"}
+                                            className="text-red-600 font-bold "
+                                            
+
+                                        
+                                        />
+                                        <TextInput
+                                            type="date"
+                                            required
+                                            name="fechaSalida"
+                                            defaultValue={`${data.updateFechaSalida}`}
+                                            
+                                            
+                                        
+                                        />
+                                        
+                            </div>)}
+
 
                    </div>
                    <div className="mt-2 flex  space-x-2">

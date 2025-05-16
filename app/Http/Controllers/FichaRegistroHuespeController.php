@@ -15,7 +15,6 @@ use App\Models\Posada;
 use App\Models\Precio;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -36,9 +35,8 @@ class FichaRegistroHuespeController extends Controller
 
     public function verificaEstatusPosada($id)
     {
-          
 
-          try {
+        try {
             // code...
 
             $posada = Posada::find($id);
@@ -217,7 +215,7 @@ class FichaRegistroHuespeController extends Controller
         $findReservacionHuespede = $this->customReservacion->findReservacionHuespede((int) $request->reservacion_id);
         if ($findReservacionHuespede != null) {
             // se carga el monto de la reservacion/
-             if (isset($findReservacionHuespede->monto) && $findReservacionHuespede->monto >= $totalVerificado) {
+            if (isset($findReservacionHuespede->monto) && $findReservacionHuespede->monto >= $totalVerificado) {
 
                 $findReservacionHuespede->monto = $findReservacionHuespede->monto - $totalVerificado;
             } else {
@@ -243,11 +241,9 @@ class FichaRegistroHuespeController extends Controller
             $findReservacionHuespede->cargado_pago_huespede = 'si';
             $findReservacionHuespede->save();
             $findReservacionHuespede->posadas()->attach($posada->id,
-            [   "created_at"=> Carbon::now()->format('Y-m-d'),
-                'updated_at' => Carbon::now()->format('Y-m-d'),
-            ]);
-            
-
+                ['created_at' => Carbon::now()->format('Y-m-d'),
+                    'updated_at' => Carbon::now()->format('Y-m-d'),
+                ]);
 
             $codeSendEmailUser = new CodeSendEmailUser($request);
             $codeSendEmailUser->sendNotificacionAlquiler($sendDataMail);
@@ -403,7 +399,7 @@ class FichaRegistroHuespeController extends Controller
     }
 
     // Estado de cuenta //-
-    
+
     public function estadocta($posada_id)
     {
 
@@ -451,11 +447,13 @@ class FichaRegistroHuespeController extends Controller
     /*  -------------------------------------------------------
       Se registra un consumo al huespde
       posada_id:inter
+      se agrego fechasalidaUpdate,para 
+      determinar si si es un cargo modificaaaacion fechaSalida
 
 
   */
 
-    public function cargarConsumo($posada_id)
+    public function cargarConsumo($posada_id,$fechaSalidaUpdate=0)
     {
 
         try {
@@ -473,6 +471,7 @@ class FichaRegistroHuespeController extends Controller
                     'fichaRegistroH' => $fichaRegistroH,
                     'huespede' => $huespede,
                     'precios' => $precios,
+                    'fechaSalidaUpdate'=>$fechaSalidaUpdate
 
                 ],
 
@@ -656,14 +655,35 @@ class FichaRegistroHuespeController extends Controller
     public function notaFactura($posada_id)
     {
 
-        $fichaRegistroHuespe = FichaRegistroHuespe::where('estatus','A')
-            ->where('posada_id',$posada_id)
+        $fichaRegistroHuespe = FichaRegistroHuespe::where('estatus', 'A')
+            ->where('posada_id', $posada_id)
             ->first();
         $posada = $fichaRegistroHuespe->posada;
         $huespede = $fichaRegistroHuespe->huespede;
-        
-        return Inertia::render('Catalogo/Huespede/Factura/Factura',['datahuespede' => [
+
+        return Inertia::render('Catalogo/Huespede/Factura/Factura', ['datahuespede' => [
             'ficharegistro' => $fichaRegistroHuespe]]);
 
+    }
+    
+    /**
+     * Llama al método cargarConsumo para obtener los consumos asociados a una posada específica.
+     *
+     * @param int $posada_id El identificador de la posada.
+     * @return mixed El resultado del método cargarConsumo con la posada y la bandera de actualización de fecha de salida.
+     */
+    public function llamarcargoConsumo($posada_id)
+    {
+       try {
+        //code...
+          $fechaSalidaUpdate=1;
+         return $this->cargarConsumo($posada_id,$fechaSalidaUpdate);
+       } catch (\Throwable $th) {
+        //throw $th;
+        return redirect(route('dashboard'))->with('message', 'Ha ocurrido un error:'.$th->getMessage());
+        
+       } 
+      
+        
     }
 }

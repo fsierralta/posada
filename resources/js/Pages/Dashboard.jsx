@@ -15,7 +15,8 @@ function AccionesPosada({
   registrarConsumo,
   estadoCta,
   darDeAlta,
-  CajaShow
+  CajaShow,
+  updateFechaSalida
 }) {
   return (
     <div className='grid grid-cols-2 md:grid-cols-4 gap-4 py-4 sm:mb-14 rounded-lg my-3 md:bg-slate-300 sm:bg-white'>
@@ -24,28 +25,38 @@ function AccionesPosada({
         name="btnAlquilar"
         onClick={alquilarPosada}
       >Alquilar</PrimaryButton>
+
       <PrimaryButton className='bg-green-500 w-full'
         id="btnPago"
         name="btnPago"
         onClick={registrarPago}
       >Registrar Pago</PrimaryButton>
+
       <PrimaryButton
         className='bg-green-600 w-full'
         onClick={registrarConsumo}
         name="btnConsumo"
       >Cargar un consumo</PrimaryButton>
+
       <PrimaryButton
         className='bg-green-700 w-full'
         name="btnEstadoCta"
         id="btnEstadoCta"
         onClick={estadoCta}
       >Estado Cta</PrimaryButton>
+
       <PrimaryButton
         className='bg-green-800 w-full'
       >Cambiar de Cabaña</PrimaryButton>
+
       <PrimaryButton
         className='bg-green-800 w-full'
-      >F. Salida</PrimaryButton>
+        onClick={updateFechaSalida}
+        name="btnUpdateFechaSalida"
+        id="btnUpdateFechaSalida"
+
+      >Cambiar Fecha Salida</PrimaryButton>
+
       <PrimaryButton
         className='bg-green-900 w-full'
         name={"btnDarDeAlta"}
@@ -180,6 +191,18 @@ export default function Dashboard({ auth, flash, dataPosada, huespedesRegistrado
     }
   };
 
+  const updateFechaSalida = (e) => {
+    e.preventDefault();
+    console.log('updateFechaSalida');
+    if (selectPosada && estatusPosada(selectPosada) === "O") {
+      router.get(route('huespedecambiofechasalida.get', selectPosada));
+    } else {
+      flash.message = "Cabaña Desocupada.. no se puede cambiar fecha salida";
+      setMostrarMessage(true);
+    }
+  };
+
+
   const darDeAlta = (e) => {
     e.preventDefault();
     if (selectPosada && estatusPosada(selectPosada) === "O") {
@@ -255,6 +278,8 @@ export default function Dashboard({ auth, flash, dataPosada, huespedesRegistrado
           estadoCta={estadoCta}
           darDeAlta={darDeAlta}
           CajaShow={CajaShow}
+          updateFechaSalida={updateFechaSalida}
+
         />
 
         {isLoading ? (

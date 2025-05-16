@@ -39,8 +39,6 @@ class ReservacionController extends Controller
 
         }
 
-
-
         $reservaciones = $this->customReservacion->reservacionesEnRangoFecha($fecha_entrada, $fecha_salida, new Reservacion);
         $nroCabana = $reservaciones ? $reservaciones->sum('cantidad_cabana_reservadas') : 0;
         info($reservaciones);
@@ -157,9 +155,9 @@ class ReservacionController extends Controller
                 'nro_personas' => $request->nro_personas,
                 'fecha_entrada' => Carbon::parse($request->fecha_entrada),
                 'fecha_salida' => Carbon::parse($request->fecha_salida),
-                'estatuspago' => 'C',//confirmado pago
-                'monto' => $totalPagar, //cambia segun los pagos
-                'monto_original' => $totalPagar, //se agrego para el control del monto original 
+                'estatuspago' => 'C', // confirmado pago
+                'monto' => $totalPagar, // cambia segun los pagos
+                'monto_original' => $totalPagar, // se agrego para el control del monto original
                 'formapago_id' => $request->pago_id,
                 'precio_id' => $precio->id,
                 'cantidad_cabana_reservadas' => $request->cantidad_cabana_reservadas,
@@ -167,7 +165,7 @@ class ReservacionController extends Controller
             ];
 
             if ($reservacion) {
-                //se debe puede modificar si la reservacion no tiene pagos
+                // se debe puede modificar si la reservacion no tiene pagos
                 if ($reservacion->pagoHuespedes()->count() > 0) {
                     throw new Exception('No se puede modificar la reservación, ya tiene pagos asociados');
                 }
@@ -265,30 +263,27 @@ class ReservacionController extends Controller
     }
 
     public function reservacionesConfirmadas(Request $request)
-       {
-        try{
-        $fecha_inicio=$request->has('fecha_inicio')  ? Carbon::parse($request->fecha_inicio)->toDateString() 
-                     : Carbon::now()->startOfMonth()->toDateString();
+    {
+        try {
+            $fecha_inicio = $request->has('fecha_inicio') ? Carbon::parse($request->fecha_inicio)->toDateString()
+                         : Carbon::now()->startOfMonth()->toDateString();
 
-        $fecha_final=$request->has('fecha_final')  ?   Carbon::parser($request->fecha_final)->toDateString()           
-                     : Carbon::now()->endOfMonth()->toDateString();
-                     
-        info('fecha',['fi'=>$fecha_inicio,'ff'=>$fecha_final]) ;
-      
-            //code...
-            $reservaciones = $this->customReservacion->reservacionesConfirmadas($fecha_inicio,$fecha_final);
-            return Inertia::render('Reservacion/ReservacionesConfirmadas',['reservaciones'=>$reservaciones]);
+            $fecha_final = $request->has('fecha_final') ? Carbon::parser($request->fecha_final)->toDateString()
+                         : Carbon::now()->endOfMonth()->toDateString();
+
+            info('fecha', ['fi' => $fecha_inicio, 'ff' => $fecha_final]);
+
+            // code...
+            $reservaciones = $this->customReservacion->reservacionesConfirmadas($fecha_inicio, $fecha_final);
+
+            return Inertia::render('Reservacion/ReservacionesConfirmadas', ['reservaciones' => $reservaciones]);
 
             return response()->json($reservaciones);
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
             return response()->json($th->getMessage());
         }
 
-     
-
-
-        //return Inertia::render('Reservacion/ReservacionConfirmada', ['reservaciones' => $reservaciones]);
+        // return Inertia::render('Reservacion/ReservacionConfirmada', ['reservaciones' => $reservaciones]);
     }
-
 }
