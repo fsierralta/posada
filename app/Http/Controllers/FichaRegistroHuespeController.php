@@ -98,7 +98,7 @@ class FichaRegistroHuespeController extends Controller
         // /se modifica para tomar las reservacion
         // se ingresaa el monto a la abono
         // cuenta
-        info('data', ['request' => $request]);
+        
         $validate = $request->validate([
             'precio_id' => ['required'],
             'nrodias' => ['required', 'min:1', 'integer', 'max:365'],
