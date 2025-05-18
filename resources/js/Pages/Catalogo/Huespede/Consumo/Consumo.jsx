@@ -7,6 +7,7 @@ import TextInput from "@/Components/TextInput"
 import Authenticated from "@/Layouts/AuthenticatedLayout"
 import { Head, Link, useForm } from "@inertiajs/react"
 import axios from "axios"
+
 import { useEffect, useState } from "react"
 
 
@@ -21,6 +22,7 @@ function Consumo({auth,flash,dataPago}) {
         url:"repo.01",
         activate:true,
   })
+    
   const {data,setData,processing,pos,errors,post,reset}=useForm({
       
        precio_id:0,
@@ -297,6 +299,7 @@ function Consumo({auth,flash,dataPago}) {
                                         
                             </div>
                             { parseInt(fechaSalidaUpdate) &&(
+                             <>
                             <div className="">
                                     <InputLabel
                                             htmlFor="NuevafechaSalida"
@@ -309,14 +312,33 @@ function Consumo({auth,flash,dataPago}) {
                                         <TextInput
                                             type="date"
                                             required
-                                            name="fechaSalida"
-                                            defaultValue={`${data.updateFechaSalida}`}
+                                            name="updatefechaSalida"
+                                            onChange={(e)=>setData("updateFechaSalida",e.target.value)}
+                                     />
+                            </div>
+                            <div>
+                                  <InputLabel
+                                            htmlFor="nrodias"
+                                            value={" Nro Dias"}
+                                            className="text-red-600 font-bold "
                                             
-                                            
+
                                         
                                         />
-                                        
-                            </div>)}
+                                        <TextInput
+                                            type="number"
+                                            required
+                                            name="nrodias"
+                                            step="1"
+                                            value={data.nrodias}
+                                            onChange={(e)=>setData("nrodias",e.target.value)}
+                                            className="w-full"
+                                                              
+                                        />
+
+                            </div>    
+                            </>)
+                            }
 
 
                    </div>
@@ -392,7 +414,7 @@ function Consumo({auth,flash,dataPago}) {
                        <div>
                                 <InputLabel
                                     htmlFor="cantidad" 
-                                    value={"Cantidad"}
+                                    value={fechaSalidaUpdate ?"Nro Personas":"Cantidad"}
                                 />
                                 <TextInput
                                  className="mt-2"

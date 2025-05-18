@@ -145,7 +145,7 @@ class FichaRegistroHuespeController extends Controller
             $precio = Precio::find($precio_id);
             $totalVerificado = ($precio->precio * $request->nrodias * $request->nropersonas);
             if ($totalVerificado != $request->montoTotal) {
-                throw new InvalidArgumentException('El total calculado no coincide con total enviado del arquiler');
+                throw new InvalidArgumentException('El total calculado no coincide con total enviado del alquiler');
             }
             $posada->estatus = 'O';
             $posada->save();
@@ -502,7 +502,8 @@ class FichaRegistroHuespeController extends Controller
             'precio_id' => ['required'],
             'descripcion' => ['required'],
             'nrodias' => ['required'], // para efecto del consumo es uno se trabaja cantidad y precio / total
-            'cantidad' => ['required'],
+                                       // nro dias que para los dias que se hospedan 
+            'cantidad' => ['required'],//si es actulizacion de fechasalidad cantidad=nropersonas
             'montoTotal' => ['required', 'min:1', 'max:999999'],
             'precio' => ['required', 'min:1', 'max:999999'],
             'nroficha' => ['required'],
@@ -512,6 +513,9 @@ class FichaRegistroHuespeController extends Controller
         ]);
         try {
             // code...
+            $fechaSalidaUpdate = $request->fechaSalidaUpdate; //para determinar 
+            //si es un consumo o  una actualizacion de fecha salida (0-1)
+
             $posada = Posada::where('estatus', 'O')
                 ->where('id', $request->posada_id)
                 ->first();
@@ -524,6 +528,12 @@ class FichaRegistroHuespeController extends Controller
             if ($fichaRegistroHuespe == null) {
                 return redirect(route('dashboard'))->with('message', 'Este huespde no esta registrado');
             }
+            if(intval($fechaSalidaUpdate)==1){
+                $fichaRegistroHuespe->fechaSalida = $request->updateFechaSalida;
+                $fichaRegistroHuespe->save();
+               
+
+            }   
             $precio = Precio::find($request->precio_id);
             if ($precio == null) {
                 return redirect(route('dashboard'))->with('message', 'Este precio  no esta registrado');
@@ -532,10 +542,10 @@ class FichaRegistroHuespeController extends Controller
             $movimientoHuespede = MovimientoHuespede::create([
                 'ficha_registro_huespe_id' => $fichaRegistroHuespe->id,
                 'precio_id' => $request->precio_id,
-                'cantidad' => $request->cantidad,
+                'cantidad' => $fechaSalidaUpdate? $request->nrodias:$request->cantidad,
                 'precio' => $request->precio,
                 'descripcion' => $request->descripcion,
-                'nropersonas' => 1,
+                'nropersonas' => $fechaSalidaUpdate ? $request->cantidad: 1, //cantidad->nropersona
                 'totalitem' => $request->montoTotal,
                 'nroficharegistro' => $request->nroficha,
                 'fecharegistro' => Carbon::now()->format('Y-m-d'),
