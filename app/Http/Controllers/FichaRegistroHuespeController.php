@@ -20,7 +20,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
+
+
 
 class FichaRegistroHuespeController extends Controller
 {
@@ -141,12 +144,12 @@ class FichaRegistroHuespeController extends Controller
             }
 
             $ficharegistro = new FichaRegistro;
-            $nroRegistro = $ficharegistro->find(1)->mostrarNroFicha();
             $precio = Precio::find($precio_id);
             $totalVerificado = ($precio->precio * $request->nrodias * $request->nropersonas);
             if ($totalVerificado != $request->montoTotal) {
                 throw new InvalidArgumentException('El total calculado no coincide con total enviado del alquiler');
             }
+            $nroRegistro = $ficharegistro->find(1)->mostrarNroFicha();
             $posada->estatus = 'O';
             $posada->save();
             $fichaRegistroHuespe = FichaRegistroHuespe::create([
@@ -193,7 +196,7 @@ class FichaRegistroHuespeController extends Controller
                     $sendDataMail);
             }
 
-            // se va a crear un classe despachadora de mail
+            // se va a crear un clase despachadora de mail
             $codeSendEmailUser = new CodeSendEmailUser($request);
             $codeSendEmailUser->sendNotificacionAlquiler($sendDataMail);
 
@@ -211,7 +214,7 @@ class FichaRegistroHuespeController extends Controller
     public function procesarReservacion($request, $totalVerificado, $posada,
         $huespede, $fichaRegistroHuespe, $sendDataMail)
     {
-
+        
         $findReservacionHuespede = $this->customReservacion->findReservacionHuespede((int) $request->reservacion_id);
         if ($findReservacionHuespede != null) {
             // se carga el monto de la reservacion/
@@ -649,16 +652,7 @@ class FichaRegistroHuespeController extends Controller
             // throw $th;
             return redirect(route('dashboard'))->with('message', 'No se dio de alta , ha ocurrido un error'.$th->getMessage());
         }
-        /* return response()->json([
-           'huespede'=>$huespede,
-           "posada"=>$posada,
-           'ficha'=>$fichaRegistroHuespe,
-           "totalc"=>$totalCargo,
-           "cargo"=>$detalleCargos,
-           'abono'=>$totalAbono
-
-
-        ]);  */
+       
 
     }
 
@@ -684,12 +678,18 @@ class FichaRegistroHuespeController extends Controller
      */
     public function llamarcargoConsumo($posada_id)
     {
+      $fechaSalidaUpdate=1; 
        try {
         //code...
-          $fechaSalidaUpdate=1;
+      
          return $this->cargarConsumo($posada_id,$fechaSalidaUpdate);
-       } catch (\Throwable $th) {
+       } catch (\Throwable $th)  {
         //throw $th;
+        Log::error('Error en llamarcargoConsumo: '.$th->getMessage(), [
+            'posada_id' => $posada_id,
+            'fechaSalidaUpdate' => $fechaSalidaUpdate,
+        ]);
+        
         return redirect(route('dashboard'))->with('message', 'Ha ocurrido un error:'.$th->getMessage());
         
        } 
