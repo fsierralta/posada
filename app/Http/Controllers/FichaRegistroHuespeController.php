@@ -185,7 +185,7 @@ class FichaRegistroHuespeController extends Controller
             ];
 
             // -----------------se carga el monto de la reservacion/
-
+           
             $findReservacionHuespede = $this->customReservacion->findReservacionHuespede((int) $request->reservacion_id);
             if ($findReservacionHuespede != null) {
                 return $this->procesarReservacion($request,
